@@ -3,615 +3,723 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLOW — Task Management That Works Offline | i_am_Hicks</title>
-    <meta name="description" content="FLOW is a beautiful Kanban task manager that works offline. $29 one-time purchase. No subscriptions. Your tasks stay private.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>FLOW — Kanban Tasks</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         :root {
-            --flow-blue: #3b82f6;
-            --flow-blue-dark: #2563eb;
-            --bg-dark: #0d1117;
-            --bg-card: #161b22;
-            --text-primary: #f0f6fc;
-            --text-secondary: #8b949e;
-            --border: #30363d;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7f6f3;
+            --bg-column: #f1f1ef;
+            --text-primary: #37352f;
+            --text-secondary: #6b6b6b;
+            --text-tertiary: #9b9b9b;
+            --accent: #2eaadc;
+            --border: #e3e2e0;
+            --shadow: rgba(15, 15, 15, 0.05);
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --radius: 8px;
         }
-        
+
+        [data-theme="dark"] {
+            --bg-primary: #191919;
+            --bg-secondary: #202020;
+            --bg-column: #252525;
+            --text-primary: #f5f5f5;
+            --text-secondary: #9b9b9b;
+            --border: #2d2d2d;
+            --shadow: rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-dark);
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
             color: var(--text-primary);
-            line-height: 1.6;
+            height: 100vh;
+            overflow: hidden;
         }
-        
-        /* Navigation */
-        nav {
+
+        /* Header */
+        .header {
+            height: 56px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 16px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header h1 i {
+            color: var(--accent);
+        }
+
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            background: var(--bg-column);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        /* Board */
+        .board {
+            display: flex;
+            gap: 16px;
+            padding: 20px;
+            height: calc(100vh - 56px);
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        /* Column */
+        .column {
+            min-width: 300px;
+            max-width: 300px;
+            background: var(--bg-column);
+            border-radius: var(--radius);
+            display: flex;
+            flex-direction: column;
+            max-height: 100%;
+        }
+
+        .column-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .column-title {
+            font-size: 14px;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .column-count {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            background: var(--bg-primary);
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .column-actions {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .column-header:hover .column-actions {
+            opacity: 1;
+        }
+
+        .column-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .column.drag-over {
+            background: var(--accent);
+            opacity: 0.3;
+        }
+
+        /* Task Card */
+        .task-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px;
+            cursor: grab;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .task-card:hover {
+            box-shadow: 0 4px 12px var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .task-card.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .task-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .task-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .task-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .task-tag {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+        }
+
+        .task-priority {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .priority-high { background: #eb5757; }
+        .priority-medium { background: #f4d03f; }
+        .priority-low { background: #2ecc71; }
+
+        /* Add Task Button */
+        .add-task-btn {
+            width: 100%;
+            padding: 8px;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--text-tertiary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .add-task-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Modal */
+        .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: 60px;
-            background: rgba(13, 17, 23, 0.95);
-            backdrop-filter: blur(20px);
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
             z-index: 1000;
-            border-bottom: 1px solid var(--border);
         }
-        
-        .nav-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-            height: 100%;
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-primary);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        
-        .nav-logo {
-            font-weight: 700;
+
+        .modal-title {
             font-size: 18px;
-            color: #fff;
-            text-decoration: none;
-        }
-        
-        .nav-logo span {
-            color: var(--flow-blue);
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 32px;
-        }
-        
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        
-        .nav-links a:hover {
-            color: var(--text-primary);
-        }
-        
-        /* Hero */
-        .hero {
-            padding: 140px 24px 80px;
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(59, 130, 246, 0.15);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            color: var(--flow-blue);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 24px;
         }
-        
-        .hero h1 {
-            font-size: clamp(40px, 8vw, 64px);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            letter-spacing: -0.03em;
-        }
-        
-        .hero h1 span {
-            color: var(--flow-blue);
-        }
-        
-        .hero-subtitle {
-            font-size: clamp(18px, 3vw, 22px);
-            color: var(--text-secondary);
-            margin-bottom: 32px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .hero-price {
-            font-size: 48px;
-            font-weight: 800;
-            margin-bottom: 8px;
-        }
-        
-        .hero-price span {
-            font-size: 16px;
-            color: var(--text-secondary);
-            font-weight: 400;
-        }
-        
-        .cta-group {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 32px;
-        }
-        
-        .btn {
-            padding: 14px 32px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
+
+        .modal-close {
+            background: none;
             border: none;
+            font-size: 24px;
             cursor: pointer;
+            color: var(--text-tertiary);
         }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--flow-blue) 0%, var(--flow-blue-dark) 100%);
-            color: white;
+
+        .modal-body {
+            padding: 20px;
         }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+
+        .form-group {
+            margin-bottom: 16px;
         }
-        
-        .btn-secondary {
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            border-color: var(--accent);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .modal-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
             background: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border);
         }
-        
-        .btn-secondary:hover {
-            background: var(--bg-card);
-            border-color: var(--text-secondary);
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
         }
-        
-        /* Elevator Pitch */
-        .pitch-section {
-            padding: 80px 24px;
-            background: var(--bg-card);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .pitch-content {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        
-        .pitch-content h2 {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 24px;
-            color: var(--text-secondary);
-        }
-        
-        .pitch-box {
-            background: var(--bg-dark);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 32px;
-            text-align: left;
-        }
-        
-        .pitch-box p {
-            margin-bottom: 16px;
-            font-size: 17px;
-            line-height: 1.7;
-        }
-        
-        .pitch-box p:last-child {
-            margin-bottom: 0;
-        }
-        
-        /* Features */
-        .features-section {
-            padding: 100px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 64px;
-        }
-        
-        .section-header h2 {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-        
-        .section-header p {
-            color: var(--text-secondary);
-            font-size: 18px;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-        }
-        
-        .feature-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 28px;
-            transition: all 0.2s;
-        }
-        
-        .feature-card:hover {
-            border-color: var(--flow-blue);
-            transform: translateY(-4px);
-        }
-        
-        .feature-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(59, 130, 246, 0.15);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-        
-        .feature-card h3 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-        
-        .feature-card p {
-            color: var(--text-secondary);
-            font-size: 15px;
-            line-height: 1.6;
-        }
-        
-        /* FAQ */
-        .faq-section {
-            padding: 100px 24px;
-            background: var(--bg-card);
-            border-top: 1px solid var(--border);
-        }
-        
-        .faq-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .faq-item {
-            border-bottom: 1px solid var(--border);
-            padding: 24px 0;
-        }
-        
-        .faq-item:last-child {
-            border-bottom: none;
-        }
-        
-        .faq-question {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-        
-        .faq-answer {
-            color: var(--text-secondary);
-            font-size: 16px;
-            line-height: 1.7;
-        }
-        
-        /* User Guide Preview */
-        .guide-section {
-            padding: 100px 24px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .guide-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 32px;
-            margin-bottom: 24px;
-        }
-        
-        .guide-card h3 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .guide-card ol {
-            margin-left: 20px;
-            color: var(--text-secondary);
-        }
-        
-        .guide-card li {
-            margin-bottom: 8px;
-            line-height: 1.6;
-        }
-        
-        /* Bundle */
-        .bundle-section {
-            padding: 100px 24px;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
-            text-align: center;
-        }
-        
-        .bundle-content {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .bundle-content h2 {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-        
-        .bundle-price {
-            font-size: 56px;
-            font-weight: 800;
-            margin: 24px 0;
-        }
-        
-        .bundle-price .original {
-            font-size: 24px;
-            color: var(--text-secondary);
-            text-decoration: line-through;
-            margin-right: 16px;
-            font-weight: 400;
-        }
-        
-        .save-badge {
-            display: inline-block;
-            background: rgba(34, 197, 94, 0.2);
-            color: #22c55e;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 24px;
-        }
-        
-        /* Footer */
-        footer {
-            padding: 40px 24px;
-            text-align: center;
-            border-top: 1px solid var(--border);
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-        
-        footer a {
-            color: var(--text-primary);
-            text-decoration: none;
-            margin: 0 12px;
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
         }
     </style>
 </head>
 <body>
-    <nav>
-        <div class="nav-content">
-            <a href="/" class="nav-logo">i_am<span>Hicks</span></a>
-            <div class="nav-links">
-                <a href="/">Home</a>
-                <a href="/mind/">MIND</a>
-                <a href="/flow/">FLOW</a>
-                <a href="/flow-demo/">Demo</a>
-            </div>
+    <div class="header">
+        <h1><i class="ph ph-kanban"></i> FLOW</h1>
+        <div class="header-actions">
+            <button class="btn btn-secondary" id="exportBtn">
+                <i class="ph ph-download"></i> Export
+            </button>
+            <button class="btn btn-secondary" id="importBtn">
+                <i class="ph ph-upload"></i> Import
+            </button>
+            <button class="btn btn-primary" id="addTaskBtn">
+                <i class="ph ph-plus"></i> New Task
+            </button>
         </div>
-    </nav>
+    </div>
 
-    <section class="hero">
-        <div class="hero-badge">
-            <span>⚡</span> FLOW — i am Focus
-        </div>
-        <h1>Tasks that actually<br><span>flow</span></h1>
-        <p class="hero-subtitle">A beautiful Kanban task manager that works offline. No subscriptions. No cloud lock-in. Just you and your workflow.</p>
-        <div class="hero-price">$29 <span>one-time</span></div>
-        <div class="cta-group">
-            <a href="#buy" class="btn btn-primary">Buy FLOW — $29</a>
-            <a href="/flow-demo/" class="btn btn-secondary">Try Demo</a>
-        </div>
-    </section>
+    <div class="board" id="board">
+        <!-- Columns will be rendered here -->
+    </div>
 
-    <section class="pitch-section">
-        <div class="pitch-content">
-            <h2>Most productivity software is subscription-based, tracks your data, and stops working without internet.</h2>
-            <div class="pitch-box">
-                <p><strong>We built the alternative.</strong></p>
-                <p>FLOW is a Kanban task manager that actually respects you. It's $29 once — not $10/month forever.</p>
-                <p>It works completely offline. Your tasks never leave your machine unless you want them to. And it looks beautiful because design matters.</p>
-                <p>It's for people who are tired of renting their tools and want to own their productivity stack. $29 once. Forever yours.</p>
+    <!-- Task Modal -->
+    <div class="modal-overlay" id="taskModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">New Task</div>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-input" id="taskTitle" placeholder="Task title">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" id="taskDesc" placeholder="Add details..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Column</label>
+                    <select class="form-select" id="taskColumn"></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Priority</label>
+                    <select class="form-select" id="taskPriority">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tags (comma separated)</label>
+                    <input type="text" class="form-input" id="taskTags" placeholder="design, urgent, review">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelTask">Cancel</button>
+                <button class="btn btn-primary" id="saveTask">Save Task</button>
             </div>
         </div>
-    </section>
+    </div>
 
-    <section class="features-section">
-        <div class="section-header">
-            <h2>Everything you need to stay in flow</h2>
-            <p>Beautiful Kanban boards, powerful organization, complete privacy</p>
-        </div>
-        
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>Kanban Boards</h3>
-                <p>Visual task management with customizable columns. Drag and drop tasks as they progress. See your workflow at a glance.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">🏷️</div>
-                <h3>Custom Labels</div>
-                <p>Color-code and categorize tasks with custom labels. Filter by priority, type, or any system you create.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">📅</div>
-                <h3>Due Dates & Calendar</h3>
-                <p>Set deadlines and view tasks in calendar mode. Never miss important dates. Get a visual overview of your schedule.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">🔔</div>
-                <h3>Recurring Tasks</h3>
-                <p>Set up daily, weekly, or monthly recurring tasks. Automate your routines while keeping control.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">✈️</div>
-                <h3>Works Offline</h3>
-                <p>On planes, in remote cabins, during outages. Your tasks don't need WiFi. Access everything anywhere.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">🔒</div>
-                <h3>Privacy First</h3>
-                <p>No account required. No cloud sync unless YOU set it up. No tracking, ever. Your tasks stay local.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">🎨</div>
-                <h3>Beautiful Design</h3>
-                <p>Clean, modern interface inspired by the best. Dark and light modes. Typography that doesn't strain your eyes.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3>Lightning Fast</h3>
-                <p>No loading spinners. No "syncing..." messages. Instant response because everything is stored locally.</p>
-            </div>
-        </div>
-    </section>
+    <script>
+        class KanbanApp {
+            constructor() {
+                this.data = {
+                    columns: [
+                        { id: 'todo', title: 'To Do', color: '#e3e2e0' },
+                        { id: 'doing', title: 'Doing', color: '#f4d03f' },
+                        { id: 'done', title: 'Done', color: '#2ecc71' }
+                    ],
+                    tasks: []
+                };
+                this.editingTaskId = null;
+                this.draggedTask = null;
+                
+                this.init();
+            }
 
-    <section class="guide-section">
-        <div class="section-header">
-            <h2>Quick Start Guide</h2>
-            <p>From download to productive in 3 minutes</p>
-        </div>
-        
-        <div class="guide-card">
-            <h3><span>1️⃣</span> Installation</h3>
-            <ol>
-                <li>Download FLOW after purchase</li>
-                <li>Unzip the file</li>
-                <li>Open <code>index.html</code> in any modern browser</li>
-                <li>That's it — no installation, no account setup</li>
-            </ol>
-        </div>
-        
-        <div class="guide-card">
-            <h3><span>2️⃣</span> Creating Your First Board</h3>
-            <ol>
-                <li>Click "+ New Board" in the header</li>
-                <li>Name your board (e.g., "Work Projects", "Personal Tasks")</li>
-                <li>Choose a template or start blank</li>
-                <li>Customize columns (To Do, In Progress, Done, etc.)</li>
-            </ol>
-        </div>
-        
-        <div class="guide-card">
-            <h3><span>3️⃣</span> Adding Tasks</h3>
-            <ol>
-                <li>Click "+ Add a card" in any column</li>
-                <li>Type your task name</li>
-                <li>Click the card to add details, due date, labels</li>
-                <li>Drag cards between columns as they progress</li>
-            </ol>
-        </div>
-        
-        <div class="guide-card">
-            <h3><span>4️⃣</span> Organizing with Labels</h3>
-            <ol>
-                <li>Open a task card</li>
-                <li>Click "Labels" to add or create new labels</li>
-                <li>Use color coding (red = urgent, blue = personal, etc.)</li>
-                <li>Filter your board by clicking label buttons at the top</li>
-            </ol>
-        </div>
-        
-        <div class="cta-group">
-            <a href="/flow-demo/" class="btn btn-secondary">Try the Demo</a>
-        </div>
-    </section>
+            init() {
+                this.loadData();
+                this.setupEventListeners();
+                this.render();
+            }
 
-    <section class="faq-section">
-        <div class="faq-content">
-            <div class="section-header">
-                <h2>Frequently Asked Questions</h2>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">How is this different from Trello or Notion?</div>
-                <div class="faq-answer">FLOW works completely offline, costs $29 once (not $10+/month), and keeps your data private on your machine. Trello and Notion require internet, subscriptions, and store your data in their cloud.</div>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">Can I collaborate with my team?</div>
-                <div class="faq-answer">FLOW is designed for personal use. For team collaboration, you can export boards and share the files, or use a shared folder with Dropbox/iCloud. Real-time collaboration requires the cloud — which we're avoiding for privacy.</div>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">Does it sync between my laptop and desktop?</div>
-                <div class="faq-answer">Not built-in, but you can use any sync service you trust. Put the FLOW folder in Dropbox, iCloud, or Syncthing. Your data is standard JSON files that sync perfectly.</div>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">What happens to my data if I stop using it?</div>
-                <div class="faq-answer">You own your data completely. It's stored as JSON files that any developer can read. Export anytime, migrate anywhere. No lock-in, ever.</div>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">Is there a mobile app?</div>
-                <div class="faq-answer">Not yet. FLOW works in any modern browser, so you can use it on mobile browsers. A dedicated mobile app is on our roadmap.</div>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">What's your refund policy?</div>
-                <div class="faq-answer">30-day money-back guarantee, no questions asked. If FLOW doesn't work for you, we'll refund every penny.</div>
-            </div>
-        </div>
-    </section>
+            loadData() {
+                const saved = localStorage.getItem('flow_data');
+                if (saved) {
+                    try {
+                        this.data = JSON.parse(saved);
+                    } catch (e) {
+                        console.error('Failed to load data:', e);
+                    }
+                }
+            }
 
-    <section class="bundle-section" id="buy">
-        <div class="bundle-content">
-            <h2>Get the Complete Suite</h2>
-            <p>FLOW + MIND together. Execution and knowledge, perfectly paired.</p>
-            <div class="bundle-price">
-                <span class="original">$58</span>$49
-            </div>
-            <div class="save-badge">Save $9</div>
-            <div class="cta-group">
-                <a href="#" class="btn btn-primary">Buy Bundle — $49</a>
-                <a href="/mind/" class="btn btn-secondary">Learn about MIND</a>
-            </div>
-        </div>
-    </section>
+            saveData() {
+                localStorage.setItem('flow_data', JSON.stringify(this.data));
+            }
 
-    <footer>
-        <p>© 2026 i_am_Hicks. Define yourself.</p>
-        <p>
-            <a href="/">Home</a>
-            <a href="/mind/">MIND</a>
-            <a href="/flow/">FLOW</a>
-            <a href="/flow-demo/">Demo</a>
-        </p>
-    </footer>
+            setupEventListeners() {
+                document.getElementById('addTaskBtn').onclick = () => this.openModal();
+                document.getElementById('closeModal').onclick = () => this.closeModal();
+                document.getElementById('cancelTask').onclick = () => this.closeModal();
+                document.getElementById('saveTask').onclick = () => this.saveTask();
+                document.getElementById('exportBtn').onclick = () => this.exportData();
+                document.getElementById('importBtn').onclick = () => this.importData();
+                
+                document.getElementById('taskModal').onclick = (e) => {
+                    if (e.target.id === 'taskModal') this.closeModal();
+                };
+
+                // Keyboard shortcuts
+                document.onkeydown = (e) => {
+                    if (e.key === 'Escape') this.closeModal();
+                    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && this.isModalOpen()) {
+                        this.saveTask();
+                    }
+                };
+            }
+
+            isModalOpen() {
+                return document.getElementById('taskModal').classList.contains('active');
+            }
+
+            openModal(taskId = null) {
+                this.editingTaskId = taskId;
+                const modal = document.getElementById('taskModal');
+                const modalTitle = document.getElementById('modalTitle');
+                
+                // Populate column select
+                const columnSelect = document.getElementById('taskColumn');
+                columnSelect.innerHTML = this.data.columns.map(col => 
+                    `<option value="${col.id}">${col.title}</option>`
+                ).join('');
+
+                if (taskId) {
+                    const task = this.data.tasks.find(t => t.id === taskId);
+                    modalTitle.textContent = 'Edit Task';
+                    document.getElementById('taskTitle').value = task.title;
+                    document.getElementById('taskDesc').value = task.description || '';
+                    document.getElementById('taskColumn').value = task.columnId;
+                    document.getElementById('taskPriority').value = task.priority || 'medium';
+                    document.getElementById('taskTags').value = task.tags ? task.tags.join(', ') : '';
+                } else {
+                    modalTitle.textContent = 'New Task';
+                    document.getElementById('taskTitle').value = '';
+                    document.getElementById('taskDesc').value = '';
+                    document.getElementById('taskColumn').value = 'todo';
+                    document.getElementById('taskPriority').value = 'medium';
+                    document.getElementById('taskTags').value = '';
+                }
+
+                modal.classList.add('active');
+                document.getElementById('taskTitle').focus();
+            }
+
+            closeModal() {
+                document.getElementById('taskModal').classList.remove('active');
+                this.editingTaskId = null;
+            }
+
+            saveTask() {
+                const title = document.getElementById('taskTitle').value.trim();
+                if (!title) return;
+
+                const task = {
+                    id: this.editingTaskId || 'task_' + Date.now(),
+                    title: title,
+                    description: document.getElementById('taskDesc').value.trim(),
+                    columnId: document.getElementById('taskColumn').value,
+                    priority: document.getElementById('taskPriority').value,
+                    tags: document.getElementById('taskTags').value.split(',').map(t => t.trim()).filter(t => t),
+                    createdAt: this.editingTaskId ? undefined : new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+
+                if (this.editingTaskId) {
+                    const index = this.data.tasks.findIndex(t => t.id === this.editingTaskId);
+                    if (index !== -1) {
+                        task.createdAt = this.data.tasks[index].createdAt;
+                        this.data.tasks[index] = task;
+                    }
+                } else {
+                    this.data.tasks.push(task);
+                }
+
+                this.saveData();
+                this.render();
+                this.closeModal();
+            }
+
+            deleteTask(taskId) {
+                if (confirm('Delete this task?')) {
+                    this.data.tasks = this.data.tasks.filter(t => t.id !== taskId);
+                    this.saveData();
+                    this.render();
+                }
+            }
+
+            moveTask(taskId, toColumnId) {
+                const task = this.data.tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.columnId = toColumnId;
+                    task.updatedAt = new Date().toISOString();
+                    this.saveData();
+                    this.render();
+                }
+            }
+
+            exportData() {
+                const dataStr = JSON.stringify(this.data, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `flow-backup-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            importData() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            try {
+                                const data = JSON.parse(event.target.result);
+                                if (data.columns && data.tasks) {
+                                    this.data = data;
+                                    this.saveData();
+                                    this.render();
+                                    alert('Data imported successfully!');
+                                } else {
+                                    alert('Invalid file format');
+                                }
+                            } catch (err) {
+                                alert('Failed to import: ' + err.message);
+                            }
+                        };
+                        reader.readAsText(file);
+                    }
+                };
+                input.click();
+            }
+
+            render() {
+                const board = document.getElementById('board');
+                board.innerHTML = '';
+
+                this.data.columns.forEach(column => {
+                    const columnEl = document.createElement('div');
+                    columnEl.className = 'column';
+                    columnEl.dataset.columnId = column.id;
+
+                    const tasksInColumn = this.data.tasks.filter(t => t.columnId === column.id);
+
+                    columnEl.innerHTML = `
+                        <div class="column-header">
+                            <div class="column-title">${column.title}</div>
+                            <div class="column-count">${tasksInColumn.length}</div>
+                            <div class="column-actions">
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="app.openModal(null, '${column.id}')">
+                                    <i class="ph ph-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="column-content" data-column-id="${column.id}">
+                            ${tasksInColumn.map(task => this.renderTaskCard(task)).join('')}
+                            <button class="add-task-btn" onclick="app.openModal(null, '${column.id}')">
+                                <i class="ph ph-plus"></i> Add task
+                            </button>
+                        </div>
+                    `;
+
+                    // Setup drag and drop
+                    const content = columnEl.querySelector('.column-content');
+                    content.ondragover = (e) => this.handleDragOver(e);
+                    content.ondrop = (e) => this.handleDrop(e, column.id);
+                    content.ondragleave = (e) => this.handleDragLeave(e);
+
+                    board.appendChild(columnEl);
+                });
+
+                // Setup task card drag events
+                document.querySelectorAll('.task-card').forEach(card => {
+                    card.ondragstart = (e) => this.handleDragStart(e, card.dataset.taskId);
+                    card.ondragend = (e) => this.handleDragEnd(e);
+                    card.ondblclick = (e) => {
+                        if (!e.target.closest('button')) {
+                            this.openModal(card.dataset.taskId);
+                        }
+                    };
+                });
+            }
+
+            renderTaskCard(task) {
+                return `
+                    <div class="task-card" draggable="true" data-task-id="${task.id}">
+                        <div class="task-title">${this.escapeHtml(task.title)}</div>
+                        ${task.description ? `<div class="task-desc">${this.escapeHtml(task.description)}</div>` : ''}
+                        <div class="task-meta">
+                            <div class="task-priority priority-${task.priority || 'medium'}"></div>
+                            ${task.tags ? task.tags.map(tag => `<span class="task-tag">${this.escapeHtml(tag)}</span>`).join('') : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            handleDragStart(e, taskId) {
+                this.draggedTask = taskId;
+                e.target.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+            }
+
+            handleDragEnd(e) {
+                e.target.classList.remove('dragging');
+                this.draggedTask = null;
+                document.querySelectorAll('.column').forEach(col => col.classList.remove('drag-over'));
+            }
+
+            handleDragOver(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                const column = e.target.closest('.column');
+                if (column) column.classList.add('drag-over');
+            }
+
+            handleDragLeave(e) {
+                const column = e.target.closest('.column');
+                if (column) column.classList.remove('drag-over');
+            }
+
+            handleDrop(e, columnId) {
+                e.preventDefault();
+                const column = e.target.closest('.column');
+                if (column) column.classList.remove('drag-over');
+                
+                if (this.draggedTask) {
+                    this.moveTask(this.draggedTask, columnId);
+                }
+            }
+        }
+
+        const app = new KanbanApp();
+    </script>
 </body>
 </html>
