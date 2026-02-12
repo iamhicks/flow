@@ -425,10 +425,108 @@
             padding-left: 8px;
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        /* Memory Module */
+        .memory-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .memory-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .memory-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .memory-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s;
+        }
+
+        .memory-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .memory-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .memory-icon {
+            font-size: 24px;
+        }
+
+        .memory-meta {
+            flex: 1;
+        }
+
+        .memory-author {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .memory-author.human {
+            color: var(--success);
+        }
+
+        .memory-time {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .memory-category {
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .memory-content {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .memory-add-form {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .memory-input {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-bottom: 12px;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .memory-input:focus {
+            outline: none;
+            border-color: var(--accent);
         }
 
         ::-webkit-scrollbar-track {
@@ -646,7 +744,23 @@
 
                 <!-- Memory Module -->
                 <div class="module" id="module-memory">
-                    <p class="placeholder-text">Shared memory loads here...</p>
+                    <div class="memory-container">
+                        <div class="memory-header">
+                            <div class="memory-filters">
+                                <button class="filter-chip active" data-filter="all">All Notes</button>
+                                <button class="filter-chip" data-filter="preference">Preferences</button>
+                                <button class="filter-chip" data-filter="trading">Trading</button>
+                                <button class="filter-chip" data-filter="product">Ideas</button>
+                            </div>
+                            <button class="btn btn-primary" id="addMemoryBtn">
+                                <i class="ph ph-plus"></i> Add Note
+                            </button>
+                        </div>
+                        
+                        <div id="memoryList" class="memory-list">
+                            <!-- Memories loaded here -->
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Deliverables Module -->
@@ -693,6 +807,111 @@
                 // Load module data
                 if (moduleId === 'activity') {
                     loadActivityStream();
+                } else if (moduleId === 'memory') {
+                    loadMemoryStream();
+                }
+            });
+        });
+
+        // Memory Stream
+        let memoryData = [];
+        
+        const loadMemoryStream = async () => {
+            try {
+                const response = await fetch('/api/memory?t=' + Date.now());
+                if (response.ok) {
+                    const data = await response.json();
+                    memoryData = data.memories || [];
+                    renderMemoryStream(memoryData);
+                }
+            } catch (e) {
+                console.log('Using local memory data');
+                renderMemoryStream(getLocalMemoryData());
+            }
+        };
+        
+        const getLocalMemoryData = () => [
+            {
+                id: 'mem_1',
+                type: 'preference',
+                content: 'Pete prefers dark mode in all apps. Default to dark theme.',
+                category: 'preference',
+                addedBy: 'Kai',
+                actorType: 'ai',
+                timestamp: new Date().toISOString(),
+                icon: '📝'
+            },
+            {
+                id: 'mem_2',
+                type: 'reminder',
+                content: 'Check trading model at 3pm before US market open',
+                category: 'trading',
+                addedBy: 'Pete',
+                actorType: 'human',
+                timestamp: new Date(Date.now() - 60 * 60000).toISOString(),
+                icon: '⏰'
+            },
+            {
+                id: 'mem_3',
+                type: 'idea',
+                content: 'FLOW Dashboard could expand to include metrics, goals tracking, and agent performance stats',
+                category: 'product',
+                addedBy: 'Kai',
+                actorType: 'ai',
+                timestamp: new Date(Date.now() - 30 * 60000).toISOString(),
+                icon: '💡'
+            }
+        ];
+        
+        const renderMemoryStream = (memories) => {
+            const container = document.getElementById('memoryList');
+            if (!container) return;
+            
+            let html = '';
+            memories.forEach(memory => {
+                const time = formatTime(memory.timestamp);
+                const categoryColors = {
+                    preference: '#2eaadc',
+                    trading: '#f4d03f',
+                    product: '#9b59b6',
+                    bug: '#dc4444',
+                    business: '#2ecc71',
+                    milestone: '#e74c3c'
+                };
+                const color = categoryColors[memory.category] || '#8b949e';
+                
+                html += `
+                    <div class="memory-card" data-category="${memory.category}">
+                        <div class="memory-card-header">
+                            <div class="memory-icon">${memory.icon}</div>
+                            <div class="memory-meta">
+                                <div class="memory-author ${memory.actorType}">${memory.addedBy}</div>
+                                <div class="memory-time">${time}</div>
+                            </div>
+                            <div class="memory-category" style="background: ${color}20; color: ${color}; border: 1px solid ${color}40;">
+                                ${memory.category}
+                            </div>
+                        </div>
+                        <div class="memory-content">${memory.content}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        };
+        
+        // Memory filters
+        document.querySelectorAll('#module-memory .filter-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('#module-memory .filter-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                
+                const filter = chip.dataset.filter;
+                if (filter === 'all') {
+                    renderMemoryStream(memoryData);
+                } else {
+                    const filtered = memoryData.filter(m => m.category === filter);
+                    renderMemoryStream(filtered);
                 }
             });
         });

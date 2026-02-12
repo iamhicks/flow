@@ -119,6 +119,23 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (urlPath === '/api/memory' && req.method === 'GET') {
+    try {
+      const memoryPath = path.join(__dirname, 'data', 'memory.json');
+      if (fs.existsSync(memoryPath)) {
+        const data = fs.readFileSync(memoryPath, 'utf8');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(data);
+        return;
+      }
+    } catch (e) {
+      console.error('Error loading memory:', e);
+    }
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Memory data not found' }));
+    return;
+  }
+
   if (urlPath === '/api/data' && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => body += chunk);
