@@ -1,0 +1,85 @@
+{
+  "activities": [
+    {
+      "id": "act_1",
+      "type": "task_moved",
+      "actor": "Kai",
+      "actorType": "ai",
+      "description": "Moved 'Fix MIND license system' from To Do to In Progress",
+      "boardId": "board_1",
+      "boardName": "Flow Mind Website",
+      "timestamp": "2026-02-12T22:58:00Z",
+      "icon": "🔄"
+    },
+    {
+      "id": "act_2",
+      "type": "task_moved",
+      "actor": "Kai",
+      "actorType": "ai",
+      "description": "Moved 'Testing FLOW kanban' from In Progress to Done",
+      "boardId": "board_1",
+      "boardName": "Flow Mind Website",
+      "timestamp": "2026-02-12T22:45:00Z",
+      "icon": "✅"
+    },
+    {
+      "id": "act_3",
+      "type": "task_created",
+      "actor": "Kai",
+      "actorType": "ai",
+      "description": "Created 'Create FLOW for OpenClaw product' in Backlog",
+      "boardId": "board_1",
+      "boardName": "Flow Mind Website",
+      "timestamp": "2026-02-12T22:30:00Z",
+      "icon": "📝"
+    },
+    {
+      "id": "act_4",
+      "type": "backup_created",
+      "actor": "System",
+      "actorType": "system",
+      "description": "Auto-backup saved to /Documents/Kai/Repos/flow/app/backups/",
+      "timestamp": "2026-02-12T22:15:00Z",
+      "icon": "💾"
+    },
+    {
+      "id": "act_5",
+      "type": "file_created",
+      "actor": "Kai",
+      "actorType": "ai",
+      "description": "Created product landing page (product.html)",
+      "timestamp": "2026-02-12T22:00:00Z",
+      "icon": "🎨"
+    },
+    {
+      "id": "act_6",
+      "type": "task_created",
+      "actor": "Pete",
+      "actorType": "human",
+      "description": "Created 'Add AI suggestions to tasks' in Backlog",
+      "boardId": "board_1",
+      "boardName": "Flow Mind Website",
+      "timestamp": "2026-02-12T21:30:00Z",
+      "icon": "📝"
+    },
+    {
+      "id": "act_7",
+      "type": "sync",
+      "actor": "System",
+      "actorType": "system",
+      "description": "Synced data with server",
+      "timestamp": "2026-02-12T21:15:00Z",
+      "icon": "🔄"
+    },
+    {
+      "id": "act_8",
+      "type": "board_created",
+      "actor": "System",
+      "actorType": "system",
+      "description": "Created 3 default boards: Flow Mind Website, General, House Keeping",
+      "timestamp": "2026-02-12T21:00:00Z",
+      "icon": "📊"
+    }
+  ],
+  "lastUpdated": "2026-02-12T23:00:00Z"
+}

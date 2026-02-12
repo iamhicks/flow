@@ -102,6 +102,23 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (urlPath === '/api/activity' && req.method === 'GET') {
+    try {
+      const activityPath = path.join(__dirname, 'data', 'activity.json');
+      if (fs.existsSync(activityPath)) {
+        const data = fs.readFileSync(activityPath, 'utf8');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(data);
+        return;
+      }
+    } catch (e) {
+      console.error('Error loading activity:', e);
+    }
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Activity data not found' }));
+    return;
+  }
+
   if (urlPath === '/api/data' && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => body += chunk);
@@ -124,6 +141,17 @@ const server = http.createServer((req, res) => {
   // Static files
   const filePath = req.url === '/' ? '/index.v2.html' : req.url;
   const fullPath = path.join(__dirname, 'app', filePath);
+  
+  // Special route for dashboard
+  if (urlPath === '/dashboard' || urlPath === '/dashboard.html') {
+    const dashboardPath = path.join(__dirname, 'dashboard.html');
+    if (fs.existsSync(dashboardPath)) {
+      const content = fs.readFileSync(dashboardPath);
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.end(content);
+      return;
+    }
+  }
   
   try {
     if (fs.existsSync(fullPath)) {

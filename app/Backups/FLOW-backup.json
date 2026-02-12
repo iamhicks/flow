@@ -1,0 +1,292 @@
+{
+  "boards": [
+    {
+      "id": "board_1",
+      "name": "Flow Mind Website",
+      "type": "kanban",
+      "columns": [
+        {
+          "id": "backlog",
+          "name": "Backlog",
+          "cards": [
+            {
+              "id": "card_1",
+              "title": "Add AI suggestions to tasks",
+              "description": "Integrate Ollama for smart task recommendations",
+              "priority": "medium",
+              "labels": [
+                "ai",
+                "feature"
+              ],
+              "createdAt": "2026-02-12T22:30:00Z"
+            },
+            {
+              "id": "card_new_1",
+              "title": "Create FLOW for OpenClaw product",
+              "description": "Package kanban+AI collaboration as standalone product for OpenClaw community. Landing page, docs, $29 pricing.",
+              "priority": "high",
+              "labels": [
+                "product",
+                "openclaw",
+                "launch"
+              ],
+              "createdAt": "2026-02-12T22:58:00Z"
+            },
+            {
+              "id": "card_new_2",
+              "title": "Expand FLOW into Agent Dashboard",
+              "description": "Full collaboration hub: Activity Log, Shared Memory, Deliverables, Schedule, Chat, Metrics, Goals. Human-AI mission control.",
+              "priority": "high",
+              "labels": [
+                "product",
+                "dashboard",
+                "v2"
+              ],
+              "createdAt": "2026-02-12T23:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "todo",
+          "name": "To Do",
+          "cards": [
+            {
+              "id": "card_3",
+              "title": "Update website screenshots",
+              "description": "New AI chat feature screenshots",
+              "priority": "medium",
+              "labels": [
+                "website",
+                "design"
+              ],
+              "createdAt": "2026-02-12T22:30:00Z"
+            }
+          ]
+        },
+        {
+          "id": "inprogress",
+          "name": "In Progress",
+          "cards": [
+            {
+              "id": "card_2",
+              "title": "Fix MIND license system 🔄 KAI MOVED",
+              "description": "Redo implementation properly - Kai moved this to In Progress",
+              "priority": "high",
+              "labels": [
+                "bug",
+                "mind",
+                "inprogress"
+              ],
+              "createdAt": "2026-02-12T22:30:00Z"
+            }
+          ]
+        },
+        {
+          "id": "done",
+          "name": "Done",
+          "cards": [
+            {
+              "id": "card_5",
+              "title": "Create FLOW kanban app",
+              "description": "Built drag-and-drop board",
+              "priority": "high",
+              "labels": [
+                "done",
+                "flow"
+              ],
+              "createdAt": "2026-02-12T22:30:00Z"
+            },
+            {
+              "id": "card_4",
+              "title": "Testing FLOW kanban ✓ MOVED BY KAI",
+              "description": "Verify Kai can move cards - SUCCESS!",
+              "priority": "high",
+              "labels": [
+                "testing",
+                "flow",
+                "done"
+              ],
+              "createdAt": "2026-02-12T22:30:00Z"
+            }
+          ]
+        },
+        {
+          "id": "archive",
+          "name": "Archive",
+          "cards": []
+        }
+      ]
+    },
+    {
+      "id": "board_2",
+      "name": "General",
+      "type": "kanban",
+      "columns": [
+        {
+          "id": "backlog",
+          "name": "Backlog",
+          "cards": [
+            {
+              "id": "card_6",
+              "title": "Launch on Product Hunt",
+              "description": "Prepare MIND launch campaign",
+              "priority": "medium",
+              "labels": [
+                "marketing"
+              ],
+              "createdAt": "2026-02-12T22:30:00Z"
+            }
+          ]
+        },
+        {
+          "id": "todo",
+          "name": "To Do",
+          "cards": [
+            {
+              "id": "card_7",
+              "title": "Research EDGE features",
+              "description": "Browser automation possibilities",
+              "priority": "low",
+              "labels": [
+                "research"
+              ],
+              "createdAt": "2026-02-12T22:30:00Z"
+            }
+          ]
+        },
+        {
+          "id": "inprogress",
+          "name": "In Progress",
+          "cards": []
+        },
+        {
+          "id": "done",
+          "name": "Done",
+          "cards": []
+        },
+        {
+          "id": "archive",
+          "name": "Archive",
+          "cards": []
+        }
+      ]
+    },
+    {
+      "id": "board_3",
+      "name": "House Keeping",
+      "type": "kanban",
+      "columns": [
+        {
+          "id": "backlog",
+          "name": "Backlog",
+          "cards": [
+            {
+              "id": "card_8",
+              "title": "Auto-git commit script",
+              "description": "Detect changes and auto-push",
+              "priority": "low",
+              "labels": [
+                "automation"
+              ],
+              "createdAt": "2026-02-12T22:30:00Z"
+            }
+          ]
+        },
+        {
+          "id": "todo",
+          "name": "To Do",
+          "cards": [
+            {
+              "id": "card_9",
+              "title": "Document OpenClaw setup",
+              "description": "Setup guide for new machines",
+              "priority": "medium",
+              "labels": [
+                "docs"
+              ],
+              "createdAt": "2026-02-12T22:30:00Z"
+            }
+          ]
+        },
+        {
+          "id": "inprogress",
+          "name": "In Progress",
+          "cards": []
+        },
+        {
+          "id": "done",
+          "name": "Done",
+          "cards": [
+            {
+              "id": "card_10",
+              "title": "Set up FLOW auto-backup",
+              "description": "File System Access API working",
+              "priority": "high",
+              "labels": [
+                "done",
+                "backup"
+              ],
+              "createdAt": "2026-02-12T22:30:00Z"
+            }
+          ]
+        },
+        {
+          "id": "archive",
+          "name": "Archive",
+          "cards": []
+        }
+      ]
+    }
+  ],
+  "archivedCards": [],
+  "customLabels": [
+    {
+      "id": "l1",
+      "name": "feature",
+      "color": "#2eaadc"
+    },
+    {
+      "id": "l2",
+      "name": "bug",
+      "color": "#dc4444"
+    },
+    {
+      "id": "l3",
+      "name": "done",
+      "color": "#2ecc71"
+    },
+    {
+      "id": "l4",
+      "name": "high",
+      "color": "#dc4444"
+    },
+    {
+      "id": "l5",
+      "name": "mind",
+      "color": "#f5a623"
+    },
+    {
+      "id": "l6",
+      "name": "flow",
+      "color": "#9b59b6"
+    },
+    {
+      "id": "l7",
+      "name": "ai",
+      "color": "#e74c3c"
+    },
+    {
+      "id": "l8",
+      "name": "website",
+      "color": "#3498db"
+    }
+  ],
+  "settings": {
+    "autoSave": true,
+    "backupReminder": true,
+    "lastBackup": null,
+    "currentBoard": "board_1"
+  },
+  "exportDate": "2026-02-12T23:11:42.169Z",
+  "version": "1.0"
+}

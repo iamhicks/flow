@@ -320,6 +320,23 @@
             border-radius: 8px;
             margin-bottom: 8px;
             background: var(--bg-tertiary);
+            transition: all 0.2s;
+        }
+
+        .activity-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .activity-item.ai {
+            border-left: 3px solid var(--accent);
+        }
+
+        .activity-item.human {
+            border-left: 3px solid var(--success);
+        }
+
+        .activity-item.system {
+            border-left: 3px solid var(--text-tertiary);
         }
 
         .activity-icon {
@@ -340,11 +357,72 @@
         .activity-text {
             font-size: 13px;
             margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .activity-actor {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .activity-actor.human {
+            color: var(--success);
         }
 
         .activity-meta {
             font-size: 11px;
             color: var(--text-tertiary);
+            display: flex;
+            gap: 12px;
+        }
+
+        .activity-board {
+            color: var(--text-secondary);
+        }
+
+        /* Activity Stream Full View */
+        .activity-stream-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .activity-filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .filter-chip {
+            padding: 6px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-chip:hover, .filter-chip.active {
+            background: var(--accent);
+            color: var(--bg-primary);
+            border-color: var(--accent);
+        }
+
+        .activity-day {
+            margin-bottom: 24px;
+        }
+
+        .activity-day-header {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            padding-left: 8px;
         }
 
         /* Scrollbar */
@@ -553,7 +631,17 @@
 
                 <!-- Activity Module -->
                 <div class="module" id="module-activity">
-                    <p class="placeholder-text">Full activity stream loads here...</p>
+                    <div class="activity-stream-container">
+                        <div class="activity-filters">
+                            <button class="filter-chip active" data-filter="all">All Activity</button>
+                            <button class="filter-chip" data-filter="ai">AI Actions</button>
+                            <button class="filter-chip" data-filter="human">Your Actions</button>
+                            <button class="filter-chip" data-filter="system">System</button>
+                        </div>
+                        <div id="activityList">
+                            <!-- Activities loaded here -->
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Memory Module -->
@@ -601,6 +689,156 @@
                 const moduleId = tab.dataset.module;
                 document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
                 document.getElementById(`module-${moduleId}`).classList.add('active');
+                
+                // Load module data
+                if (moduleId === 'activity') {
+                    loadActivityStream();
+                }
+            });
+        });
+
+        // Activity Stream
+        let activityData = [];
+        
+        const loadActivityStream = async () => {
+            try {
+                const response = await fetch('/api/activity?t=' + Date.now());
+                if (response.ok) {
+                    const data = await response.json();
+                    activityData = data.activities || [];
+                    renderActivityStream(activityData);
+                }
+            } catch (e) {
+                console.log('Using local activity data');
+                renderActivityStream(getLocalActivityData());
+            }
+        };
+        
+        const getLocalActivityData = () => [
+            {
+                id: 'act_1',
+                actor: 'Kai',
+                actorType: 'ai',
+                description: 'Moved "Fix MIND license system" from To Do to In Progress',
+                boardName: 'Flow Mind Website',
+                timestamp: new Date().toISOString(),
+                icon: '🔄'
+            },
+            {
+                id: 'act_2',
+                actor: 'Kai',
+                actorType: 'ai',
+                description: 'Moved "Testing FLOW kanban" from In Progress to Done',
+                boardName: 'Flow Mind Website',
+                timestamp: new Date(Date.now() - 15 * 60000).toISOString(),
+                icon: '✅'
+            },
+            {
+                id: 'act_3',
+                actor: 'Kai',
+                actorType: 'ai',
+                description: 'Created "Create FLOW for OpenClaw product" in Backlog',
+                boardName: 'Flow Mind Website',
+                timestamp: new Date(Date.now() - 30 * 60000).toISOString(),
+                icon: '📝'
+            },
+            {
+                id: 'act_4',
+                actor: 'System',
+                actorType: 'system',
+                description: 'Auto-backup saved to /flow/app/backups/',
+                timestamp: new Date(Date.now() - 45 * 60000).toISOString(),
+                icon: '💾'
+            },
+            {
+                id: 'act_5',
+                actor: 'Kai',
+                actorType: 'ai',
+                description: 'Created product landing page (product.html)',
+                timestamp: new Date(Date.now() - 60 * 60000).toISOString(),
+                icon: '🎨'
+            }
+        ];
+        
+        const renderActivityStream = (activities) => {
+            const container = document.getElementById('activityList');
+            if (!container) return;
+            
+            const grouped = groupActivitiesByDate(activities);
+            
+            let html = '';
+            for (const [date, items] of Object.entries(grouped)) {
+                html += `<div class="activity-day">`;
+                html += `<div class="activity-day-header">${date}</div>`;
+                
+                items.forEach(activity => {
+                    const time = formatTime(activity.timestamp);
+                    html += `
+                        <div class="activity-item ${activity.actorType}">
+                            <div class="activity-icon">${activity.icon}</div>
+                            <div class="activity-content">
+                                <div class="activity-text">
+                                    <span class="activity-actor ${activity.actorType}">${activity.actor}</span>
+                                    ${activity.description}
+                                </div>
+                                <div class="activity-meta">
+                                    <span>${time}</span>
+                                    ${activity.boardName ? `<span class="activity-board">📋 ${activity.boardName}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            }
+            
+            container.innerHTML = html;
+        };
+        
+        const groupActivitiesByDate = (activities) => {
+            const grouped = {};
+            
+            activities.forEach(activity => {
+                const date = new Date(activity.timestamp);
+                const today = new Date();
+                const yesterday = new Date(today);
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                let dateKey;
+                if (date.toDateString() === today.toDateString()) {
+                    dateKey = 'Today';
+                } else if (date.toDateString() === yesterday.toDateString()) {
+                    dateKey = 'Yesterday';
+                } else {
+                    dateKey = date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+                }
+                
+                if (!grouped[dateKey]) grouped[dateKey] = [];
+                grouped[dateKey].push(activity);
+            });
+            
+            return grouped;
+        };
+        
+        const formatTime = (timestamp) => {
+            const date = new Date(timestamp);
+            return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        };
+        
+        // Activity filters
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                
+                const filter = chip.dataset.filter;
+                if (filter === 'all') {
+                    renderActivityStream(activityData);
+                } else {
+                    const filtered = activityData.filter(a => a.actorType === filter);
+                    renderActivityStream(filtered);
+                }
             });
         });
 
@@ -610,15 +848,21 @@
                 const response = await fetch('/api/data?t=' + Date.now());
                 if (response.ok) {
                     console.log('Synced successfully');
-                    // Flash the button
                     const btn = document.getElementById('syncBtn');
                     btn.style.color = 'var(--success)';
                     setTimeout(() => btn.style.color = '', 500);
+                    
+                    if (document.getElementById('module-activity').classList.contains('active')) {
+                        loadActivityStream();
+                    }
                 }
             } catch (e) {
                 console.error('Sync failed:', e);
             }
         });
+
+        // Load initial activity data
+        loadActivityStream();
     </script>
 </body>
 </html>
