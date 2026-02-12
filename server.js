@@ -136,6 +136,23 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (urlPath === '/api/deliverables' && req.method === 'GET') {
+    try {
+      const deliverablesPath = path.join(__dirname, 'data', 'deliverables.json');
+      if (fs.existsSync(deliverablesPath)) {
+        const data = fs.readFileSync(deliverablesPath, 'utf8');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(data);
+        return;
+      }
+    } catch (e) {
+      console.error('Error loading deliverables:', e);
+    }
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Deliverables data not found' }));
+    return;
+  }
+
   if (urlPath === '/api/data' && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => body += chunk);
