@@ -1327,6 +1327,7 @@
         </div>
         <div class="header-right">
             <span id="backupStatus" style="font-size: 11px; color: var(--text-muted); margin-right: 8px;"></span>
+            <button class="btn btn-icon" id="backupFolderBtn" title="Set Backup Folder"><i class="ph ph-folder-notch"></i></button>
             <button class="btn btn-icon" id="searchBtn" title="Search (Ctrl+K)"><i class="ph ph-magnifying-glass"></i></button>
             <button class="btn btn-icon" id="templateBtn" title="Templates"><i class="ph ph-copy"></i></button>
             <button class="btn btn-icon" id="labelsBtn" title="Manage Labels"><i class="ph ph-tag"></i></button>
@@ -1824,31 +1825,71 @@
             return doneNames.some(name => lowerName.includes(name));
         };
 
-        // Local Storage
+        // File System Access API for persistent backups
+        let backupFileHandle = null;
         let lastBackupTime = null;
         
-        const autoExportToFile = () => {
-            const data = {
-                boards: store.boards,
-                archivedCards: store.archivedCards,
-                customLabels: store.customLabels,
-                settings: store.settings,
-                exportDate: new Date().toISOString(),
-                version: '1.0'
-            };
+        const getBackupData = () => ({
+            boards: store.boards,
+            archivedCards: store.archivedCards,
+            customLabels: store.customLabels,
+            settings: store.settings,
+            exportDate: new Date().toISOString(),
+            version: '1.0'
+        });
+        
+        const selectBackupFolder = async () => {
+            try {
+                if (!window.showDirectoryPicker) {
+                    showToast('File System Access not supported. Use Chrome/Edge.', 'error');
+                    return false;
+                }
+                
+                const dirHandle = await window.showDirectoryPicker();
+                // Store the directory handle
+                backupFileHandle = dirHandle;
+                localStorage.setItem('flow_backup_dir', 'granted');
+                showToast('Backup folder selected!', 'success');
+                await saveBackupToFile();
+                return true;
+            } catch (err) {
+                console.error('Folder selection cancelled:', err);
+                return false;
+            }
+        };
+        
+        const saveBackupToFile = async () => {
+            if (!backupFileHandle) {
+                // Try to restore from saved permission or fallback to downloads
+                fallbackExport();
+                return;
+            }
             
-            const dataStr = JSON.stringify(data, null, 2);
+            try {
+                // Create or get the backup file
+                const fileHandle = await backupFileHandle.getFileHandle('FLOW-backup.json', { create: true });
+                const writable = await fileHandle.createWritable();
+                const data = getBackupData();
+                await writable.write(JSON.stringify(data, null, 2));
+                await writable.close();
+                
+                lastBackupTime = new Date();
+                updateBackupStatus();
+            } catch (err) {
+                console.error('Backup failed:', err);
+                fallbackExport();
+            }
+        };
+        
+        const fallbackExport = () => {
+            // Fallback: download to default location
+            const dataStr = JSON.stringify(getBackupData(), null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             
-            // Create filename with timestamp
-            const date = new Date();
-            const timestamp = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}_${String(date.getHours()).padStart(2,'0')}-${String(date.getMinutes()).padStart(2,'0')}`;
-            const filename = `FLOW-backup-${timestamp}.json`;
-            
             const a = document.createElement('a');
             a.href = url;
-            a.download = filename;
+            a.download = `FLOW-backup-${new Date().toISOString().split('T')[0]}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -1856,14 +1897,22 @@
             
             lastBackupTime = new Date();
             updateBackupStatus();
+            showToast('Backup saved to Downloads (select folder for auto-save)', 'info');
         };
         
         const updateBackupStatus = () => {
             const statusEl = document.getElementById('backupStatus');
-            if (statusEl && lastBackupTime) {
-                const timeStr = lastBackupTime.toLocaleTimeString();
-                statusEl.textContent = `Last backup: ${timeStr}`;
-                statusEl.style.color = 'var(--accent-green)';
+            if (statusEl) {
+                if (backupFileHandle) {
+                    const timeStr = lastBackupTime ? lastBackupTime.toLocaleTimeString() : 'Never';
+                    statusEl.textContent = `Auto-backup: ${timeStr}`;
+                    statusEl.style.color = 'var(--accent-green)';
+                } else {
+                    statusEl.textContent = 'Click to set backup folder';
+                    statusEl.style.color = 'var(--accent-yellow)';
+                    statusEl.style.cursor = 'pointer';
+                    statusEl.onclick = () => selectBackupFolder();
+                }
             }
         };
 
@@ -1875,11 +1924,14 @@
                 settings: store.settings
             }));
             
-            // Auto-export on every save (debounced)
+            // Auto-backup to file (debounced)
             clearTimeout(window.exportTimeout);
             window.exportTimeout = setTimeout(() => {
-                autoExportToFile();
-                showToast('Auto-backup saved to Downloads', 'success');
+                if (backupFileHandle) {
+                    saveBackupToFile();
+                } else {
+                    fallbackExport();
+                }
             }, 1000);
         };
 
@@ -3024,6 +3076,7 @@
             renderBoardSelector();
             renderBoard();
             renderCalendar();
+            updateBackupStatus(); // Initialize backup status display
             
             // Board selector
             document.getElementById('boardSelect').addEventListener('change', (e) => {
@@ -3117,6 +3170,11 @@
                 document.getElementById('boardModal').classList.add('active');
                 document.getElementById('boardName').value = '';
                 document.getElementById('boardName').focus();
+            });
+            
+            // Backup folder button
+            document.getElementById('backupFolderBtn').addEventListener('click', () => {
+                selectBackupFolder();
             });
             
             document.getElementById('closeBoardModal').addEventListener('click', () => {
