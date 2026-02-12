@@ -92,15 +92,17 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // API endpoints
-  if (req.url === '/api/data' && req.method === 'GET') {
+  // API endpoints (handle query params by checking startsWith)
+  const urlPath = req.url.split('?')[0];
+  
+  if (urlPath === '/api/data' && req.method === 'GET') {
     const data = loadData();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(data));
     return;
   }
 
-  if (req.url === '/api/data' && req.method === 'POST') {
+  if (urlPath === '/api/data' && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => body += chunk);
     req.on('end', () => {
