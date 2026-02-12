@@ -144,7 +144,10 @@ const server = http.createServer((req, res) => {
   
   // Special route for dashboard
   if (urlPath === '/dashboard' || urlPath === '/dashboard.html') {
+    console.log('Dashboard route matched for:', urlPath);
     const dashboardPath = path.join(__dirname, 'dashboard.html');
+    console.log('Looking for dashboard at:', dashboardPath);
+    console.log('File exists:', fs.existsSync(dashboardPath));
     if (fs.existsSync(dashboardPath)) {
       const content = fs.readFileSync(dashboardPath);
       res.writeHead(200, { 'Content-Type': 'text/html' });
