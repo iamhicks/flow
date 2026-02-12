@@ -1327,6 +1327,7 @@
         </div>
         <div class="header-right">
             <span id="backupStatus" style="font-size: 11px; color: var(--text-muted); margin-right: 8px;"></span>
+            <button class="btn btn-icon" id="syncBtn" title="Sync with Server"><i class="ph ph-arrows-clockwise"></i></button>
             <button class="btn btn-icon" id="backupFolderBtn" title="Set Backup Folder"><i class="ph ph-folder-notch"></i></button>
             <button class="btn btn-icon" id="searchBtn" title="Search (Ctrl+K)"><i class="ph ph-magnifying-glass"></i></button>
             <button class="btn btn-icon" id="templateBtn" title="Templates"><i class="ph ph-copy"></i></button>
@@ -3178,6 +3179,25 @@
             // Backup folder button
             document.getElementById('backupFolderBtn').addEventListener('click', () => {
                 selectBackupFolder();
+            });
+            
+            // Sync button - reload from server
+            document.getElementById('syncBtn').addEventListener('click', async () => {
+                try {
+                    const response = await fetch('/api/data?t=' + Date.now());
+                    if (response.ok) {
+                        const data = await response.json();
+                        store.boards = data.boards || [];
+                        store.archivedCards = data.archivedCards || [];
+                        store.customLabels = data.customLabels || [];
+                        store.settings = { ...store.settings, ...data.settings };
+                        renderBoard();
+                        renderBoardSelector();
+                        showToast('Synced from server!', 'success');
+                    }
+                } catch (e) {
+                    showToast('Sync failed', 'error');
+                }
             });
             
             document.getElementById('closeBoardModal').addEventListener('click', () => {
