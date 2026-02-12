@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLOW Dashboard — Mission Control</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #1c2128;
+            --bg-hover: #21262d;
+            --border: #30363d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --text-tertiary: #6e7681;
+            --accent: #2eaadc;
+            --accent-hover: #5bc2e7;
+            --success: #2ecc71;
+            --warning: #f4d03f;
+            --danger: #dc4444;
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            height: 56px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 4px;
+            margin-left: 24px;
+        }
+
+        .nav-tab {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .nav-tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .nav-tab.active {
+            background: var(--bg-hover);
+            color: var(--accent);
+        }
+
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 56px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-section {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-card {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .focus-list {
+            list-style: none;
+        }
+
+        .focus-item {
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .focus-item::before {
+            content: '→';
+            color: var(--accent);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-container {
+            flex: 1;
+            overflow: auto;
+            padding: 20px;
+        }
+
+        .module {
+            display: none;
+        }
+
+        .module.active {
+            display: block;
+        }
+
+        /* Dashboard Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            height: 100%;
+        }
+
+        .dashboard-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .card-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .card-content {
+            flex: 1;
+            overflow: auto;
+            padding: 12px;
+        }
+
+        /* Placeholder Content */
+        .placeholder-text {
+            color: var(--text-tertiary);
+            font-size: 13px;
+            text-align: center;
+            padding: 40px;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            height: 32px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            gap: 16px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        .status-dot.pending {
+            background: var(--warning);
+        }
+
+        /* Activity Item (for Activity Stream module) */
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: var(--bg-tertiary);
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-hover);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .activity-meta {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <i class="ph ph-activity"></i>
+            FLOW Dashboard
+        </div>
+        
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-module="overview">
+                <i class="ph ph-squares-four"></i> Overview
+            </button>
+            <button class="nav-tab" data-module="kanban">
+                <i class="ph ph-kanban"></i> Kanban
+            </button>
+            <button class="nav-tab" data-module="activity">
+                <i class="ph ph-clock-counter-clockwise"></i> Activity
+            </button>
+            <button class="nav-tab" data-module="memory">
+                <i class="ph ph-brain"></i> Memory
+            </button>
+            <button class="nav-tab" data-module="deliverables">
+                <i class="ph ph-folder"></i> Deliverables
+            </button>
+            <button class="nav-tab" data-module="chat">
+                <i class="ph ph-chat-circle"></i> Chat
+            </button>
+        </nav>
+        
+        <div class="header-actions">
+            <button class="btn btn-secondary" id="syncBtn">
+                <i class="ph ph-arrows-clockwise"></i> Sync
+            </button>
+            <button class="btn btn-primary">
+                <i class="ph ph-plus"></i> New Task
+            </button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Today's Progress</div>
+                <div class="metric-card">
+                    <div class="metric-label">Tasks Completed</div>
+                    <div class="metric-value">12</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">Time Saved</div>
+                    <div class="metric-value">4.5h</div>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Current Focus</div>
+                <ul class="focus-list">
+                    <li class="focus-item">Fix MIND license system</li>
+                    <li class="focus-item">Test FLOW dashboard sync</li>
+                    <li class="focus-item">Review product landing page</li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">Next Agent Check-in</div>
+                <div style="padding: 12px; background: var(--bg-tertiary); border-radius: 8px;">
+                    <div style="font-size: 24px; font-weight: 700; color: var(--accent);">2h 15m</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Morning heartbeat at 07:00</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="module-container">
+                
+                <!-- Overview Module (Default) -->
+                <div class="module active" id="module-overview">
+                    <div class="dashboard-grid">
+                        <!-- Activity Stream Preview -->
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <i class="ph ph-clock-counter-clockwise"></i>
+                                    Recent Activity
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-btn"><i class="ph ph-arrow-right"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="activity-item">
+                                    <div class="activity-icon">🤖</div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Kai moved "Fix MIND license" to Done</div>
+                                        <div class="activity-meta">2 minutes ago • Flow Mind Website</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="activity-item">
+                                    <div class="activity-icon">✅</div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Auto-backup completed</div>
+                                        <div class="activity-meta">5 minutes ago • System</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="activity-item">
+                                    <div class="activity-icon">📝</div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Kai created product landing page</div>
+                                        <div class="activity-meta">1 hour ago • FLOW project</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shared Memory Preview -->
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <i class="ph ph-brain"></i>
+                                    Shared Memory
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-btn"><i class="ph ph-plus"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <p class="placeholder-text">
+                                    Quick notes and context between you and your AI agent.
+                                    <br><br>
+                                    Coming in v1.1...
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Deliverables Preview -->
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <i class="ph ph-folder"></i>
+                                    Recent Deliverables
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-btn"><i class="ph ph-download"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <p class="placeholder-text">
+                                    Files, code, and assets created by your AI agent.
+                                    <br><br>
+                                    Coming in v1.2...
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Chat Preview -->
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <i class="ph ph-chat-circle"></i>
+                                    Recent Messages
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-btn"><i class="ph ph-arrow-right"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <p class="placeholder-text">
+                                    Async chat with your AI agent.
+                                    <br><br>
+                                    Coming in v1.3...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kanban Module -->
+                <div class="module" id="module-kanban">
+                    <p class="placeholder-text">Kanban board loads here...</p>
+                </div>
+
+                <!-- Activity Module -->
+                <div class="module" id="module-activity">
+                    <p class="placeholder-text">Full activity stream loads here...</p>
+                </div>
+
+                <!-- Memory Module -->
+                <div class="module" id="module-memory">
+                    <p class="placeholder-text">Shared memory loads here...</p>
+                </div>
+
+                <!-- Deliverables Module -->
+                <div class="module" id="module-deliverables">
+                    <p class="placeholder-text">Deliverables manager loads here...</p>
+                </div>
+
+                <!-- Chat Module -->
+                <div class="module" id="module-chat">
+                    <p class="placeholder-text">Chat interface loads here...</p>
+                </div>
+
+            </div>
+
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    Connected to server
+                </div>
+                <div class="status-indicator">
+                    Last sync: Just now
+                </div>
+                <div style="margin-left: auto;">
+                    FLOW Dashboard v2.0
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Module switching
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update active tab
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show corresponding module
+                const moduleId = tab.dataset.module;
+                document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+                document.getElementById(`module-${moduleId}`).classList.add('active');
+            });
+        });
+
+        // Sync button
+        document.getElementById('syncBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/data?t=' + Date.now());
+                if (response.ok) {
+                    console.log('Synced successfully');
+                    // Flash the button
+                    const btn = document.getElementById('syncBtn');
+                    btn.style.color = 'var(--success)';
+                    setTimeout(() => btn.style.color = '', 500);
+                }
+            } catch (e) {
+                console.error('Sync failed:', e);
+            }
+        });
+    </script>
+</body>
+</html>
