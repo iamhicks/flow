@@ -3187,16 +3187,32 @@
                     const response = await fetch('/api/data?t=' + Date.now());
                     if (response.ok) {
                         const data = await response.json();
-                        store.boards = data.boards || [];
-                        store.archivedCards = data.archivedCards || [];
-                        store.customLabels = data.customLabels || [];
-                        store.settings = { ...store.settings, ...data.settings };
-                        renderBoard();
+                        
+                        // Force complete data replacement
+                        store.boards = JSON.parse(JSON.stringify(data.boards || []));
+                        store.archivedCards = JSON.parse(JSON.stringify(data.archivedCards || []));
+                        store.customLabels = JSON.parse(JSON.stringify(data.customLabels || []));
+                        store.settings = JSON.parse(JSON.stringify({ ...store.settings, ...data.settings }));
+                        
+                        // Ensure current board still exists
+                        const currentExists = store.boards.find(b => b.id === store.currentBoard);
+                        if (!currentExists && store.boards.length > 0) {
+                            store.currentBoard = store.boards[0].id;
+                        }
+                        
+                        // Force full re-render
                         renderBoardSelector();
+                        renderBoard();
+                        renderCalendar();
+                        
                         showToast('Synced from server!', 'success');
+                        console.log('Synced data:', store.boards[0]?.columns?.find(c => c.id === 'done')?.cards);
+                    } else {
+                        showToast('Server error: ' + response.status, 'error');
                     }
                 } catch (e) {
-                    showToast('Sync failed', 'error');
+                    console.error('Sync error:', e);
+                    showToast('Sync failed: ' + e.message, 'error');
                 }
             });
             
