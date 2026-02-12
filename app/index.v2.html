@@ -1326,6 +1326,7 @@
             </div>
         </div>
         <div class="header-right">
+            <span id="backupStatus" style="font-size: 11px; color: var(--text-muted); margin-right: 8px;"></span>
             <button class="btn btn-icon" id="searchBtn" title="Search (Ctrl+K)"><i class="ph ph-magnifying-glass"></i></button>
             <button class="btn btn-icon" id="templateBtn" title="Templates"><i class="ph ph-copy"></i></button>
             <button class="btn btn-icon" id="labelsBtn" title="Manage Labels"><i class="ph ph-tag"></i></button>
@@ -1824,6 +1825,48 @@
         };
 
         // Local Storage
+        let lastBackupTime = null;
+        
+        const autoExportToFile = () => {
+            const data = {
+                boards: store.boards,
+                archivedCards: store.archivedCards,
+                customLabels: store.customLabels,
+                settings: store.settings,
+                exportDate: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            // Create filename with timestamp
+            const date = new Date();
+            const timestamp = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}_${String(date.getHours()).padStart(2,'0')}-${String(date.getMinutes()).padStart(2,'0')}`;
+            const filename = `FLOW-backup-${timestamp}.json`;
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            lastBackupTime = new Date();
+            updateBackupStatus();
+        };
+        
+        const updateBackupStatus = () => {
+            const statusEl = document.getElementById('backupStatus');
+            if (statusEl && lastBackupTime) {
+                const timeStr = lastBackupTime.toLocaleTimeString();
+                statusEl.textContent = `Last backup: ${timeStr}`;
+                statusEl.style.color = 'var(--accent-green)';
+            }
+        };
+
         const saveToStorage = () => {
             localStorage.setItem('taskmaster_data', JSON.stringify({
                 boards: store.boards,
@@ -1831,6 +1874,13 @@
                 customLabels: store.customLabels,
                 settings: store.settings
             }));
+            
+            // Auto-export on every save (debounced)
+            clearTimeout(window.exportTimeout);
+            window.exportTimeout = setTimeout(() => {
+                autoExportToFile();
+                showToast('Auto-backup saved to Downloads', 'success');
+            }, 1000);
         };
 
         const loadFromStorage = () => {
