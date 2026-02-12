@@ -1732,7 +1732,8 @@
                     { id: 'backlog', name: 'Backlog', cards: [] },
                     { id: 'todo', name: 'To Do', cards: [] },
                     { id: 'inprogress', name: 'In Progress', cards: [] },
-                    { id: 'done', name: 'Done', cards: [] }
+                    { id: 'done', name: 'Done', cards: [] },
+                    { id: 'archive', name: 'Archive', cards: [] }
                 ]
             },
             project: {
@@ -1950,9 +1951,11 @@
                 store.customLabels = [...defaultLabels];
             }
             
-            // Create default board if none exists
+            // Create default boards if none exists
             if (store.boards.length === 0) {
-                createBoard('My First Board', 'kanban');
+                createBoard('Flow Mind Website', 'kanban');
+                createBoard('General', 'kanban');
+                createBoard('House Keeping', 'kanban');
             }
             
             if (!store.currentBoard && store.boards.length > 0) {
