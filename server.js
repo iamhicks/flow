@@ -712,6 +712,37 @@ const server = http.createServer(async (req, res) => {
         // Emit event for cross-module communication
         EventBus.emit('chat:message', newMessage);
         
+        // ALSO write to OpenClaw session log so Kai can see it
+        if (newMessage.senderType === 'human') {
+          try {
+            const sessionsPath = path.join(process.env.HOME, '.openclaw/agents/main/sessions');
+            // Find the most recent session file
+            if (fs.existsSync(sessionsPath)) {
+              const files = fs.readdirSync(sessionsPath)
+                .filter(f => f.endsWith('.jsonl'))
+                .sort()
+                .reverse();
+              
+              if (files.length > 0) {
+                const sessionFile = path.join(sessionsPath, files[0]);
+                const entry = {
+                  id: 'flow_' + Date.now(),
+                  timestamp: new Date().toISOString(),
+                  type: 'message',
+                  message: {
+                    role: 'user',
+                    content: `[FlowChat] ${newMessage.text}`
+                  }
+                };
+                fs.appendFileSync(sessionFile, JSON.stringify(entry) + '\n');
+                console.log('Forwarded FlowChat message to OpenClaw session:', files[0]);
+              }
+            }
+          } catch (e) {
+            console.error('Error forwarding to OpenClaw:', e);
+          }
+        }
+        
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true, message: newMessage }));
       } catch (e) {

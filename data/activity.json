@@ -1,6 +1,16 @@
 {
   "activities": [
     {
+      "id": "act_1770997500752",
+      "type": "chat",
+      "icon": "💬",
+      "actor": "Pete",
+      "actorType": "human",
+      "description": "there?",
+      "boardName": "flowchat",
+      "timestamp": "2026-02-13T15:45:00.752Z"
+    },
+    {
       "id": "act_1770997213426",
       "type": "chat",
       "icon": "💬",
@@ -487,18 +497,7 @@
       "boardName": "Flow Mind Website",
       "timestamp": "2026-02-12T22:58:00Z",
       "icon": "🔄"
-    },
-    {
-      "id": "act_2",
-      "type": "task_moved",
-      "actor": "Kai",
-      "actorType": "ai",
-      "description": "Moved 'Testing FLOW kanban' from In Progress to Done",
-      "boardId": "board_1",
-      "boardName": "Flow Mind Website",
-      "timestamp": "2026-02-12T22:45:00Z",
-      "icon": "✅"
     }
   ],
-  "lastUpdated": "2026-02-13T15:40:13.426Z"
+  "lastUpdated": "2026-02-13T15:45:00.752Z"
 }

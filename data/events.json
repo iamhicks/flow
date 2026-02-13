@@ -616,7 +616,22 @@
         "timestamp": "2026-02-13T15:40:13.424Z"
       },
       "timestamp": "2026-02-13T15:40:13.427Z"
+    },
+    {
+      "id": "evt_1770997500753",
+      "type": "chat:message",
+      "data": {
+        "channel": "flowchat",
+        "channelName": "FlowChat",
+        "sender": "Pete",
+        "senderType": "human",
+        "text": "there?",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770997500744",
+        "timestamp": "2026-02-13T15:45:00.744Z"
+      },
+      "timestamp": "2026-02-13T15:45:00.753Z"
     }
   ],
-  "lastUpdated": "2026-02-13T15:40:13.427Z"
+  "lastUpdated": "2026-02-13T15:45:00.753Z"
 }
