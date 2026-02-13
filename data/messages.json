@@ -1,36 +1,6 @@
 {
   "messages": [
     {
-      "id": "be172036",
-      "channel": "telegram",
-      "channelName": "Telegram",
-      "sender": "Pete",
-      "senderType": "human",
-      "text": "[media attached: /Users/peteroberts/.openclaw/media/inbound/file_128---d4784251-d35e-4edd-ac0b-77a7fdc125d6.jpg (image/jpeg) | /Users/peteroberts/.openclaw/media/inbound/file_128---d4784251-d35e-4edd-ac0b-77a7fdc125d6.jpg]\nTo send an image back, prefer the message tool (media/path/filePath). If you must inline, use MEDIA:https://example.com/image.jpg (spaces ok, quote if needed) or a safe relative path like MEDIA:./image.jpg. Avoid absolute paths (MEDIA:/...) and ~ paths — they are blocked for security. Keep caption in the text body.\nvertical line broken, remove that horizontal line above message box you put in. confirm delete for chat, nothing happens, message does not get deleted. Note title, should wrap onto new line. More button does not work, no modal appears when you click it",
-      "timestamp": "2026-02-12T16:53:51.375Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "14856fd2",
-      "channel": "flowchat",
-      "channelName": "FlowChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Done! Fixes applied:\n\n1. ✅ **Removed horizontal line** — Removed `box-shadow` from input area\n2. ✅ **Note title wrapping** — Added inline style to force wrapping\n3. ✅ **Delete button simplified** — Using native `confirm()` directly\n4. ✅ **More dropdown** — Increased `z-index` to 10000 and fixed positioning\n\nClose and restart!",
-      "timestamp": "2026-02-12T16:55:50.319Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "d1e46d8c",
-      "channel": "telegram",
-      "channelName": "Telegram",
-      "sender": "Pete",
-      "senderType": "human",
-      "text": "delete chat works horizontal line gone, but vertical line still broken note title - no change more button - no change",
-      "timestamp": "2026-02-12T16:57:09.798Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
       "id": "b1a03462",
       "channel": "flowchat",
       "channelName": "FlowChat",
@@ -4999,8 +4969,38 @@
       "text": "The stored messages still have the old data. Let me clear and re-sync:",
       "timestamp": "2026-02-13T15:26:25.625Z",
       "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "d885bd00",
+      "channel": "flowchat",
+      "channelName": "FlowChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "Messages re-synced! Let me verify the channels are correct:",
+      "timestamp": "2026-02-13T15:27:20.184Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "914c35de",
+      "channel": "flowchat",
+      "channelName": "FlowChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "**✅ All fixed!**\n\n1. **`[message_id: XXXX]` removed** — Messages re-synced, no more message_id in text\n2. **FlowChat first** — Channels API now returns FlowChat before Telegram\n3. **WebChat → FlowChat** — All references updated (messages show \"FlowChat\" as channel name)\n4. **\"Message Kai\"** — This is already personalized! Kai is the agent name from SOUL.md 🌊\n\n**Refresh dashboard** — you should see FlowChat at the top of the channel list, and messages without the `` tags! 🎨",
+      "timestamp": "2026-02-13T15:27:26.931Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "5896a341",
+      "channel": "telegram",
+      "channelName": "Telegram",
+      "sender": "Pete",
+      "senderType": "human",
+      "text": "thanks, channels list is now not showing",
+      "timestamp": "2026-02-13T15:28:39.759Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
     }
   ],
   "channels": [],
-  "lastUpdated": "2026-02-13T15:26:51.004Z"
+  "lastUpdated": "2026-02-13T15:29:33.000Z"
 }

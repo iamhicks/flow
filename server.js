@@ -625,17 +625,39 @@ const server = http.createServer(async (req, res) => {
       await syncMessagesFromSessions();
       
       const messagesPath = path.join(__dirname, 'data', 'messages.json');
+      let messagesData = { messages: [], lastUpdated: new Date().toISOString() };
+      
       if (fs.existsSync(messagesPath)) {
-        const data = fs.readFileSync(messagesPath, 'utf8');
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(data);
-        return;
-      } else {
-        // Return empty structure if file doesn't exist
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ messages: [], channels: [], lastUpdated: new Date().toISOString() }));
-        return;
+        messagesData = JSON.parse(fs.readFileSync(messagesPath, 'utf8'));
       }
+      
+      // Build channels list from unique channels in messages
+      const uniqueChannels = new Map();
+      messagesData.messages.forEach(msg => {
+        if (!uniqueChannels.has(msg.channel)) {
+          uniqueChannels.set(msg.channel, {
+            id: msg.channel,
+            name: msg.channelName || msg.channel,
+            status: 'connected',
+            icon: msg.channel === 'flowchat' ? 'ph-chat-circle-text' : 'ph-telegram-logo'
+          });
+        }
+      });
+      
+      // Sort: FlowChat first
+      const channels = Array.from(uniqueChannels.values()).sort((a, b) => {
+        if (a.id === 'flowchat') return -1;
+        if (b.id === 'flowchat') return 1;
+        return 0;
+      });
+      
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        messages: messagesData.messages || [],
+        channels: channels,
+        lastUpdated: messagesData.lastUpdated || new Date().toISOString()
+      }));
+      return;
     } catch (e) {
       console.error('Error loading messages:', e);
       res.writeHead(500, { 'Content-Type': 'application/json' });
