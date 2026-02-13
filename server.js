@@ -890,12 +890,20 @@ const server = http.createServer(async (req, res) => {
         const sessionsPath = path.join(process.env.HOME, '.openclaw/agents/main/sessions');
         if (fs.existsSync(sessionsPath)) {
           channels.push({
-            name: 'flowchat',
+            id: 'flowchat',
+            name: 'FlowChat',
             enabled: true,
             status: 'active'
           });
         }
       }
+      
+      // Sort: FlowChat first, then alphabetical
+      channels.sort((a, b) => {
+        if (a.id === 'flowchat' || a.name === 'flowchat') return -1;
+        if (b.id === 'flowchat' || b.name === 'flowchat') return 1;
+        return (a.name || a.id || '').localeCompare(b.name || b.id || '');
+      });
       
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ channels }));
