@@ -1,26 +1,6 @@
 {
   "messages": [
     {
-      "id": "6b113933",
-      "channel": "flowchat",
-      "channelName": "FlowChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Done! Updated:\n\n**\"Where is my data stored?\"**\n> Right on your computer — **you choose exactly which folder**. Your notes and AI conversations are saved locally to your chosen backup location. It never touches our servers — because we don't have any. Export anytime as Markdown or JSON to any folder you specify.\n\nPushed to GitHub.",
-      "timestamp": "2026-02-12T18:37:22.799Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "be507a5b",
-      "channel": "telegram",
-      "channelName": "Telegram",
-      "sender": "Pete",
-      "senderType": "human",
-      "text": "I have edited this, can u also mentioend auto backups every 10 min \"Where is my data stored?\" Right on your computer — you choose exactly which folder. Your notes and AI conversations are saved locally to your chosen backup location. Export anytime as Markdown or JSON to any folder you specify. don't thin k is correct is it? Can I use MIND on multiple devices? Absolutely. Copy the HTML file to any device. Use the export/import feature to move your data — including your AI chat history. Your license covers all your personal devices.",
-      "timestamp": "2026-02-12T18:38:51.942Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
       "id": "580198f3",
       "channel": "flowchat",
       "channelName": "FlowChat",
@@ -4999,8 +4979,28 @@
       "text": "Actually, let me implement a **direct polling solution** — I'll check FLOW every 2 seconds for new messages:",
       "timestamp": "2026-02-13T15:52:54.618Z",
       "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "6f5e6000",
+      "channel": "flowchat",
+      "channelName": "FlowChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "Let me implement the **real solution** — FLOW will call OpenClaw's gateway directly to deliver messages instantly:",
+      "timestamp": "2026-02-13T15:53:09.967Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "074ddfab",
+      "channel": "flowchat",
+      "channelName": "FlowChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "Let me implement **true instant delivery** — FLOW forwards directly to your active session:",
+      "timestamp": "2026-02-13T15:53:18.185Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
     }
   ],
   "channels": [],
-  "lastUpdated": "2026-02-13T15:53:01.243Z"
+  "lastUpdated": "2026-02-13T15:53:46.656Z"
 }
