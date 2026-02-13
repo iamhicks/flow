@@ -80,6 +80,111 @@ function saveData(data) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
 }
 
+// Load messages from OpenClaw sessions
+const syncMessagesFromSessions = async () => {
+  try {
+    const sessionsPath = path.join(process.env.HOME, '.openclaw/agents/main/sessions');
+    const messagesPath = path.join(__dirname, 'data', 'messages.json');
+    
+    let data = { messages: [], channels: [], lastUpdated: new Date().toISOString() };
+    if (fs.existsSync(messagesPath)) {
+      data = JSON.parse(fs.readFileSync(messagesPath, 'utf8'));
+    }
+    
+    // Track existing message IDs to avoid duplicates
+    const existingIds = new Set(data.messages.map(m => m.id));
+    
+    // Read session files
+    if (fs.existsSync(sessionsPath)) {
+      const files = fs.readdirSync(sessionsPath).filter(f => f.endsWith('.jsonl'));
+      
+      for (const file of files) {
+        const sessionId = file.replace('.jsonl', '');
+        const content = fs.readFileSync(path.join(sessionsPath, file), 'utf8');
+        const lines = content.split('\n').filter(line => line.trim());
+        
+        for (const line of lines) {
+          try {
+            const entry = JSON.parse(line);
+            if (entry.type === 'message' && entry.message) {
+              const msg = entry.message;
+              
+              // Only process user and assistant messages
+              if (msg.role === 'user' || msg.role === 'assistant') {
+                const messageId = entry.id || `msg_${entry.timestamp}`;
+                
+                // Skip if already exists
+                if (existingIds.has(messageId)) continue;
+                
+                // Extract text content
+                let text = '';
+                if (typeof msg.content === 'string') {
+                  text = msg.content;
+                } else if (Array.isArray(msg.content)) {
+                  text = msg.content
+                    .filter(c => c.type === 'text')
+                    .map(c => c.text)
+                    .join('\n');
+                }
+                
+                // Skip system/heartbeat messages
+                if (text.includes('HEARTBEAT_OK') || text.includes('[cron:')) continue;
+                
+                // Detect channel from content
+                let channel = 'webchat';
+                let channelName = 'WebChat';
+                
+                if (text.includes('[Telegram') || text.includes('telegram')) {
+                  channel = 'telegram';
+                  channelName = 'Telegram';
+                }
+                
+                // Clean up the text
+                text = text
+                  .replace(/\[Telegram.*?\]\s*/, '')
+                  .replace(/\[Queued messages.*?\]\s*/s, '')
+                  .replace(/System:\s*\[.*?\]\s*Cron:.*?(?=\n|$)/, '')
+                  .trim();
+                
+                if (text.length < 3) continue; // Skip very short messages
+                
+                data.messages.push({
+                  id: messageId,
+                  channel: channel,
+                  channelName: channelName,
+                  sender: msg.role === 'user' ? 'Pete' : 'Kai',
+                  senderType: msg.role === 'user' ? 'human' : 'ai',
+                  text: text.substring(0, 1000), // Limit length
+                  timestamp: entry.timestamp || new Date().toISOString(),
+                  sessionId: sessionId
+                });
+                
+                existingIds.add(messageId);
+              }
+            }
+          } catch (e) {
+            // Skip malformed lines
+          }
+        }
+      }
+    }
+    
+    // Sort by timestamp
+    data.messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    
+    // Keep only last 500 messages
+    if (data.messages.length > 500) {
+      data.messages = data.messages.slice(-500);
+    }
+    
+    data.lastUpdated = new Date().toISOString();
+    fs.writeFileSync(messagesPath, JSON.stringify(data, null, 2));
+    
+  } catch (e) {
+    console.error('Error syncing messages:', e);
+  }
+};
+
 const server = http.createServer((req, res) => {
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -156,6 +261,9 @@ const server = http.createServer((req, res) => {
   // Messages API - Unified chat history
   if (urlPath === '/api/messages' && req.method === 'GET') {
     try {
+      // First, sync from OpenClaw sessions
+      await syncMessagesFromSessions();
+      
       const messagesPath = path.join(__dirname, 'data', 'messages.json');
       if (fs.existsSync(messagesPath)) {
         const data = fs.readFileSync(messagesPath, 'utf8');
