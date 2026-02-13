@@ -841,7 +841,18 @@
 
                 <!-- Kanban Module -->
                 <div class="module" id="module-kanban">
-                    <p class="placeholder-text">Kanban board loads here...</p>
+                    <div class="kanban-container" style="height: 100%; display: flex; flex-direction: column;">
+                        <div style="padding: 12px 20px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                            <div style="font-size: 14px; color: var(--text-secondary);">
+                                <i class="ph ph-kanban" style="margin-right: 8px;"></i>
+                                Manage tasks in kanban boards
+                            </div>
+                            <button class="btn btn-secondary" onclick="document.getElementById('kanbanFrame').src = document.getElementById('kanbanFrame').src">
+                                <i class="ph ph-arrows-clockwise"></i> Refresh
+                            </button>
+                        </div>
+                        <iframe id="kanbanFrame" src="/index.v2.html" style="flex: 1; border: none; width: 100%;"></iframe>
+                    </div>
                 </div>
 
                 <!-- Activity Module -->
@@ -1015,6 +1026,9 @@
             const container = document.getElementById('deliverablesList');
             if (!container) return;
 
+            // Sort by createdAt descending (newest first)
+            deliverables.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
             let html = '';
             deliverables.forEach(item => {
                 const time = formatTime(item.createdAt);
@@ -1027,8 +1041,6 @@
                             <div class="deliverable-name">${item.name}</div>
                             <div class="deliverable-desc">${item.description}</div>
                             <div class="deliverable-meta">
-                                <span>${item.size}</span>
-                                <span>•</span>
                                 <span>${time}</span>
                                 <span>•</span>
                                 <span>by ${item.createdBy}</span>
@@ -1116,6 +1128,9 @@
         const renderMemoryStream = (memories) => {
             const container = document.getElementById('memoryList');
             if (!container) return;
+            
+            // Sort by timestamp descending (newest first)
+            memories.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
             
             let html = '';
             memories.forEach(memory => {
