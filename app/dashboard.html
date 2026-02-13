@@ -1035,6 +1035,287 @@
             word-break: break-word;
         }
 
+        /* Schedule & Heartbeat Module */
+        .schedule-container {
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .schedule-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .schedule-card-wide {
+            grid-column: 1 / -1;
+        }
+
+        .schedule-card-header {
+            padding: 16px 20px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .schedule-card-header i {
+            color: var(--accent);
+            font-size: 20px;
+        }
+
+        .schedule-card-body {
+            padding: 16px 20px;
+        }
+
+        .schedule-status {
+            margin-left: auto;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .schedule-status.healthy {
+            background: rgba(46, 204, 113, 0.15);
+            color: var(--success);
+        }
+
+        /* Rhythm Items */
+        .rhythm-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: var(--bg-tertiary);
+            transition: all 0.2s;
+        }
+
+        .rhythm-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .rhythm-item.completed {
+            opacity: 0.6;
+        }
+
+        .rhythm-item.completed i {
+            color: var(--success);
+        }
+
+        .rhythm-item.active {
+            border: 1px solid var(--accent);
+            background: rgba(46, 170, 220, 0.1);
+        }
+
+        .rhythm-item.active i {
+            color: var(--accent);
+            animation: pulse 2s infinite;
+        }
+
+        .rhythm-info {
+            flex: 1;
+        }
+
+        .rhythm-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .rhythm-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Upcoming Items */
+        .upcoming-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .upcoming-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+
+        .upcoming-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: 'SF Mono', monospace;
+        }
+
+        .upcoming-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        /* Heartbeat Grid */
+        .heartbeat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .heartbeat-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border-left: 3px solid var(--success);
+        }
+
+        .heartbeat-item.warning {
+            border-left-color: var(--warning);
+        }
+
+        .heartbeat-item.error {
+            border-left-color: var(--danger);
+        }
+
+        .heartbeat-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(46, 204, 113, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--success);
+        }
+
+        .heartbeat-item.warning .heartbeat-icon {
+            background: rgba(244, 208, 63, 0.15);
+            color: var(--warning);
+        }
+
+        .heartbeat-item.error .heartbeat-icon {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        .heartbeat-info {
+            flex: 1;
+        }
+
+        .heartbeat-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .heartbeat-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Review Section */
+        .review-status {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .review-day {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+
+        .day-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .day-value {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .review-tasks {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .review-task {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .review-task i {
+            color: var(--text-tertiary);
+        }
+
+        /* Hours Visual */
+        .hours-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .hours-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hours-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: 'SF Mono', monospace;
+            width: 100px;
+            flex-shrink: 0;
+        }
+
+        .hours-bar {
+            flex: 1;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        .hours-bar.active {
+            background: linear-gradient(90deg, var(--accent) 0%, var(--accent-hover) 100%);
+        }
+
+        .hours-bar.quiet {
+            background: var(--bg-tertiary);
+            border: 1px dashed var(--border);
+        }
+
+        .hours-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            width: 140px;
+            flex-shrink: 0;
+        }
+
         /* Chat Module */
         .chat-layout {
             display: flex;
@@ -1337,6 +1618,9 @@
             </button>
             <button class="nav-tab" data-module="system">
                 <i class="ph ph-monitor"></i> System
+            </button>
+            <button class="nav-tab" data-module="schedule">
+                <i class="ph ph-calendar-check"></i> Schedule
             </button>
         </nav>
         
@@ -1814,6 +2098,169 @@
                                 </div>
                                 <div class="system-card-body">
                                     <pre class="config-preview" id="configPreview">Loading...</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Schedule & Heartbeat Module -->
+                <div class="module" id="module-schedule">
+                    <div class="schedule-container">
+                        <div class="schedule-grid">
+                            <!-- Daily Rhythm Card -->
+                            <div class="schedule-card">
+                                <div class="schedule-card-header">
+                                    <i class="ph ph-sun"></i>
+                                    <span>Daily Rhythm</span>
+                                </div>
+                                <div class="schedule-card-body">
+                                    <div class="rhythm-item completed">
+                                        <i class="ph ph-check-circle"></i>
+                                        <div class="rhythm-info">
+                                            <div class="rhythm-name">Morning Startup</div>
+                                            <div class="rhythm-time">07:00</div>
+                                        </div>
+                                    </div>
+                                    <div class="rhythm-item active">
+                                        <i class="ph ph-spinner"></i>
+                                        <div class="rhythm-info">
+                                            <div class="rhythm-name">Active Work</div>
+                                            <div class="rhythm-time">09:00 - 18:00</div>
+                                        </div>
+                                    </div>
+                                    <div class="rhythm-item">
+                                        <i class="ph ph-moon"></i>
+                                        <div class="rhythm-info">
+                                            <div class="rhythm-name">Evening Review</div>
+                                            <div class="rhythm-time">19:00</div>
+                                        </div>
+                                    </div>
+                                    <div class="rhythm-item">
+                                        <i class="ph ph-bookmark"></i>
+                                        <div class="rhythm-info">
+                                            <div class="rhythm-name">Memory Curation</div>
+                                            <div class="rhythm-time">End of session</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Upcoming Cron Jobs Card -->
+                            <div class="schedule-card">
+                                <div class="schedule-card-header">
+                                    <i class="ph ph-clock"></i>
+                                    <span>Upcoming Checks</span>
+                                </div>
+                                <div class="schedule-card-body">
+                                    <div class="upcoming-list" id="upcomingChecks">
+                                        <div class="upcoming-item">
+                                            <div class="upcoming-time">Next hour</div>
+                                            <div class="upcoming-name">GitHub Monitor</div>
+                                        </div>
+                                        <div class="upcoming-item">
+                                            <div class="upcoming-time">Every hour</div>
+                                            <div class="upcoming-name">Auto-push Memory</div>
+                                        </div>
+                                        <div class="upcoming-item">
+                                            <div class="upcoming-time">Tomorrow 07:00</div>
+                                            <div class="upcoming-name">Backup Check</div>
+                                        </div>
+                                        <div class="upcoming-item">
+                                            <div class="upcoming-time">Friday 09:00</div>
+                                            <div class="upcoming-name">Weekly Cleanup</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Heartbeat Status Card -->
+                            <div class="schedule-card schedule-card-wide">
+                                <div class="schedule-card-header">
+                                    <i class="ph ph-heartbeat"></i>
+                                    <span>Heartbeat Status</span>
+                                    <span class="schedule-status healthy">All Healthy</span>
+                                </div>
+                                <div class="schedule-card-body">
+                                    <div class="heartbeat-grid">
+                                        <div class="heartbeat-item success">
+                                            <div class="heartbeat-icon"><i class="ph ph-check"></i></div>
+                                            <div class="heartbeat-info">
+                                                <div class="heartbeat-name">Backup System</div>
+                                                <div class="heartbeat-meta">Last check: 2 min ago</div>
+                                            </div>
+                                        </div>
+                                        <div class="heartbeat-item success">
+                                            <div class="heartbeat-icon"><i class="ph ph-check"></i></div>
+                                            <div class="heartbeat-info">
+                                                <div class="heartbeat-name">GitHub Monitor</div>
+                                                <div class="heartbeat-meta">Last check: 32 min ago</div>
+                                            </div>
+                                        </div>
+                                        <div class="heartbeat-item success">
+                                            <div class="heartbeat-icon"><i class="ph ph-check"></i></div>
+                                            <div class="heartbeat-info">
+                                                <div class="heartbeat-name">Memory Sync</div>
+                                                <div class="heartbeat-meta">Last check: 4 min ago</div>
+                                            </div>
+                                        </div>
+                                        <div class="heartbeat-item success">
+                                            <div class="heartbeat-icon"><i class="ph ph-check"></i></div>
+                                            <div class="heartbeat-info">
+                                                <div class="heartbeat-name">Gateway Health</div>
+                                                <div class="heartbeat-meta">Continuous monitoring</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Weekly Review Card -->
+                            <div class="schedule-card">
+                                <div class="schedule-card-header">
+                                    <i class="ph ph-calendar-blank"></i>
+                                    <span>Weekly Review</span>
+                                </div>
+                                <div class="schedule-card-body">
+                                    <div class="review-status">
+                                        <div class="review-day">
+                                            <span class="day-label">Next Review</span>
+                                            <span class="day-value">Sunday Evening</span>
+                                        </div>
+                                        <div class="review-tasks">
+                                            <div class="review-task">
+                                                <i class="ph ph-square"></i> Project health check
+                                            </div>
+                                            <div class="review-task">
+                                                <i class="ph ph-square"></i> Pattern analysis
+                                            </div>
+                                            <div class="review-task">
+                                                <i class="ph ph-square"></i> Memory curation
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Active Hours Card -->
+                            <div class="schedule-card">
+                                <div class="schedule-card-header">
+                                    <i class="ph ph-clock-afternoon"></i>
+                                    <span>Active Hours</span>
+                                </div>
+                                <div class="schedule-card-body">
+                                    <div class="hours-visual">
+                                        <div class="hours-row">
+                                            <span class="hours-label">07:00 - 23:00</span>
+                                            <span class="hours-bar active"></span>
+                                            <span class="hours-desc">Active monitoring</span>
+                                        </div>
+                                        <div class="hours-row">
+                                            <span class="hours-label">23:00 - 07:00</span>
+                                            <span class="hours-bar quiet"></span>
+                                            <span class="hours-desc">Quiet mode (alerts only)</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
