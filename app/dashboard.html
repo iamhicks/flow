@@ -1943,9 +1943,15 @@
                     <div class="chat-layout">
                         <!-- Channels Sidebar -->
                         <div class="chat-channels">
-                            <div class="chat-channels-header">
-                                <i class="ph ph-chat-circle-text"></i>
-                                <span>Channels</span>
+                            <div class="chat-channels-header" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <i class="ph ph-chat-circle-text"></i>
+                                    <span>Unified Chat</span>
+                                </div>
+                                <div id="sidebarMessageCount" style="font-size: 12px; color: var(--text-secondary); font-weight: normal;">0 messages</div>
+                                <div class="chat-search" style="width: 100%; margin-top: 8px;">
+                                    <input type="text" id="chatSearch" placeholder="Search messages..." style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; color: var(--text-primary); outline: none; width: 100%;">
+                                </div>
                             </div>
                             <div class="chat-channel-list" id="channelList">
                                 <!-- Channels loaded dynamically -->
@@ -1962,13 +1968,7 @@
                                             <span style="width: 8px; height: 8px; background: var(--success); border-radius: 50%; display: inline-block;"></span>
                                             Connected
                                         </span>
-                                        <span style="color: var(--text-tertiary); margin: 0 4px;">•</span>
-                                        <span id="chatMessageCount">0 messages</span>
                                     </div>
-                                </div>
-                                <div class="chat-search" style="display: flex; align-items: center; gap: 8px;">
-                                    <input type="text" id="chatSearch" placeholder="Search messages..." style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; color: var(--text-primary); outline: none; width: 200px;">
-                                    <i class="ph ph-magnifying-glass" style="color: var(--text-tertiary);"></i>
                                 </div>
                             </div>
                             <div class="chat-messages" id="chatMessages">
@@ -1977,9 +1977,11 @@
                                     <p>Loading messages...</p>
                                 </div>
                             </div>
-                            <div class="chat-input-area" style="position: relative; padding: 12px 16px;">
-                                <textarea class="chat-input" id="chatInput" placeholder="Message Kai..." rows="1" style="padding: 12px 48px 12px 16px; border-radius: 24px;"></textarea>
-                                <button class="chat-send-btn" id="chatSendBtn" style="position: absolute; right: 28px; bottom: 20px; width: 32px; height: 32px;">
+                            <div class="chat-input-area" style="position: relative; padding: 16px;"
+>                                <textarea class="chat-input" id="chatInput" placeholder="Message Kai..." rows="1"
+></textarea>
+                                <button class="chat-send-btn" id="chatSendBtn" style="position: absolute; right: 28px; bottom: 24px;"
+>
                                     <i class="ph ph-paper-plane-right"></i>
                                 </button>
                             </div>
@@ -3536,7 +3538,11 @@
             });
             
             // Update message count
-            document.getElementById('chatMessageCount').textContent = `${filteredMessages.length} message${filteredMessages.length !== 1 ? 's' : ''}`;
+            const countText = `${filteredMessages.length} message${filteredMessages.length !== 1 ? 's' : ''}`;
+            const chatMessageCount = document.getElementById('chatMessageCount');
+            const sidebarMessageCount = document.getElementById('sidebarMessageCount');
+            if (chatMessageCount) chatMessageCount.textContent = countText;
+            if (sidebarMessageCount) sidebarMessageCount.textContent = countText;
             
             // Only auto-scroll if not searching and user was at bottom
             if (!searchText && isScrolledToBottom) {

@@ -1,26 +1,6 @@
 {
   "messages": [
     {
-      "id": "6bd05db3",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Done! Changes:\n\n1. **Vertical line** — Added `border-bottom` to scroll container to complete the line\n2. **Delete button** — Added inline onclick handler as backup + `z-index: 100` to ensure it's clickable\n\nClose and restart!",
-      "timestamp": "2026-02-12T16:12:32.890Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "8680eafc",
-      "channel": "telegram",
-      "channelName": "Telegram",
-      "sender": "Pete",
-      "senderType": "human",
-      "text": "delete button working, can you position the modal under the delete button when i confirm to delete it does not delete the chat vertical line break still there, you have put back the horizontal line i asked you to remove previously Note title if long should return onto new line, currently long titles are being cut off the more button (3 dots) should open modal under the button\n[message_id: 4427]",
-      "timestamp": "2026-02-12T16:44:38.716Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
       "id": "a5c701d3",
       "channel": "webchat",
       "channelName": "WebChat",
@@ -4997,6 +4977,26 @@
       "text": "remove the filter from Channels, as we are just displaying what channel is connected. no need for any blue highlight padding around message box has not updated for me\n[message_id: 4800]",
       "timestamp": "2026-02-13T14:57:43.335Z",
       "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "de5bc2b4",
+      "channel": "flowchat",
+      "channelName": "FlowChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "**✅ Changes done:**\n\n1. **Channels are now static display only** — No filtering, no click handlers, just showing connected channels\n2. **Removed blue highlight** — No more \"filtered\" state styling\n3. **Message box padding fixed** — Proper right padding (48px) for the send button, larger border-radius (24px)\n4. **Send button cleaned up** — Smaller (32px), no hover effects\n\n**Refresh dashboard** to see the updates! 🎨",
+      "timestamp": "2026-02-13T14:59:44.756Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "4c368df6",
+      "channel": "telegram",
+      "channelName": "Telegram",
+      "sender": "Pete",
+      "senderType": "human",
+      "text": "remove the Channels title. replace it with Unified Chat 500 messages move search field below Unified Chat title and above Channels list message field paddign still the same for me\n[message_id: 4802]",
+      "timestamp": "2026-02-13T15:02:26.161Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
     }
   ],
   "channels": [
@@ -5037,5 +5037,5 @@
       "icon": "ph-chat-circle"
     }
   ],
-  "lastUpdated": "2026-02-13T14:59:18.134Z"
+  "lastUpdated": "2026-02-13T15:04:50.040Z"
 }
