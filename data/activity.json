@@ -1,6 +1,16 @@
 {
   "activities": [
     {
+      "id": "act_1770981280713",
+      "type": "chat",
+      "icon": "💬",
+      "actor": "Pete",
+      "actorType": "human",
+      "description": "Test message from cross-module system",
+      "boardName": "test",
+      "timestamp": "2026-02-13T11:14:40.713Z"
+    },
+    {
       "id": "act_victory",
       "type": "victory",
       "actor": "Pete + Kai",
@@ -108,5 +118,5 @@
       "icon": "📊"
     }
   ],
-  "lastUpdated": "2026-02-12T23:00:00Z"
+  "lastUpdated": "2026-02-13T11:14:40.713Z"
 }

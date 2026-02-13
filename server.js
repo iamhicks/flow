@@ -246,10 +246,11 @@ const setupModuleTriggers = () => {
     addActivityItem({
       type: 'chat',
       icon: '💬',
-      title: `New message in ${data.channel}`,
-      description: data.text.substring(0, 100),
       actor: data.sender,
-      channel: data.channel
+      actorType: data.senderType || 'human',
+      description: data.text.substring(0, 200),
+      boardName: data.channel,
+      timestamp: new Date().toISOString()
     });
   });
   
@@ -258,10 +259,11 @@ const setupModuleTriggers = () => {
     addActivityItem({
       type: 'task',
       icon: '✅',
-      title: 'Task created',
-      description: data.title,
       actor: data.creator || 'User',
-      board: data.board
+      actorType: 'human',
+      description: `Created task: "${data.title}"`,
+      boardName: data.board,
+      timestamp: new Date().toISOString()
     });
   });
   
@@ -270,9 +272,11 @@ const setupModuleTriggers = () => {
     addActivityItem({
       type: 'task',
       icon: '📋',
-      title: `Task moved to ${data.column}`,
-      description: data.title,
-      actor: data.actor || 'User'
+      actor: data.actor || 'User',
+      actorType: 'human',
+      description: `Moved "${data.title}" to ${data.column}`,
+      boardName: data.board,
+      timestamp: new Date().toISOString()
     });
   });
   
@@ -281,9 +285,11 @@ const setupModuleTriggers = () => {
     addActivityItem({
       type: 'system',
       icon: '🌊',
-      title: `Kai file edited: ${data.file}`,
-      description: 'Identity file updated',
-      actor: 'Pete'
+      actor: 'Pete',
+      actorType: 'human',
+      description: `Edited Kai file: ${data.file}`,
+      boardName: 'Kai Profile',
+      timestamp: new Date().toISOString()
     });
   });
 };

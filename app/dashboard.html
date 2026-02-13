@@ -2687,6 +2687,9 @@
 
         // Load initial activity data
         loadActivityStream();
+        
+        // Auto-refresh activity every 3 seconds
+        setInterval(loadActivityStream, 3000);
 
         // Kai Profile Module
         const kaiFiles = {
