@@ -176,27 +176,13 @@ const server = http.createServer((req, res) => {
   let filePath = req.url;
   
   // Route mapping
-  if (req.url === '/') {
-    filePath = '/index.html';  // Landing page
+  if (req.url === '/' || req.url === '/dashboard') {
+    filePath = '/dashboard.html';
   } else if (req.url === '/kanban' || req.url === '/kanban.html') {
     filePath = '/kanban.html';
   }
   
   const fullPath = path.join(__dirname, 'app', filePath);
-  
-  // Special route for dashboard
-  if (urlPath === '/dashboard' || urlPath === '/dashboard.html') {
-    console.log('Dashboard route matched for:', urlPath);
-    const dashboardPath = path.join(__dirname, 'dashboard.html');
-    console.log('Looking for dashboard at:', dashboardPath);
-    console.log('File exists:', fs.existsSync(dashboardPath));
-    if (fs.existsSync(dashboardPath)) {
-      const content = fs.readFileSync(dashboardPath);
-      res.writeHead(200, { 'Content-Type': 'text/html' });
-      res.end(content);
-      return;
-    }
-  }
   
   try {
     if (fs.existsSync(fullPath)) {
