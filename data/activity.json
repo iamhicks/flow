@@ -1,6 +1,16 @@
 {
   "activities": [
     {
+      "id": "act_1770998078568",
+      "type": "chat",
+      "icon": "💬",
+      "actor": "Pete",
+      "actorType": "human",
+      "description": "there now Kai?",
+      "boardName": "flowchat",
+      "timestamp": "2026-02-13T15:54:38.568Z"
+    },
+    {
       "id": "act_1770997791186",
       "type": "chat",
       "icon": "💬",
@@ -488,16 +498,7 @@
       "description": "🏆 VICTORY! Human-AI collaboration dashboard WORKING! Pete says 'this is way cool' - mission accomplished!",
       "timestamp": "2026-02-12T23:30:00Z",
       "icon": "🏆"
-    },
-    {
-      "id": "act_live_test",
-      "type": "live_demo",
-      "actor": "Kai",
-      "actorType": "ai",
-      "description": "✅ LIVE TEST: You just clicked Sync and saw this! Real-time collaboration is WORKING!",
-      "timestamp": "2026-02-12T23:26:00Z",
-      "icon": "🔴"
     }
   ],
-  "lastUpdated": "2026-02-13T15:49:51.186Z"
+  "lastUpdated": "2026-02-13T15:54:38.568Z"
 }

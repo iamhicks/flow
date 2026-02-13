@@ -661,7 +661,22 @@
         "timestamp": "2026-02-13T15:49:51.184Z"
       },
       "timestamp": "2026-02-13T15:49:51.186Z"
+    },
+    {
+      "id": "evt_1770998078568",
+      "type": "chat:message",
+      "data": {
+        "channel": "flowchat",
+        "channelName": "FlowChat",
+        "sender": "Pete",
+        "senderType": "human",
+        "text": "there now Kai?",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770998078565",
+        "timestamp": "2026-02-13T15:54:38.565Z"
+      },
+      "timestamp": "2026-02-13T15:54:38.568Z"
     }
   ],
-  "lastUpdated": "2026-02-13T15:49:51.186Z"
+  "lastUpdated": "2026-02-13T15:54:38.568Z"
 }

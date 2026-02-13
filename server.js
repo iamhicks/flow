@@ -147,6 +147,10 @@ const syncMessagesFromSessions = async () => {
                   .replace(/System:\s*\[.*?\]\s*Cron:.*?(?=\n|$)/, '')
                   .trim();
                 
+                // Skip FlowChat messages to prevent circular sync
+                // (FLOW messages are already in the database, don't re-add from session log)
+                if (entry.id && entry.id.startsWith('flow_')) continue;
+                
                 if (text.length < 3) continue; // Skip very short messages
                 
                 data.messages.push({
@@ -712,62 +716,21 @@ const server = http.createServer(async (req, res) => {
         // Emit event for cross-module communication
         EventBus.emit('chat:message', newMessage);
         
-        // ALSO write to OpenClaw session log so Kai can see it
-        // AND trigger immediate notification via gateway
+        // Create notification for instant delivery (without writing to session log)
+        // This avoids circular sync issues
         if (newMessage.senderType === 'human') {
           try {
-            const sessionsPath = path.join(process.env.HOME, '.openclaw/agents/main/sessions');
-            // Find the most recent session file
-            if (fs.existsSync(sessionsPath)) {
-              const files = fs.readdirSync(sessionsPath)
-                .filter(f => f.endsWith('.jsonl'))
-                .sort()
-                .reverse();
-              
-              if (files.length > 0) {
-                const sessionFile = path.join(sessionsPath, files[0]);
-                const entry = {
-                  id: 'flow_' + Date.now(),
-                  timestamp: new Date().toISOString(),
-                  type: 'message',
-                  message: {
-                    role: 'user',
-                    content: `[FlowChat] ${newMessage.text}`
-                  }
-                };
-                fs.appendFileSync(sessionFile, JSON.stringify(entry) + '\n');
-                console.log('Forwarded FlowChat message to OpenClaw session:', files[0]);
-                
-                // TRIGGER IMMEDIATE NOTIFICATION via OpenClaw gateway
-                // Send a wake event to notify Kai of new message
-                try {
-                  const gatewayPort = 18789; // Default OpenClaw gateway port
-                  const notifyReq = http.request({
-                    hostname: 'localhost',
-                    port: gatewayPort,
-                    path: '/api/events',
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
-                  }, (res) => {
-                    console.log('Gateway notification sent:', res.statusCode);
-                  });
-                  notifyReq.on('error', (e) => {
-                    // Gateway might not be running, that's ok
-                    console.log('Gateway notification skipped:', e.message);
-                  });
-                  notifyReq.write(JSON.stringify({
-                    type: 'flowchat:message',
-                    sessionId: files[0].replace('.jsonl', ''),
-                    timestamp: new Date().toISOString()
-                  }));
-                  notifyReq.end();
-                } catch (notifyErr) {
-                  console.log('Notification error:', notifyErr.message);
-                }
-              }
-            }
+            const notifyPath = path.join(process.env.HOME, '.openclaw/workspace/.flowchat-notify');
+            fs.writeFileSync(notifyPath, JSON.stringify({
+              id: 'flow_' + Date.now(),
+              timestamp: new Date().toISOString(),
+              text: newMessage.text,
+              sender: newMessage.sender,
+              channel: newMessage.channel
+            }));
+            console.log('FlowChat notification created for instant delivery');
           } catch (e) {
-            console.error('Error forwarding to OpenClaw:', e);
+            console.error('Error creating notification:', e);
           }
         }
         
