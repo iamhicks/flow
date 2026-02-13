@@ -676,7 +676,22 @@
         "timestamp": "2026-02-13T15:54:38.565Z"
       },
       "timestamp": "2026-02-13T15:54:38.568Z"
+    },
+    {
+      "id": "evt_1770998286047",
+      "type": "chat:message",
+      "data": {
+        "channel": "flowchat",
+        "channelName": "FlowChat",
+        "sender": "Pete",
+        "senderType": "human",
+        "text": "lets try again you there?",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770998286038",
+        "timestamp": "2026-02-13T15:58:06.038Z"
+      },
+      "timestamp": "2026-02-13T15:58:06.047Z"
     }
   ],
-  "lastUpdated": "2026-02-13T15:54:38.568Z"
+  "lastUpdated": "2026-02-13T15:58:06.047Z"
 }
