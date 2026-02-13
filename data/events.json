@@ -110,7 +110,31 @@
         "creator": "User"
       },
       "timestamp": "2026-02-13T12:27:04.745Z"
+    },
+    {
+      "id": "evt_1770985800517",
+      "type": "kanban:taskCreated",
+      "data": {
+        "id": "_076lol2xn",
+        "title": "Gateway Access",
+        "column": "backlog",
+        "board": "Flow Mind Website",
+        "creator": "User"
+      },
+      "timestamp": "2026-02-13T12:30:00.517Z"
+    },
+    {
+      "id": "evt_1770986116108",
+      "type": "kanban:taskCreated",
+      "data": {
+        "id": "_tlwrxs8ad",
+        "title": "Flow Left column",
+        "column": "backlog",
+        "board": "Flow Mind Website",
+        "creator": "User"
+      },
+      "timestamp": "2026-02-13T12:35:16.108Z"
     }
   ],
-  "lastUpdated": "2026-02-13T12:27:04.745Z"
+  "lastUpdated": "2026-02-13T12:35:16.108Z"
 }

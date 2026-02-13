@@ -1625,6 +1625,9 @@
         </nav>
         
         <div class="header-actions">
+            <button class="btn btn-secondary" id="helpBtn" title="Documentation">
+                <i class="ph ph-question"></i> Help
+            </button>
             <button class="btn btn-secondary" id="syncBtn">
                 <i class="ph ph-arrows-clockwise"></i> Sync
             </button>
@@ -2668,6 +2671,85 @@
                     const filtered = activityData.filter(a => a.actorType === filter);
                     renderActivityStream(filtered);
                 }
+            });
+        });
+
+        // Help button
+        document.getElementById('helpBtn').addEventListener('click', () => {
+            const helpModal = document.createElement('div');
+            helpModal.style.cssText = `
+                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0,0,0,0.8); z-index: 10000;
+                display: flex; align-items: center; justify-content: center;
+                padding: 40px;
+            `;
+            helpModal.innerHTML = `
+                <div style="
+                    background: var(--bg-secondary); border: 1px solid var(--border);
+                    border-radius: 12px; width: 100%; max-width: 800px; max-height: 80vh;
+                    display: flex; flex-direction: column;
+                ">
+                    <div style="padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                        <h2 style="margin: 0; color: var(--accent);"><i class="ph ph-book"></i> FLOW Documentation</h2>
+                        <button id="closeHelp" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 20px;">
+                            <i class="ph ph-x"></i>
+                        </button>
+                    </div>
+                    <div style="padding: 24px; overflow-y: auto; color: var(--text-primary); line-height: 1.6;">
+                        <h3 style="color: var(--accent); margin-top: 0;">📚 Module Overview</h3>
+                        <p>FLOW is a Human-AI Mission Control Dashboard that unifies task management, real-time chat, system monitoring, and memory.</p>
+                        
+                        <h4 style="margin-top: 20px;">🎯 Kanban</h4>
+                        <p>Task management with drag-and-drop. Creates activity logs when cards are moved.</p>
+                        
+                        <h4 style="margin-top: 20px;">📊 Activity Stream</h4>
+                        <p>Real-time log of all events: chat messages, task movements, file edits. Auto-refreshes every 3 seconds.</p>
+                        
+                        <h4 style="margin-top: 20px;">🧠 Memory</h4>
+                        <p>Curated knowledge extracted from daily logs and file edits. Auto-refreshes every 5 seconds. Parses accomplishments and technical decisions automatically.</p>
+                        
+                        <h4 style="margin-top: 20px;">💬 Chat</h4>
+                        <p>Unified view of all conversations (Telegram, WebChat). <strong>Read-only</strong> — messages appear here but you reply in the original channel.</p>
+                        
+                        <h4 style="margin-top: 20px;">🌊 Kai Profile</h4>
+                        <p>Edit Kai's identity files (SOUL.md, IDENTITY.md, etc.). Changes are auto-saved to workspace and extracted to Memory.</p>
+                        
+                        <h4 style="margin-top: 20px;">🛠️ Skills Browser</h4>
+                        <p>Browse 50+ installed OpenClaw skills. Static catalog view.</p>
+                        
+                        <h4 style="margin-top: 20px;">⚙️ System Dashboard</h4>
+                        <p>Monitor OpenClaw: real cron jobs, channel status, sessions. Shows live data from your gateway.</p>
+                        
+                        <h4 style="margin-top: 20px;">⏰ Schedule & Heartbeat</h4>
+                        <p>Daily rhythm tracking, upcoming cron checks, and system health status.</p>
+                        
+                        <hr style="border-color: var(--border); margin: 24px 0;">
+                        
+                        <h3 style="color: var(--accent);">🔗 Cross-Module Features</h3>
+                        <ul style="margin: 10px 0;">
+                            <li>Chat messages → Activity Stream</li>
+                            <li>Kanban card created/moved → Activity Stream</li>
+                            <li>Kai file edited → Activity + Memory</li>
+                            <li>Daily logs parsed → Memory (hourly)</li>
+                        </ul>
+                        
+                        <hr style="border-color: var(--border); margin: 24px 0;">
+                        
+                        <h3 style="color: var(--accent);">📖 Full Documentation</h3>
+                        <p>Complete module documentation available in Obsidian:</p>
+                        <code style="background: var(--bg-tertiary); padding: 4px 8px; border-radius: 4px;">
+                            Kai_Obsidian/Kai/i_am-Hicks/i_am_Flow/FLOW Module Documentation.md
+                        </code>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(helpModal);
+            
+            document.getElementById('closeHelp').addEventListener('click', () => {
+                helpModal.remove();
+            });
+            helpModal.addEventListener('click', (e) => {
+                if (e.target === helpModal) helpModal.remove();
             });
         });
 

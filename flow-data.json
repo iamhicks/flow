@@ -71,7 +71,7 @@
             {
               "id": "_v4m1r0xsl",
               "title": "Token Usage",
-              "description": "",
+              "description": "can we pull from openclaw usage stats to show how many tokens have been used etc? Not sure how this works and what is the benefit of showing it to the user",
               "dueDate": "",
               "priority": "medium",
               "labels": [],
@@ -79,6 +79,30 @@
               "attachments": [],
               "recurring": "",
               "createdAt": "2026-02-13T12:27:04.239Z"
+            },
+            {
+              "id": "_076lol2xn",
+              "title": "Gateway Access",
+              "description": "openclaw dashboard shows Gateway Access, if it's connected or not and the ability to restart it etc inside dashboard. is this something helpful we could use?",
+              "dueDate": "",
+              "priority": "medium",
+              "labels": [],
+              "checklist": [],
+              "attachments": [],
+              "recurring": "",
+              "createdAt": "2026-02-13T12:30:00.014Z"
+            },
+            {
+              "id": "_tlwrxs8ad",
+              "title": "Flow Left column",
+              "description": "",
+              "dueDate": "",
+              "priority": "medium",
+              "labels": [],
+              "checklist": [],
+              "attachments": [],
+              "recurring": "",
+              "createdAt": "2026-02-13T12:35:15.605Z"
             }
           ]
         },
@@ -323,6 +347,6 @@
     "lastBackup": null,
     "currentBoard": "board_1"
   },
-  "lastModified": "2026-02-13T12:27:04.742Z",
+  "lastModified": "2026-02-13T12:35:16.107Z",
   "modifiedBy": "user"
 }
