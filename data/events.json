@@ -631,7 +631,37 @@
         "timestamp": "2026-02-13T15:45:00.744Z"
       },
       "timestamp": "2026-02-13T15:45:00.753Z"
+    },
+    {
+      "id": "evt_1770997715999",
+      "type": "chat:message",
+      "data": {
+        "channel": "flowchat",
+        "channelName": "FlowChat",
+        "sender": "Pete",
+        "senderType": "human",
+        "text": "flow message test are oyu seeing it?",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770997715997",
+        "timestamp": "2026-02-13T15:48:35.997Z"
+      },
+      "timestamp": "2026-02-13T15:48:35.999Z"
+    },
+    {
+      "id": "evt_1770997791186",
+      "type": "chat:message",
+      "data": {
+        "channel": "flowchat",
+        "channelName": "FlowChat",
+        "sender": "Pete",
+        "senderType": "human",
+        "text": "see this now?",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770997791184",
+        "timestamp": "2026-02-13T15:49:51.184Z"
+      },
+      "timestamp": "2026-02-13T15:49:51.186Z"
     }
   ],
-  "lastUpdated": "2026-02-13T15:45:00.753Z"
+  "lastUpdated": "2026-02-13T15:49:51.186Z"
 }

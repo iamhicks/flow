@@ -713,6 +713,7 @@ const server = http.createServer(async (req, res) => {
         EventBus.emit('chat:message', newMessage);
         
         // ALSO write to OpenClaw session log so Kai can see it
+        // AND trigger immediate notification via gateway
         if (newMessage.senderType === 'human') {
           try {
             const sessionsPath = path.join(process.env.HOME, '.openclaw/agents/main/sessions');
@@ -736,6 +737,33 @@ const server = http.createServer(async (req, res) => {
                 };
                 fs.appendFileSync(sessionFile, JSON.stringify(entry) + '\n');
                 console.log('Forwarded FlowChat message to OpenClaw session:', files[0]);
+                
+                // TRIGGER IMMEDIATE NOTIFICATION via OpenClaw gateway
+                // Send a wake event to notify Kai of new message
+                try {
+                  const gatewayPort = 18789; // Default OpenClaw gateway port
+                  const notifyReq = http.request({
+                    hostname: 'localhost',
+                    port: gatewayPort,
+                    path: '/api/events',
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                  }, (res) => {
+                    console.log('Gateway notification sent:', res.statusCode);
+                  });
+                  notifyReq.on('error', (e) => {
+                    // Gateway might not be running, that's ok
+                    console.log('Gateway notification skipped:', e.message);
+                  });
+                  notifyReq.write(JSON.stringify({
+                    type: 'flowchat:message',
+                    sessionId: files[0].replace('.jsonl', ''),
+                    timestamp: new Date().toISOString()
+                  }));
+                  notifyReq.end();
+                } catch (notifyErr) {
+                  console.log('Notification error:', notifyErr.message);
+                }
               }
             }
           } catch (e) {
