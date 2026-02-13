@@ -211,7 +211,82 @@
         "actor": "User"
       },
       "timestamp": "2026-02-13T12:56:38.570Z"
+    },
+    {
+      "id": "evt_1770987587288",
+      "type": "kanban:taskCreated",
+      "data": {
+        "id": "_nm1w9u9az",
+        "title": "Chat styling",
+        "column": "backlog",
+        "board": "Flow Mind Website",
+        "creator": "User"
+      },
+      "timestamp": "2026-02-13T12:59:47.288Z"
+    },
+    {
+      "id": "evt_1770987632815",
+      "type": "kanban:taskMoved",
+      "data": {
+        "id": "_nm1w9u9az",
+        "title": "Chat styling",
+        "fromColumn": "backlog",
+        "column": "todo",
+        "board": "Flow Mind Website",
+        "actor": "User"
+      },
+      "timestamp": "2026-02-13T13:00:32.815Z"
+    },
+    {
+      "id": "evt_1770987632820",
+      "type": "kanban:taskMoved",
+      "data": {
+        "id": "_nm1w9u9az",
+        "title": "Chat styling",
+        "fromColumn": "todo",
+        "column": "backlog",
+        "board": "Flow Mind Website",
+        "actor": "User"
+      },
+      "timestamp": "2026-02-13T13:00:32.820Z"
+    },
+    {
+      "id": "evt_1770987635714",
+      "type": "kanban:taskMoved",
+      "data": {
+        "id": "_nm1w9u9az",
+        "title": "Chat styling",
+        "fromColumn": "backlog",
+        "column": "todo",
+        "board": "Flow Mind Website",
+        "actor": "User"
+      },
+      "timestamp": "2026-02-13T13:00:35.714Z"
+    },
+    {
+      "id": "evt_1770987832645",
+      "type": "kanban:taskCreated",
+      "data": {
+        "id": "_gql64n59j",
+        "title": "Chat message formatting",
+        "column": "backlog",
+        "board": "Flow Mind Website",
+        "creator": "User"
+      },
+      "timestamp": "2026-02-13T13:03:52.645Z"
+    },
+    {
+      "id": "evt_1770987956412",
+      "type": "kanban:taskCreated",
+      "data": {
+        "id": "_29g1rvv8i",
+        "title": "Tasks Progress Stats",
+        "column": "backlog",
+        "board": "Flow Mind Website",
+        "creator": "User"
+      },
+      "timestamp": "2026-02-13T13:05:56.412Z"
     }
   ],
-  "lastUpdated": "2026-02-13T12:56:38.570Z"
+  "lastUpdated": "2026-02-13T13:05:56.412Z"
 }

@@ -700,6 +700,98 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
+  // Token Usage API - Get session token stats from OpenClaw
+  if (urlPath === '/api/tokens' && req.method === 'GET') {
+    try {
+      const { execSync } = require('child_process');
+      const output = execSync('openclaw sessions list 2>/dev/null || echo ""', { encoding: 'utf8', timeout: 5000 });
+      
+      // Parse session data
+      const lines = output.split('\n').filter(l => l.trim() && l.includes('agent:main'));
+      const sessions = [];
+      let totalTokens = 0;
+      let totalContext = 0;
+      
+      for (const line of lines) {
+        // Parse: direct agent:main:main 2m ago k2p5 136k/262k (52%) system id:...
+        // Split by multiple spaces but first extract kind and key
+        const trimmed = line.trim();
+        const kindMatch = trimmed.match(/^(\S+)\s+(agent:main:\S+)/);
+        
+        if (kindMatch) {
+          const kind = kindMatch[1];
+          const key = kindMatch[2];
+          const rest = trimmed.substring(kindMatch[0].length).trim();
+          const parts = rest.split(/\s{2,}/);
+          
+          const age = parts[0];
+          const model = parts[1];
+          const tokens = parts[2];
+          
+          // Skip if no token data (shows "-")
+          if (tokens === '-' || !tokens.includes('/')) {
+            sessions.push({
+              key: key.replace('agent:main:', ''),
+              age,
+              model,
+              tokensUsed: '-',
+              tokensTotal: '-',
+              percent: 0,
+              kind,
+              active: false
+            });
+            continue;
+          }
+          
+          const tokenMatch = tokens.match(/(\d+(?:\.\d+)?k?)\/(\d+(?:\.\d+)?k?)/);
+          const percentMatch = line.match(/\((\d+)%\)/);
+          
+          if (tokenMatch) {
+            const [_, used, total] = tokenMatch;
+            const percent = percentMatch ? parseInt(percentMatch[1]) : 0;
+            
+            const usedNum = parseFloat(used.replace('k', '')) * (used.includes('k') ? 1000 : 1);
+            const totalNum = parseFloat(total.replace('k', '')) * (total.includes('k') ? 1000 : 1);
+            
+            sessions.push({
+              key: key.replace('agent:main:', ''),
+              age,
+              model,
+              tokensUsed: used,
+              tokensTotal: total,
+              percent,
+              kind,
+              active: true
+            });
+            
+            totalTokens += usedNum;
+            totalContext += totalNum;
+          }
+        }
+      }
+      
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        sessions,
+        summary: {
+          totalSessions: sessions.length,
+          activeSessions: sessions.filter(s => s.active).length,
+          totalTokensUsed: Math.round(totalTokens / 1000) + 'k',
+          totalContextWindow: Math.round(totalContext / 1000) + 'k',
+          averageUsage: sessions.filter(s => s.active).length > 0 ? 
+            Math.round(sessions.filter(s => s.active).reduce((a, s) => a + s.percent, 0) / sessions.filter(s => s.active).length) + '%' : '0%'
+        },
+        lastUpdated: new Date().toISOString()
+      }));
+      return;
+    } catch (e) {
+      console.error('Error loading tokens:', e);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ sessions: [], summary: {}, error: e.message }));
+      return;
+    }
+  }
+
   // Module trigger API - Allow modules to emit events
   if (urlPath === '/api/trigger' && req.method === 'POST') {
     let body = '';
