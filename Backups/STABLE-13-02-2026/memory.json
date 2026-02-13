@@ -1,0 +1,83 @@
+{
+  "memories": [
+    {
+      "id": "mem_victory",
+      "type": "milestone",
+      "content": "🏆 2026-02-12: FLOW Dashboard v2.0 launched! Activity Stream + Shared Memory modules working. Human-AI collaboration is REAL!",
+      "category": "milestone",
+      "addedBy": "Pete + Kai",
+      "actorType": "human",
+      "timestamp": "2026-02-12T23:39:00Z",
+      "icon": "🚀"
+    },
+    {
+      "id": "mem_1",
+      "type": "note",
+      "content": "Pete prefers dark mode in all apps. Default to dark theme.",
+      "category": "preference",
+      "addedBy": "Kai",
+      "actorType": "ai",
+      "timestamp": "2026-02-12T22:00:00Z",
+      "icon": "📝"
+    },
+    {
+      "id": "mem_2",
+      "type": "reminder",
+      "content": "Check trading model at 3pm before US market open",
+      "category": "trading",
+      "addedBy": "Pete",
+      "actorType": "human",
+      "timestamp": "2026-02-12T21:30:00Z",
+      "icon": "⏰"
+    },
+    {
+      "id": "mem_3",
+      "type": "idea",
+      "content": "FLOW Dashboard could expand to include metrics, goals tracking, and agent performance stats",
+      "category": "product",
+      "addedBy": "Kai",
+      "actorType": "ai",
+      "timestamp": "2026-02-12T23:00:00Z",
+      "icon": "💡"
+    },
+    {
+      "id": "mem_4",
+      "type": "context",
+      "content": "MIND license system needs proper testing before deployment. Current implementation caused blank screen bug.",
+      "category": "bug",
+      "addedBy": "Kai",
+      "actorType": "ai",
+      "timestamp": "2026-02-12T22:30:00Z",
+      "icon": "🐛"
+    },
+    {
+      "id": "mem_5",
+      "type": "decision",
+      "content": "Pricing strategy: FLOW Core $29, Pro $49, Enterprise $99. One-time purchase, no subscriptions.",
+      "category": "business",
+      "addedBy": "Pete",
+      "actorType": "human",
+      "timestamp": "2026-02-12T22:15:00Z",
+      "icon": "💰"
+    },
+    {
+      "id": "mem_6",
+      "type": "victory",
+      "content": "Activity Stream module WORKING! Real-time human-AI collaboration achieved! 🎉",
+      "category": "milestone",
+      "addedBy": "Kai",
+      "actorType": "ai",
+      "timestamp": "2026-02-12T23:30:00Z",
+      "icon": "🏆"
+    }
+  ],
+  "categories": [
+    { "id": "preference", "name": "Preferences", "color": "#2eaadc" },
+    { "id": "trading", "name": "Trading", "color": "#f4d03f" },
+    { "id": "product", "name": "Product Ideas", "color": "#9b59b6" },
+    { "id": "bug", "name": "Bugs & Issues", "color": "#dc4444" },
+    { "id": "business", "name": "Business", "color": "#2ecc71" },
+    { "id": "milestone", "name": "Milestones", "color": "#e74c3c" }
+  ],
+  "lastUpdated": "2026-02-12T23:32:00Z"
+}

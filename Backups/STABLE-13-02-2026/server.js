@@ -185,195 +185,6 @@ const syncMessagesFromSessions = async () => {
   }
 };
 
-// ==========================================
-// CROSS-MODULE EVENT BUS
-// ==========================================
-
-const EventBus = {
-  events: {},
-  
-  // Subscribe to an event
-  on(event, callback) {
-    if (!this.events[event]) {
-      this.events[event] = [];
-    }
-    this.events[event].push(callback);
-  },
-  
-  // Emit an event
-  emit(event, data) {
-    if (this.events[event]) {
-      this.events[event].forEach(callback => callback(data));
-    }
-    // Also save to event log for persistence
-    logEvent(event, data);
-  }
-};
-
-// Event logging for cross-module persistence
-const logEvent = (eventType, data) => {
-  try {
-    const eventsPath = path.join(__dirname, 'data', 'events.json');
-    let events = { items: [], lastUpdated: new Date().toISOString() };
-    
-    if (fs.existsSync(eventsPath)) {
-      events = JSON.parse(fs.readFileSync(eventsPath, 'utf8'));
-    }
-    
-    events.items.push({
-      id: 'evt_' + Date.now(),
-      type: eventType,
-      data: data,
-      timestamp: new Date().toISOString()
-    });
-    
-    // Keep only last 100 events
-    if (events.items.length > 100) {
-      events.items = events.items.slice(-100);
-    }
-    
-    events.lastUpdated = new Date().toISOString();
-    fs.writeFileSync(eventsPath, JSON.stringify(events, null, 2));
-  } catch (e) {
-    console.error('Error logging event:', e);
-  }
-};
-
-// Cross-module triggers
-const setupModuleTriggers = () => {
-  // When message is posted in Chat → Add to Activity
-  EventBus.on('chat:message', (data) => {
-    addActivityItem({
-      type: 'chat',
-      icon: '💬',
-      title: `New message in ${data.channel}`,
-      description: data.text.substring(0, 100),
-      actor: data.sender,
-      channel: data.channel
-    });
-  });
-  
-  // When task is created in Kanban → Log to Activity
-  EventBus.on('kanban:taskCreated', (data) => {
-    addActivityItem({
-      type: 'task',
-      icon: '✅',
-      title: 'Task created',
-      description: data.title,
-      actor: data.creator || 'User',
-      board: data.board
-    });
-  });
-  
-  // When task moves in Kanban → Log to Activity
-  EventBus.on('kanban:taskMoved', (data) => {
-    addActivityItem({
-      type: 'task',
-      icon: '📋',
-      title: `Task moved to ${data.column}`,
-      description: data.title,
-      actor: data.actor || 'User'
-    });
-  });
-  
-  // When Kai file is edited → Log to Activity
-  EventBus.on('kai:fileEdited', (data) => {
-    addActivityItem({
-      type: 'system',
-      icon: '🌊',
-      title: `Kai file edited: ${data.file}`,
-      description: 'Identity file updated',
-      actor: 'Pete'
-    });
-  });
-};
-
-// Add item to activity stream
-const addActivityItem = async (item) => {
-  try {
-    const activityPath = path.join(__dirname, 'data', 'activity.json');
-    let activity = { activities: [], lastUpdated: new Date().toISOString() };
-    
-    if (fs.existsSync(activityPath)) {
-      activity = JSON.parse(fs.readFileSync(activityPath, 'utf8'));
-    }
-    
-    activity.activities.unshift({
-      id: 'act_' + Date.now(),
-      ...item,
-      timestamp: new Date().toISOString()
-    });
-    
-    // Keep only last 50 activities
-    if (activity.activities.length > 50) {
-      activity.activities = activity.activities.slice(0, 50);
-    }
-    
-    activity.lastUpdated = new Date().toISOString();
-    fs.writeFileSync(activityPath, JSON.stringify(activity, null, 2));
-    
-  } catch (e) {
-    console.error('Error adding activity:', e);
-  }
-};
-
-// Initialize triggers
-setupModuleTriggers();
-
-// Detect kanban changes and emit events
-const detectKanbanChanges = (oldData, newData) => {
-  try {
-    const oldCards = new Map();
-    const newCards = new Map();
-    
-    // Index old cards
-    oldData.boards?.forEach(board => {
-      board.columns?.forEach(col => {
-        col.cards?.forEach(card => {
-          oldCards.set(card.id, { ...card, column: col.id, board: board.name });
-        });
-      });
-    });
-    
-    // Index new cards
-    newData.boards?.forEach(board => {
-      board.columns?.forEach(col => {
-        col.cards?.forEach(card => {
-          newCards.set(card.id, { ...card, column: col.id, board: board.name });
-        });
-      });
-    });
-    
-    // Check for new cards
-    newCards.forEach((card, id) => {
-      if (!oldCards.has(id)) {
-        EventBus.emit('kanban:taskCreated', {
-          id: card.id,
-          title: card.title,
-          column: card.column,
-          board: card.board,
-          creator: 'User'
-        });
-      } else {
-        // Check if moved
-        const oldCard = oldCards.get(id);
-        if (oldCard.column !== card.column) {
-          EventBus.emit('kanban:taskMoved', {
-            id: card.id,
-            title: card.title,
-            fromColumn: oldCard.column,
-            column: card.column,
-            board: card.board,
-            actor: 'User'
-          });
-        }
-      }
-    });
-  } catch (e) {
-    console.error('Error detecting kanban changes:', e);
-  }
-};
-
 const server = http.createServer(async (req, res) => {
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -494,62 +305,10 @@ const server = http.createServer(async (req, res) => {
         
         fs.writeFileSync(messagesPath, JSON.stringify(data, null, 2));
         
-        // Emit event for cross-module communication
-        EventBus.emit('chat:message', newMessage);
-        
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true, message: newMessage }));
       } catch (e) {
         console.error('Error saving message:', e);
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: e.message }));
-      }
-    });
-    return;
-  }
-
-  // Events API - Cross-module event log
-  if (urlPath === '/api/events' && req.method === 'GET') {
-    try {
-      const eventsPath = path.join(__dirname, 'data', 'events.json');
-      if (fs.existsSync(eventsPath)) {
-        const data = fs.readFileSync(eventsPath, 'utf8');
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(data);
-        return;
-      } else {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ items: [], lastUpdated: new Date().toISOString() }));
-        return;
-      }
-    } catch (e) {
-      console.error('Error loading events:', e);
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: e.message }));
-      return;
-    }
-  }
-
-  // Module trigger API - Allow modules to emit events
-  if (urlPath === '/api/trigger' && req.method === 'POST') {
-    let body = '';
-    req.on('data', chunk => body += chunk);
-    req.on('end', () => {
-      try {
-        const { event, data } = JSON.parse(body);
-        
-        // Validate event type
-        const validEvents = ['kanban:taskCreated', 'kanban:taskMoved', 'kai:fileEdited'];
-        if (validEvents.includes(event)) {
-          EventBus.emit(event, data);
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: true, event }));
-        } else {
-          res.writeHead(400, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'Invalid event type' }));
-        }
-      } catch (e) {
-        console.error('Error triggering event:', e);
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: e.message }));
       }
@@ -601,10 +360,6 @@ const server = http.createServer(async (req, res) => {
         const { content } = JSON.parse(body);
         const workspacePath = path.join(process.env.HOME, '.openclaw/workspace', fileName);
         fs.writeFileSync(workspacePath, content, 'utf8');
-        
-        // Emit event for cross-module communication
-        EventBus.emit('kai:fileEdited', { file: fileName });
-        
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true }));
       } catch (e) {
@@ -625,11 +380,6 @@ const server = http.createServer(async (req, res) => {
         data.lastModified = new Date().toISOString();
         data.modifiedBy = 'user';
         saveData(data);
-        
-        // Detect changes for activity logging
-        const oldData = loadData();
-        detectKanbanChanges(oldData, data);
-        
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true }));
       } catch (e) {
