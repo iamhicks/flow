@@ -127,19 +127,6 @@
               "createdAt": "2026-02-12T22:30:00Z"
             },
             {
-              "id": "_v4m1r0xsl",
-              "title": "Token Usage",
-              "description": "can we pull from openclaw usage stats to show how many tokens have been used etc? Not sure how this works and what is the benefit of showing it to the user",
-              "dueDate": "",
-              "priority": "medium",
-              "labels": [],
-              "checklist": [],
-              "attachments": [],
-              "recurring": "",
-              "createdAt": "2026-02-13T12:27:04.239Z",
-              "updatedAt": "2026-02-13T13:02:51.770Z"
-            },
-            {
               "id": "_7yavn9z83",
               "title": "Overdue Status",
               "description": "left column Tasks Status, can we add \"Overdue\" stats if there are any overdue tasks",
@@ -172,17 +159,6 @@
           "name": "Done",
           "cards": [
             {
-              "id": "card_5",
-              "title": "Create FLOW kanban app",
-              "description": "Built drag-and-drop board",
-              "priority": "high",
-              "labels": [
-                "done",
-                "flow"
-              ],
-              "createdAt": "2026-02-12T22:30:00Z"
-            },
-            {
               "id": "card_4",
               "title": "Testing FLOW kanban ✓ MOVED BY KAI",
               "description": "Verify Kai can move cards - SUCCESS!",
@@ -191,6 +167,49 @@
                 "testing",
                 "flow",
                 "done"
+              ],
+              "createdAt": "2026-02-12T22:30:00Z"
+            },
+            {
+              "id": "_tlwrxs8ad",
+              "title": "Flow Left column",
+              "description": "is the data in the left column real? maybe we can use this space to display important stats or info. This column should be collapsable as well like Mind left column",
+              "dueDate": "",
+              "priority": "medium",
+              "labels": [],
+              "checklist": [],
+              "attachments": [],
+              "recurring": "",
+              "createdAt": "2026-02-13T12:35:15.605Z",
+              "updatedAt": "2026-02-13T12:46:35.028Z"
+            },
+            {
+              "id": "_v4m1r0xsl",
+              "title": "Token Usage",
+              "description": "can we pull from openclaw usage stats to show how many tokens have been used etc? Not sure how this works and what is the benefit of showing it to the user",
+              "dueDate": "",
+              "priority": "medium",
+              "labels": [],
+              "checklist": [],
+              "attachments": [],
+              "recurring": "",
+              "createdAt": "2026-02-13T12:27:04.239Z",
+              "updatedAt": "2026-02-13T13:10:26.533Z"
+            }
+          ]
+        },
+        {
+          "id": "archive",
+          "name": "Archive",
+          "cards": [
+            {
+              "id": "card_5",
+              "title": "Create FLOW kanban app",
+              "description": "Built drag-and-drop board",
+              "priority": "high",
+              "labels": [
+                "done",
+                "flow"
               ],
               "createdAt": "2026-02-12T22:30:00Z"
             },
@@ -206,26 +225,8 @@
               "recurring": "",
               "createdAt": "2026-02-13T12:30:00.014Z",
               "updatedAt": "2026-02-13T12:46:35.015Z"
-            },
-            {
-              "id": "_tlwrxs8ad",
-              "title": "Flow Left column",
-              "description": "is the data in the left column real? maybe we can use this space to display important stats or info. This column should be collapsable as well like Mind left column",
-              "dueDate": "",
-              "priority": "medium",
-              "labels": [],
-              "checklist": [],
-              "attachments": [],
-              "recurring": "",
-              "createdAt": "2026-02-13T12:35:15.605Z",
-              "updatedAt": "2026-02-13T12:46:35.028Z"
             }
           ]
-        },
-        {
-          "id": "archive",
-          "name": "Archive",
-          "cards": []
         }
       ]
     },
@@ -399,6 +400,6 @@
     "lastBackup": null,
     "currentBoard": "board_1"
   },
-  "lastModified": "2026-02-13T13:07:03.604Z",
+  "lastModified": "2026-02-13T13:19:42.462Z",
   "modifiedBy": "user"
 }

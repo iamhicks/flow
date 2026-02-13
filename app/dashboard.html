@@ -1442,7 +1442,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: var(--bg-secondary);
+            background: var(--bg-primary);
             position: relative;
         }
 
@@ -1502,58 +1502,44 @@
 
         .chat-message {
             display: flex;
-            gap: 12px;
-            max-width: 80%;
+            max-width: 85%;
+            margin-bottom: 4px;
         }
 
         .chat-message.user {
             margin-left: auto;
-            flex-direction: row-reverse;
         }
 
         .chat-message-avatar {
-            font-size: 20px;
-            width: 32px;
-            height: 32px;
-            background: var(--bg-tertiary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .chat-message.user .chat-message-avatar {
-            background: var(--accent);
+            display: none;
         }
 
         .chat-message-content {
-            background: var(--bg-tertiary);
             padding: 12px 16px;
             border-radius: 12px;
-            border-bottom-left-radius: 4px;
             font-size: 14px;
             line-height: 1.5;
+            background: transparent;
+            color: var(--text-primary);
         }
 
         .chat-message.user .chat-message-content {
-            background: var(--accent);
-            color: var(--bg-primary);
-            border-bottom-left-radius: 12px;
-            border-bottom-right-radius: 4px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
         }
 
         .chat-message-meta {
             font-size: 11px;
             color: var(--text-tertiary);
-            margin-top: 4px;
+            margin-top: 2px;
             display: flex;
             align-items: center;
             gap: 6px;
+            padding: 0 4px;
         }
 
         .chat-message-channel {
-            padding: 2px 6px;
+            padding: 1px 6px;
             background: var(--bg-hover);
             border-radius: 4px;
             font-size: 10px;
@@ -1959,12 +1945,14 @@
                             <div class="chat-header">
                                 <div class="chat-header-info">
                                     <div class="chat-name" id="chatChannelName">Unified Chat</div>
-                                    <div class="chat-subtitle">All messages from connected channels</div>
-                                </div>
-                                <div class="chat-header-actions">
-                                    <button class="btn btn-secondary" id="refreshChatBtn">
-                                        <i class="ph ph-arrows-clockwise"></i>
-                                    </button>
+                                    <div class="chat-subtitle">
+                                        <span id="chatConnectionStatus" style="display: inline-flex; align-items: center; gap: 4px;">
+                                            <span style="width: 8px; height: 8px; background: var(--success); border-radius: 50%; display: inline-block;"></span>
+                                            Connected
+                                        </span>
+                                        <span style="color: var(--text-tertiary); margin: 0 4px;">•</span>
+                                        <span id="chatMessageCount">0 messages</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="chat-messages" id="chatMessages">
@@ -3493,7 +3481,6 @@
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `chat-message ${isUser ? 'user' : ''}`;
                 messageDiv.innerHTML = `
-                    <div class="chat-message-avatar">${isUser ? '👤' : '🌊'}</div>
                     <div>
                         <div class="chat-message-content">${escapeHtml(msg.text)}</div>
                         <div class="chat-message-meta">
@@ -3504,6 +3491,9 @@
                 `;
                 chatMessages.appendChild(messageDiv);
             });
+            
+            // Update message count
+            document.getElementById('chatMessageCount').textContent = `${messages.length} message${messages.length !== 1 ? 's' : ''}`;
             
             chatMessages.scrollTop = chatMessages.scrollHeight;
         };
@@ -3682,10 +3672,38 @@
             });
         });
 
-        // Refresh button
-        refreshChatBtn?.addEventListener('click', async () => {
-            lastMessageCount = await loadChat();
-        });
+        // Connection status check
+        const updateConnectionStatus = async () => {
+            try {
+                const response = await fetch('/api/messages?t=' + Date.now());
+                const statusEl = document.getElementById('chatConnectionStatus');
+                if (statusEl) {
+                    if (response.ok) {
+                        statusEl.innerHTML = `
+                            <span style="width: 8px; height: 8px; background: var(--success); border-radius: 50%; display: inline-block;"></span>
+                            Connected
+                        `;
+                    } else {
+                        statusEl.innerHTML = `
+                            <span style="width: 8px; height: 8px; background: var(--danger); border-radius: 50%; display: inline-block;"></span>
+                            Disconnected
+                        `;
+                    }
+                }
+            } catch (e) {
+                const statusEl = document.getElementById('chatConnectionStatus');
+                if (statusEl) {
+                    statusEl.innerHTML = `
+                        <span style="width: 8px; height: 8px; background: var(--danger); border-radius: 50%; display: inline-block;"></span>
+                        Disconnected
+                    `;
+                }
+            }
+        };
+        
+        // Check connection status every 5 seconds
+        setInterval(updateConnectionStatus, 5000);
+        updateConnectionStatus();
 
         chatSendBtn?.addEventListener('click', sendMessage);
         

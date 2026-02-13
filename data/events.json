@@ -286,7 +286,33 @@
         "creator": "User"
       },
       "timestamp": "2026-02-13T13:05:56.412Z"
+    },
+    {
+      "id": "evt_1770988776734",
+      "type": "kanban:taskMoved",
+      "data": {
+        "id": "card_5",
+        "title": "Create FLOW kanban app",
+        "fromColumn": "done",
+        "column": "archive",
+        "board": "Flow Mind Website",
+        "actor": "User"
+      },
+      "timestamp": "2026-02-13T13:19:36.734Z"
+    },
+    {
+      "id": "evt_1770988782464",
+      "type": "kanban:taskMoved",
+      "data": {
+        "id": "_076lol2xn",
+        "title": "Gateway Access",
+        "fromColumn": "done",
+        "column": "archive",
+        "board": "Flow Mind Website",
+        "actor": "User"
+      },
+      "timestamp": "2026-02-13T13:19:42.464Z"
     }
   ],
-  "lastUpdated": "2026-02-13T13:05:56.412Z"
+  "lastUpdated": "2026-02-13T13:19:42.464Z"
 }
