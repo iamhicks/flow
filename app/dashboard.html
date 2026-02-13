@@ -1389,12 +1389,10 @@
             background: var(--bg-primary);
             display: flex;
             flex-direction: column;
-            border-right: 1px solid var(--border);
         }
 
         .chat-channels-header {
             padding: 16px;
-            border-bottom: 1px solid var(--border);
             font-weight: 600;
             display: flex;
             align-items: center;
@@ -1426,6 +1424,15 @@
 
         .chat-channel-item.active {
             background: rgba(46, 170, 220, 0.1);
+        }
+
+        .chat-channel-item.filtered {
+            background: var(--accent);
+            color: white;
+        }
+
+        .chat-channel-item.filtered .chat-channel-status {
+            color: rgba(255,255,255,0.8);
         }
 
         .chat-channel-icon {
@@ -1474,7 +1481,7 @@
             justify-content: space-between;
             padding: 16px 20px;
             background: var(--bg-primary);
-            border-bottom: 1px solid var(--border);
+            border-bottom: none;
         }
 
         .chat-header-info {
@@ -1584,27 +1591,8 @@
             gap: 12px;
             padding: 16px 20px;
             background: var(--bg-primary);
-            border-top: 1px solid var(--border);
+            border-top: none;
             align-items: flex-end;
-        }
-
-        .chat-channel-selector {
-            width: 48px;
-            height: 48px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
-
-        .chat-channel-selector:hover {
-            background: var(--bg-hover);
-            border-color: var(--accent);
         }
 
         .chat-input {
@@ -2001,28 +1989,10 @@
                                 </div>
                             </div>
                             <div class="chat-input-area">
-                                <button class="chat-channel-selector" id="channelFilterBtn" title="Select Channel">
-                                    <i class="ph ph-funnel" style="font-size: 20px; color: var(--text-secondary);"></i>
-                                </button>
                                 <textarea class="chat-input" id="chatInput" placeholder="Message Kai..." rows="1"></textarea>
                                 <button class="chat-send-btn" id="chatSendBtn">
                                     <i class="ph ph-paper-plane-right"></i>
                                 </button>
-                            </div>
-                            
-                            <!-- Channel Filter Modal -->
-                            <div id="channelFilterModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10000;align-items:center;justify-content:center;">
-                                <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;padding:24px;max-width:300px;width:90%;">
-                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                                        <h3 style="margin:0;color:var(--text-primary);font-size:16px;">Select Channel</h3>
-                                        <button id="closeChannelModal" style="background:none;border:none;color:var(--text-secondary);cursor:pointer;font-size:20px;">
-                                            <i class="ph ph-x"></i>
-                                        </button>
-                                    </div>
-                                    <div id="channelFilterList" style="display:flex;flex-direction:column;gap:8px;">
-                                        <!-- Channels loaded here -->
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -3475,26 +3445,7 @@
         const refreshChatBtn = document.getElementById('refreshChatBtn');
         let chatHistory = [];
         let channels = [];
-        let selectedChannel = 'webchat'; // Default channel
-
-        // Channel Filter Modal
-        const channelFilterBtn = document.getElementById('channelFilterBtn');
-        const channelFilterModal = document.getElementById('channelFilterModal');
-        const closeChannelModal = document.getElementById('closeChannelModal');
-        
-        channelFilterBtn?.addEventListener('click', () => {
-            channelFilterModal.style.display = 'flex';
-        });
-        
-        closeChannelModal?.addEventListener('click', () => {
-            channelFilterModal.style.display = 'none';
-        });
-        
-        channelFilterModal?.addEventListener('click', (e) => {
-            if (e.target === channelFilterModal) {
-                channelFilterModal.style.display = 'none';
-            }
-        });
+        let selectedChannel = 'all'; // 'all' to show all channels, or specific channel id
 
         const loadChannels = async () => {
             try {
@@ -3503,9 +3454,12 @@
                     const data = await response.json();
                     channels = data.channels || [];
                     
+                    // Add "All Channels" option
+                    const allChannels = [{ id: 'all', name: 'All Channels', status: 'connected', icon: 'ph-chat-circle-text' }, ...channels];
+                    
                     // Render channel list
-                    channelList.innerHTML = channels.map(ch => `
-                        <div class="chat-channel-item" data-channel="${ch.id}">
+                    channelList.innerHTML = allChannels.map(ch => `
+                        <div class="chat-channel-item ${ch.id === selectedChannel ? 'filtered' : ''}" data-channel="${ch.id}">
                             <div class="chat-channel-icon">
                                 <i class="ph ${ch.icon || 'ph-chat-circle'}"></i>
                             </div>
@@ -3518,43 +3472,17 @@
                         </div>
                     `).join('');
                     
-                    // Update channel filter modal
-                    const channelFilterList = document.getElementById('channelFilterList');
-                    if (channelFilterList) {
-                        channelFilterList.innerHTML = channels.map(ch => `
-                            <button class="chat-channel-item" data-channel="${ch.id}" style="background:var(--bg-tertiary);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:pointer;text-align:left;width:100%;">
-                                <div style="display:flex;align-items:center;gap:10px;">
-                                    <div class="chat-channel-icon" style="width:32px;height:32px;background:var(--bg-secondary);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-                                        <i class="ph ${ch.icon || 'ph-chat-circle'}"></i>
-                                    </div>
-                                    <div class="chat-channel-info" style="flex:1;">
-                                        <div class="chat-channel-name" style="font-size:14px;font-weight:500;">${ch.name}</div>
-                                        <div class="chat-channel-status ${ch.status}" style="font-size:12px;color:var(--text-secondary);">
-                                            ${ch.status === 'connected' ? '🟢' : '⚪'} ${ch.status}
-                                        </div>
-                                    </div>
-                                    <div id="channel-check-${ch.id}" style="color:var(--accent);display:${ch.id === selectedChannel ? 'block' : 'none'};">
-                                        <i class="ph ph-check"></i>
-                                    </div>
-                                </div>
-                            </button>
-                        `).join('');
-                        
-                        // Add click handlers
-                        channelFilterList.querySelectorAll('.chat-channel-item').forEach(btn => {
-                            btn.addEventListener('click', () => {
-                                selectedChannel = btn.dataset.channel;
-                                // Update checkmarks
-                                channelFilterList.querySelectorAll('[id^="channel-check-"]').forEach(check => {
-                                    check.style.display = 'none';
-                                });
-                                const check = document.getElementById(`channel-check-${selectedChannel}`);
-                                if (check) check.style.display = 'block';
-                                // Close modal
-                                document.getElementById('channelFilterModal').style.display = 'none';
-                            });
+                    // Add click handlers for filtering
+                    channelList.querySelectorAll('.chat-channel-item').forEach(item => {
+                        item.addEventListener('click', () => {
+                            selectedChannel = item.dataset.channel;
+                            // Update UI
+                            channelList.querySelectorAll('.chat-channel-item').forEach(ch => ch.classList.remove('filtered'));
+                            item.classList.add('filtered');
+                            // Re-render messages with filter
+                            renderMessages(data.messages || []);
                         });
-                    }
+                    });
                     
                     return data.messages || [];
                 }
@@ -3567,17 +3495,22 @@
         const renderMessages = (messages) => {
             chatMessages.innerHTML = '';
             
-            if (messages.length === 0) {
+            // Filter messages by selected channel
+            const filteredMessages = selectedChannel === 'all' 
+                ? messages 
+                : messages.filter(msg => msg.channel === selectedChannel || msg.channelName?.toLowerCase() === selectedChannel.toLowerCase());
+            
+            if (filteredMessages.length === 0) {
                 chatMessages.innerHTML = `
                     <div class="chat-welcome">
                         <i class="ph ph-hand-waving"></i>
-                        <p>No messages yet. Start a conversation!</p>
+                        <p>${selectedChannel === 'all' ? 'No messages yet. Start a conversation!' : 'No messages in this channel.'}</p>
                     </div>
                 `;
                 return;
             }
             
-            messages.forEach(msg => {
+            filteredMessages.forEach(msg => {
                 const isUser = msg.senderType === 'human';
                 const time = new Date(msg.timestamp).toLocaleTimeString('en-GB', { 
                     hour: '2-digit', 
@@ -3599,7 +3532,7 @@
             });
             
             // Update message count
-            document.getElementById('chatMessageCount').textContent = `${messages.length} message${messages.length !== 1 ? 's' : ''}`;
+            document.getElementById('chatMessageCount').textContent = `${filteredMessages.length} message${filteredMessages.length !== 1 ? 's' : ''}`;
             
             chatMessages.scrollTop = chatMessages.scrollHeight;
         };
