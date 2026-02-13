@@ -1121,6 +1121,7 @@
             display: flex;
             flex-direction: column;
             background: var(--bg-secondary);
+            position: relative;
         }
 
         .chat-header {
@@ -2637,7 +2638,84 @@
         const loadChat = async () => {
             const messages = await loadChannels();
             renderMessages(messages);
+            return messages.length;
         };
+
+        // Real-time polling
+        let chatPollInterval = null;
+        let lastMessageCount = 0;
+        let isScrolledToBottom = true;
+
+        const startChatPolling = () => {
+            if (chatPollInterval) return;
+            
+            chatPollInterval = setInterval(async () => {
+                const currentCount = await loadChat();
+                
+                if (currentCount > lastMessageCount) {
+                    // New messages arrived
+                    if (isScrolledToBottom) {
+                        // Auto-scroll to show new message
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    } else {
+                        // Show new message indicator
+                        showNewMessageIndicator();
+                    }
+                }
+                lastMessageCount = currentCount;
+            }, 3000); // Check every 3 seconds
+        };
+
+        const stopChatPolling = () => {
+            if (chatPollInterval) {
+                clearInterval(chatPollInterval);
+                chatPollInterval = null;
+            }
+        };
+
+        const showNewMessageIndicator = () => {
+            // Remove existing indicator
+            const existing = document.getElementById('newMessagesIndicator');
+            if (existing) existing.remove();
+            
+            const indicator = document.createElement('div');
+            indicator.id = 'newMessagesIndicator';
+            indicator.style.cssText = `
+                position: absolute;
+                bottom: 80px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--accent);
+                color: var(--bg-primary);
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                z-index: 100;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            `;
+            indicator.innerHTML = '<i class="ph ph-arrow-down"></i> New messages';
+            indicator.onclick = () => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                indicator.remove();
+            };
+            
+            document.querySelector('.chat-container').appendChild(indicator);
+        };
+
+        // Track scroll position
+        chatMessages?.addEventListener('scroll', () => {
+            const threshold = 50;
+            isScrolledToBottom = 
+                chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight < threshold;
+            
+            // Hide indicator if scrolled to bottom
+            if (isScrolledToBottom) {
+                const indicator = document.getElementById('newMessagesIndicator');
+                if (indicator) indicator.remove();
+            }
+        });
 
         const sendMessage = async () => {
             const text = chatInput.value.trim();
@@ -2714,29 +2792,20 @@
 
         // Load chat when tab is clicked
         document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
+            tab.addEventListener('click', async () => {
+                // Stop all module polling
+                stopChatPolling();
+                
                 if (tab.dataset.module === 'chat') {
-                    loadChat();
+                    lastMessageCount = await loadChat();
+                    startChatPolling();
                 }
             });
         });
 
         // Refresh button
-        refreshChatBtn?.addEventListener('click', loadChat);
-
-        chatSendBtn?.addEventListener('click', sendMessage);
-        
-        chatInput?.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-
-        // Auto-resize textarea
-        chatInput?.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        refreshChatBtn?.addEventListener('click', async () => {
+            lastMessageCount = await loadChat();
         });
 
         chatSendBtn?.addEventListener('click', sendMessage);
