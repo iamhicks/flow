@@ -1,26 +1,6 @@
 {
   "messages": [
     {
-      "id": "482b28d8",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Now add the More button to the note meta area:",
-      "timestamp": "2026-02-12T15:54:43.839Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "8fdfb0b4",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Now adjust AI chat positions to be below the tabs bar:",
-      "timestamp": "2026-02-12T15:55:22.854Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
       "id": "e4ec38a8",
       "channel": "webchat",
       "channelName": "WebChat",
@@ -4997,6 +4977,26 @@
       "text": "Bug! The polling refreshes messages and breaks the search filter. Fixing now:",
       "timestamp": "2026-02-13T14:42:56.150Z",
       "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "ff3e8285",
+      "channel": "webchat",
+      "channelName": "WebChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "**✅ Fixed!**\n\nThe polling was refreshing messages and losing the search filter. Now the search text is preserved even when new messages arrive or you scroll.\n\n**Refresh dashboard** and try searching \"Kai\" again — it should stay filtered even when scrolling! 🔍",
+      "timestamp": "2026-02-13T14:44:14.634Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "236a119e",
+      "channel": "telegram",
+      "channelName": "Telegram",
+      "sender": "Pete",
+      "senderType": "human",
+      "text": "works but now when i scroll up through the results ans stop, messages scroll/jump back down to newest message\n[message_id: 4796]",
+      "timestamp": "2026-02-13T14:45:51.902Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
     }
   ],
   "channels": [
@@ -5037,5 +5037,5 @@
       "icon": "ph-chat-circle"
     }
   ],
-  "lastUpdated": "2026-02-13T14:43:49.963Z"
+  "lastUpdated": "2026-02-13T14:46:55.301Z"
 }

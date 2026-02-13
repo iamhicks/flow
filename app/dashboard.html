@@ -3564,7 +3564,10 @@
             // Update message count
             document.getElementById('chatMessageCount').textContent = `${filteredMessages.length} message${filteredMessages.length !== 1 ? 's' : ''}`;
             
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            // Only auto-scroll if not searching and user was at bottom
+            if (!searchText && isScrolledToBottom) {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
         };
 
         const escapeHtml = (text) => {
@@ -3590,10 +3593,13 @@
             chatPollInterval = setInterval(async () => {
                 const currentCount = await loadChat();
                 
+                // Don't auto-scroll if user is searching or scrolled up
+                const isSearching = currentSearchText && currentSearchText.length > 0;
+                
                 if (currentCount > lastMessageCount) {
                     // New messages arrived
-                    if (isScrolledToBottom) {
-                        // Auto-scroll to show new message
+                    if (isScrolledToBottom && !isSearching) {
+                        // Auto-scroll to show new message (only if not searching and at bottom)
                         chatMessages.scrollTop = chatMessages.scrollHeight;
                     } else {
                         // Show new message indicator
