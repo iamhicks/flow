@@ -173,7 +173,15 @@ const server = http.createServer((req, res) => {
   }
 
   // Static files
-  const filePath = req.url === '/' ? '/index.v2.html' : req.url;
+  let filePath = req.url;
+  
+  // Route mapping
+  if (req.url === '/') {
+    filePath = '/index.html';  // Landing page
+  } else if (req.url === '/kanban' || req.url === '/kanban.html') {
+    filePath = '/kanban.html';
+  }
+  
   const fullPath = path.join(__dirname, 'app', filePath);
   
   // Special route for dashboard
