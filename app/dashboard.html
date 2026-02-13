@@ -1426,15 +1426,6 @@
             background: transparent;
         }
 
-        .chat-channel-item.filtered {
-            background: var(--accent);
-            color: white;
-        }
-
-        .chat-channel-item.filtered .chat-channel-status {
-            color: rgba(255,255,255,0.8);
-        }
-
         .chat-channel-icon {
             width: 32px;
             height: 32px;
@@ -1599,8 +1590,8 @@
             flex: 1;
             background: var(--bg-secondary);
             border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 12px 16px;
+            border-radius: 24px;
+            padding: 12px 48px 12px 16px;
             color: var(--text-primary);
             font-size: 14px;
             resize: none;
@@ -1614,8 +1605,8 @@
         }
 
         .chat-send-btn {
-            width: 48px;
-            height: 48px;
+            width: 32px;
+            height: 32px;
             background: var(--accent);
             border: none;
             border-radius: 50%;
@@ -1624,17 +1615,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
             flex-shrink: 0;
         }
 
-        .chat-send-btn:hover {
-            background: var(--accent-hover);
-            transform: scale(1.05);
-        }
-
         .chat-send-btn i {
-            font-size: 20px;
+            font-size: 16px;
         }
     </style>
 </head>
@@ -3471,9 +3456,9 @@
                     // Add "All Channels" option
                     const allChannels = [{ id: 'all', name: 'All Channels', status: 'connected', icon: 'ph-chat-circle-text' }, ...channels];
                     
-                    // Render channel list
+                    // Render channel list - static display only, no filtering
                     channelList.innerHTML = allChannels.map(ch => `
-                        <div class="chat-channel-item ${ch.id === selectedChannel ? 'filtered' : ''}" data-channel="${ch.id}">
+                        <div class="chat-channel-item" data-channel="${ch.id}">
                             <div class="chat-channel-icon">
                                 <i class="ph ${ch.icon || 'ph-chat-circle'}"></i>
                             </div>
@@ -3486,19 +3471,8 @@
                         </div>
                     `).join('');
                     
-                    // Add click handlers for filtering
-                    channelList.querySelectorAll('.chat-channel-item').forEach(item => {
-                        item.addEventListener('click', () => {
-                            selectedChannel = item.dataset.channel;
-                            // Update UI
-                            channelList.querySelectorAll('.chat-channel-item').forEach(ch => ch.classList.remove('filtered'));
-                            item.classList.add('filtered');
-                            // Clear search when changing channel
-                            if (chatSearch) chatSearch.value = '';
-                            // Re-render messages with filter
-                            renderMessages(allMessages);
-                        });
-                    });
+                    // Always show all messages, no channel filtering
+                    selectedChannel = 'all';
                     
                     return data.messages || [];
                 }

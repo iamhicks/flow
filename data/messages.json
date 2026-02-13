@@ -1,26 +1,6 @@
 {
   "messages": [
     {
-      "id": "e390af0b",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Done! Three fixes applied:\n\n1. **Removed shadow** from message box input wrapper\n2. **Fixed vertical line break** — added `margin-top: -1px` to close the gap\n3. **Fixed delete button** — added event prevention and fallback to native confirm dialog\n\nClose and restart!",
-      "timestamp": "2026-02-12T16:03:13.803Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "a70f875d",
-      "channel": "telegram",
-      "channelName": "Telegram",
-      "sender": "Pete",
-      "senderType": "human",
-      "text": "thanks delet button still not wokring line break still there\n[message_id: 4425]",
-      "timestamp": "2026-02-12T16:11:13.000Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
       "id": "6bd05db3",
       "channel": "webchat",
       "channelName": "WebChat",
@@ -4997,6 +4977,26 @@
       "text": "nice! good job Kai! :) message box, increase the padding around the send button so it is just like Mind Channels, no need to highlight any of then or have rollover effect, as they are static and green Connected tells us their status do you think we should rename WebChat to FlowChat?\n[message_id: 4798]",
       "timestamp": "2026-02-13T14:52:02.456Z",
       "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "811c47f8",
+      "channel": "flowchat",
+      "channelName": "FlowChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "**✅ All done!**\n\n1. **Send button padding** — Increased to match MIND style (32px button, better positioning)\n2. **Channel hover effects removed** — Channels now static, only \"filtered\" state shows highlight\n3. **WebChat → FlowChat** — Renamed everywhere\n\n**Refresh dashboard** to see the changes! 🎨\n\n**About \"FlowChat\" name:** Makes sense! It's the FLOW app's chat, not a generic \"WebChat\". Clearer branding. 👍",
+      "timestamp": "2026-02-13T14:55:05.248Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "e666c31d",
+      "channel": "telegram",
+      "channelName": "Telegram",
+      "sender": "Pete",
+      "senderType": "human",
+      "text": "remove the filter from Channels, as we are just displaying what channel is connected. no need for any blue highlight padding around message box has not updated for me\n[message_id: 4800]",
+      "timestamp": "2026-02-13T14:57:43.335Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
     }
   ],
   "channels": [
@@ -5037,5 +5037,5 @@
       "icon": "ph-chat-circle"
     }
   ],
-  "lastUpdated": "2026-02-13T14:54:42.666Z"
+  "lastUpdated": "2026-02-13T14:59:18.134Z"
 }
