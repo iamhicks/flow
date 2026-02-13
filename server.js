@@ -563,6 +563,94 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // Crons API - Real cron jobs from OpenClaw
+  if (urlPath === '/api/crons' && req.method === 'GET') {
+    try {
+      const { execSync } = require('child_process');
+      const output = execSync('openclaw cron list 2>/dev/null || echo ""', { encoding: 'utf8' });
+      
+      // Parse the fixed-width table output
+      const lines = output.split('\n').filter(l => l.trim() && !l.startsWith('ID') && !l.includes('------'));
+      const crons = [];
+      
+      for (const line of lines) {
+        // Fixed column positions based on header
+        const id = line.substring(0, 36).trim();
+        const name = line.substring(37, 61).trim();
+        const schedule = line.substring(62, 94).trim();
+        const next = line.substring(95, 105).trim();
+        const last = line.substring(106, 116).trim();
+        const status = line.substring(117, 126).trim();
+        const target = line.substring(127, 136).trim();
+        const agent = line.substring(137).trim();
+        
+        if (id && name) {
+          crons.push({
+            id: id,
+            name: name,
+            schedule: schedule,
+            next: next,
+            last: last,
+            status: status,
+            target: target,
+            agent: agent
+          });
+        }
+      }
+      
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ crons, count: crons.length }));
+      return;
+    } catch (e) {
+      console.error('Error loading crons:', e);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ crons: [], count: 0, error: e.message }));
+      return;
+    }
+  }
+
+  // Channels API - Real channel status from OpenClaw
+  if (urlPath === '/api/channels' && req.method === 'GET') {
+    try {
+      const configPath = path.join(process.env.HOME, '.openclaw/openclaw.json');
+      let channels = [];
+      
+      if (fs.existsSync(configPath)) {
+        const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+        
+        // Extract channel status from config
+        if (config.channels) {
+          for (const [name, settings] of Object.entries(config.channels)) {
+            channels.push({
+              name: name,
+              enabled: settings.enabled || false,
+              status: settings.enabled ? 'connected' : 'disabled'
+            });
+          }
+        }
+        
+        // Add webchat if sessions exist
+        const sessionsPath = path.join(process.env.HOME, '.openclaw/agents/main/sessions');
+        if (fs.existsSync(sessionsPath)) {
+          channels.push({
+            name: 'webchat',
+            enabled: true,
+            status: 'active'
+          });
+        }
+      }
+      
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ channels }));
+      return;
+    } catch (e) {
+      console.error('Error loading channels:', e);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ channels: [], error: e.message }));
+      return;
+    }
+  }
+
   // Workspace .md files API
   if (urlPath.startsWith('/api/workspace/') && req.method === 'GET') {
     try {

@@ -72,7 +72,33 @@
         "timestamp": "2026-02-13T11:16:37.355Z"
       },
       "timestamp": "2026-02-13T11:16:37.357Z"
+    },
+    {
+      "id": "evt_1770984428875",
+      "type": "kanban:taskMoved",
+      "data": {
+        "id": "_3c1vvgjt1",
+        "title": "test card for activity field",
+        "fromColumn": "backlog",
+        "column": "todo",
+        "board": "Flow Mind Website",
+        "actor": "User"
+      },
+      "timestamp": "2026-02-13T12:07:08.875Z"
+    },
+    {
+      "id": "evt_1770984440961",
+      "type": "kanban:taskMoved",
+      "data": {
+        "id": "_3c1vvgjt1",
+        "title": "test card for activity field",
+        "fromColumn": "todo",
+        "column": "backlog",
+        "board": "Flow Mind Website",
+        "actor": "User"
+      },
+      "timestamp": "2026-02-13T12:07:20.961Z"
     }
   ],
-  "lastUpdated": "2026-02-13T11:16:37.357Z"
+  "lastUpdated": "2026-02-13T12:07:20.961Z"
 }

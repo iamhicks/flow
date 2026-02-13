@@ -45,18 +45,6 @@
               "createdAt": "2026-02-12T23:00:00Z"
             },
             {
-              "id": "_f7mug076w",
-              "title": "Auto backups",
-              "description": "are we able to setup an auto backup, not sure what it should be. maybe /workspace/ everything inside of it.\nThe sessions back you did for me, is that custom? as i cold not see Sessions folder inside /workspace/\n Kanban. Anything else you can think of, or would you backup everything inside flow?\n\n",
-              "dueDate": "",
-              "priority": "medium",
-              "labels": [],
-              "checklist": [],
-              "attachments": [],
-              "recurring": "",
-              "createdAt": "2026-02-13T08:48:16.912Z"
-            },
-            {
               "id": "_3c1vvgjt1",
               "title": "test card for activity field",
               "description": "",
@@ -67,6 +55,18 @@
               "attachments": [],
               "recurring": "",
               "createdAt": "2026-02-13T11:18:36.647Z"
+            },
+            {
+              "id": "_f7mug076w",
+              "title": "Auto backups",
+              "description": "are we able to setup an auto backup, not sure what it should be. maybe /workspace/ everything inside of it.\nThe sessions back you did for me, is that custom? as i cold not see Sessions folder inside /workspace/\n Kanban. Anything else you can think of, or would you backup everything inside flow?\n\n",
+              "dueDate": "",
+              "priority": "medium",
+              "labels": [],
+              "checklist": [],
+              "attachments": [],
+              "recurring": "",
+              "createdAt": "2026-02-13T08:48:16.912Z"
             }
           ]
         },
@@ -311,6 +311,6 @@
     "lastBackup": null,
     "currentBoard": "board_1"
   },
-  "lastModified": "2026-02-13T11:18:37.151Z",
+  "lastModified": "2026-02-13T12:07:20.959Z",
   "modifiedBy": "user"
 }

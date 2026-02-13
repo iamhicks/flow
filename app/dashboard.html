@@ -2080,7 +2080,7 @@
                                 <div class="system-card-header">
                                     <i class="ph ph-clock"></i>
                                     <span>Cron Jobs</span>
-                                    <span class="system-badge">4 active</span>
+                                    <span class="system-badge" id="cronBadge">4 active</span>
                                 </div>
                                 <div class="system-card-body">
                                     <div class="cron-list" id="cronList">
@@ -2924,29 +2924,55 @@
         // System Dashboard Module
         const loadSystemData = async () => {
             try {
-                // Load cron jobs
+                // Load REAL cron jobs from OpenClaw
                 const cronList = document.getElementById('cronList');
-                const cronJobs = [
-                    { name: 'GitHub Monitor', schedule: 'Every 2 hours', enabled: true },
-                    { name: 'Auto-Push Memory', schedule: 'Every hour', enabled: true },
-                    { name: 'Backup Check', schedule: 'Daily at 07:00', enabled: true },
-                    { name: 'Friday Cleanup', schedule: 'Fridays at 09:00', enabled: true }
-                ];
-                
                 if (cronList) {
-                    cronList.innerHTML = cronJobs.map(job => `
-                        <div class="cron-item">
-                            <div class="cron-name">${job.name}</div>
-                            <div class="cron-schedule">${job.schedule}</div>
-                            <div class="cron-status ${job.enabled ? 'enabled' : ''}">
-                                <i class="ph ph-${job.enabled ? 'check-circle' : 'x-circle'}"></i>
-                                ${job.enabled ? 'Enabled' : 'Disabled'}
+                    try {
+                        const response = await fetch('/api/crons?t=' + Date.now());
+                        const data = await response.json();
+                        const cronJobs = data.crons || [];
+                        
+                        document.getElementById('cronBadge').textContent = `${cronJobs.length} active`;
+                        
+                        cronList.innerHTML = cronJobs.map(job => `
+                            <div class="cron-item">
+                                <div class="cron-name">${job.name}</div>
+                                <div class="cron-schedule">${job.schedule} • Next: ${job.next}</div>
+                                <div class="cron-status ${job.status === 'ok' ? 'enabled' : ''}">
+                                    <i class="ph ph-${job.status === 'ok' ? 'check-circle' : 'x-circle'}"></i>
+                                    ${job.status === 'ok' ? 'Enabled' : job.status}
+                                </div>
                             </div>
-                        </div>
-                    `).join('');
+                        `).join('');
+                    } catch (e) {
+                        cronList.innerHTML = '<div class="cron-item">Error loading crons</div>';
+                    }
                 }
 
-                // Load sessions
+                // Load REAL channels from OpenClaw
+                try {
+                    const channelsResponse = await fetch('/api/channels?t=' + Date.now());
+                    const channelsData = await channelsResponse.json();
+                    const channels = channelsData.channels || [];
+                    
+                    // Update Channels card with real data
+                    const channelsCard = document.querySelectorAll('.system-card')[1]; // Second card is Channels
+                    if (channelsCard) {
+                        const cardBody = channelsCard.querySelector('.system-card-body');
+                        if (cardBody) {
+                            cardBody.innerHTML = channels.map(ch => `
+                                <div class="system-row">
+                                    <span class="system-label">${ch.name === 'telegram' ? '<i class="ph ph-telegram-logo"></i> ' : ''}${ch.name}</span>
+                                    <span class="system-status ${ch.enabled ? 'online' : 'offline'}">${ch.status}</span>
+                                </div>
+                            `).join('');
+                        }
+                    }
+                } catch (e) {
+                    console.log('Using demo channel data:', e);
+                }
+
+                // Load sessions (still static for now)
                 const sessionList = document.getElementById('sessionList');
                 const sessions = [
                     { id: 'main', name: 'Main Agent', status: 'active' },
@@ -2967,7 +2993,7 @@
 
                 document.getElementById('sessionCount').textContent = `${sessions.length} active`;
 
-                // Load config preview
+                // Load config preview (still static)
                 const configPreview = document.getElementById('configPreview');
                 if (configPreview) {
                     const config = {

@@ -1,56 +1,6 @@
 {
   "messages": [
     {
-      "id": "bca42af7",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "The fixed positioned elements escape the parent's `display: none`. Let me fix the hiding logic:",
-      "timestamp": "2026-02-12T14:25:07.445Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "3d0471f5",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Done! All three elements now fixed positioned on the right:\n- **Header**: Fixed at top right (below app header)\n- **Messages**: Fixed in middle with scroll\n- **Input**: Fixed at bottom right\n\nClose and restart!",
-      "timestamp": "2026-02-12T14:25:18.811Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "9faa8463",
-      "channel": "telegram",
-      "channelName": "Telegram",
-      "sender": "Pete",
-      "senderType": "human",
-      "text": "now when i click on ai chat button it seems to open but all the ai chat right column graphics are not there, just empty white space\n[message_id: 4351]",
-      "timestamp": "2026-02-12T14:26:31.442Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "6b19da34",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "The fixed elements are children of the hidden panel. Let me move them outside so they're siblings:",
-      "timestamp": "2026-02-12T14:27:08.791Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "e3c4186a",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Done! Moved all the chat elements outside the hidden panel. They now show/hide based on the `chat-open` class on the body. Close and restart!",
-      "timestamp": "2026-02-12T14:27:58.952Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
       "id": "7bb52775",
       "channel": "telegram",
       "channelName": "Telegram",
@@ -4997,6 +4947,56 @@
       "text": "Now rearranging Schedule — Weekly Review next to Upcoming Checks:",
       "timestamp": "2026-02-13T11:26:04.180Z",
       "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "96f4e991",
+      "channel": "webchat",
+      "channelName": "WebChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "**✅ All fixes done! Refresh dashboard.**\n\n---\n\n## **Your Questions Answered:**\n\n### **1. Activity Tab — what shows?**\n| Event | Shows in Activity? |\n|-------|-------------------|\n| Chat messages | ✅ Yes |\n| Kanban cards created/moved | ✅ Yes (just fixed) |\n| Kai file edits | ✅ Yes |\n\n**Test it:** Add a card in Kanban → check Activity tab (auto-refreshes every 3s)\n\n---\n\n### **2. FLOW Chat → Telegram?**\n**No.** FLOW chat is **read-only**. It shows messages FROM Telegram, but doesn't send back.\n\n```\nTelegram → FLOW: ✅ (synced)\nFLOW → Telegram: ❌ (not possible)\n```\n\n---\n\n### **3. Dropdown (Telegram/WebChat) purpose?**\n**Filter view.** Shows only messages from that channel, or \"All Channels\" combined.\n\n---\n\n### **4. Why Telegram tag but not in Telegram?**\nThose are messages you sent **to me via Telegram** (I reply, conversation flows). They get synced INTO FLOW for your records.\n\nMessages you type **inside FLOW chat** stay in FLOW only.\n\n---\n\n### **5. Dashboard stats — real or demo?**\nMostl",
+      "timestamp": "2026-02-13T11:27:25.943Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "22b81cdf",
+      "channel": "telegram",
+      "channelName": "Telegram",
+      "sender": "Pete",
+      "senderType": "human",
+      "text": "Cron jobs - real Channel status - real No demo data\n[message_id: 4718]",
+      "timestamp": "2026-02-13T12:04:09.163Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "0f2af649",
+      "channel": "webchat",
+      "channelName": "WebChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "Got it! Adding real cron and channel APIs now:",
+      "timestamp": "2026-02-13T12:04:36.196Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "0cb872d9",
+      "channel": "webchat",
+      "channelName": "WebChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "Now updating dashboard to use real data:",
+      "timestamp": "2026-02-13T12:05:04.651Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "cc8c8418",
+      "channel": "webchat",
+      "channelName": "WebChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "Parsing issue. Fixing:",
+      "timestamp": "2026-02-13T12:06:38.137Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
     }
   ],
   "channels": [
@@ -5037,5 +5037,5 @@
       "icon": "ph-chat-circle"
     }
   ],
-  "lastUpdated": "2026-02-13T11:27:14.339Z"
+  "lastUpdated": "2026-02-13T12:08:14.656Z"
 }
