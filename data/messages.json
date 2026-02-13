@@ -1,26 +1,6 @@
 {
   "messages": [
     {
-      "id": "b1a03462",
-      "channel": "flowchat",
-      "channelName": "FlowChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Done! Fixes applied:\n\n1. ✅ **Vertical line** — Added `border-top` to input area to complete the line\n2. ✅ **Note title wrapping** — Changed to `<textarea>` with `height: auto` and wrapping styles\n3. ✅ **More dropdown** — Moved inside `note-meta` div so it positions correctly under the button\n\nClose and restart!",
-      "timestamp": "2026-02-12T17:00:29.135Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "8dbc9258",
-      "channel": "telegram",
-      "channelName": "Telegram",
-      "sender": "Pete",
-      "senderType": "human",
-      "text": "---\nQueued #1\nmore button working not title - when the title gets too long it now deletes everything before it and starts again, i asked for it to wrap onto a new line vertical line still broken and now you have put the horizontal line back - going around in circles on this one",
-      "timestamp": "2026-02-12T17:03:23.702Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
       "id": "45143cf4",
       "channel": "flowchat",
       "channelName": "FlowChat",
@@ -4999,8 +4979,28 @@
       "text": "thanks, channels list is now not showing",
       "timestamp": "2026-02-13T15:28:39.759Z",
       "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "887f0199",
+      "channel": "flowchat",
+      "channelName": "FlowChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "**✅ Fixed!**\n\nThe `/api/messages` endpoint now includes channels in the response:\n- FlowChat (first)\n- Telegram (second)\n\n**Refresh dashboard** — channel list should now appear! 🎨",
+      "timestamp": "2026-02-13T15:29:39.767Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "49f08962",
+      "channel": "telegram",
+      "channelName": "Telegram",
+      "sender": "Pete",
+      "senderType": "human",
+      "text": "what about the other channels - slack etc",
+      "timestamp": "2026-02-13T15:30:10.895Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
     }
   ],
   "channels": [],
-  "lastUpdated": "2026-02-13T15:29:33.000Z"
+  "lastUpdated": "2026-02-13T15:31:02.998Z"
 }

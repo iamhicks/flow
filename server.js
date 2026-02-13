@@ -644,11 +644,33 @@ const server = http.createServer(async (req, res) => {
         }
       });
       
-      // Sort: FlowChat first
+      // Add other configured channels from OpenClaw (even if no messages yet)
+      const configPath = path.join(process.env.HOME, '.openclaw/openclaw.json');
+      if (fs.existsSync(configPath)) {
+        const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+        if (config.channels) {
+          for (const [name, settings] of Object.entries(config.channels)) {
+            if (!uniqueChannels.has(name) && settings.enabled) {
+              uniqueChannels.set(name, {
+                id: name,
+                name: name.charAt(0).toUpperCase() + name.slice(1),
+                status: 'connected',
+                icon: name === 'slack' ? 'ph-slack-logo' : 
+                      name === 'discord' ? 'ph-discord-logo' :
+                      name === 'whatsapp' ? 'ph-whatsapp-logo' :
+                      name === 'signal' ? 'ph-chat-circle' :
+                      'ph-chat-circle'
+              });
+            }
+          }
+        }
+      }
+      
+      // Sort: FlowChat first, then alphabetical
       const channels = Array.from(uniqueChannels.values()).sort((a, b) => {
         if (a.id === 'flowchat') return -1;
         if (b.id === 'flowchat') return 1;
-        return 0;
+        return a.name.localeCompare(b.name);
       });
       
       res.writeHead(200, { 'Content-Type': 'application/json' });
