@@ -630,10 +630,13 @@ const server = http.createServer(async (req, res) => {
         const data = JSON.parse(body);
         data.lastModified = new Date().toISOString();
         data.modifiedBy = 'user';
+        
+        // Load OLD data BEFORE saving for comparison
+        const oldData = loadData();
+        
         saveData(data);
         
         // Detect changes for activity logging
-        const oldData = loadData();
         detectKanbanChanges(oldData, data);
         
         res.writeHead(200, { 'Content-Type': 'application/json' });

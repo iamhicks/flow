@@ -1,6 +1,46 @@
 {
   "activities": [
     {
+      "id": "act_1770981397357",
+      "type": "chat",
+      "icon": "💬",
+      "actor": "Kai",
+      "actorType": "ai",
+      "description": "Working on it now. Check the Activity tab for updates!",
+      "boardName": "telegram",
+      "timestamp": "2026-02-13T11:16:37.357Z"
+    },
+    {
+      "id": "act_1770981395872",
+      "type": "chat",
+      "icon": "💬",
+      "actor": "Pete",
+      "actorType": "human",
+      "description": "i am not seeing messages i send u in flow chat appear in my telegram - is that possible? i guess not",
+      "boardName": "telegram",
+      "timestamp": "2026-02-13T11:16:35.872Z"
+    },
+    {
+      "id": "act_1770981330411",
+      "type": "chat",
+      "icon": "💬",
+      "actor": "Kai",
+      "actorType": "ai",
+      "description": "I can help with that! Let me check your kanban boards.",
+      "boardName": "telegram",
+      "timestamp": "2026-02-13T11:15:30.411Z"
+    },
+    {
+      "id": "act_1770981328900",
+      "type": "chat",
+      "icon": "💬",
+      "actor": "Pete",
+      "actorType": "human",
+      "description": "no reply yes please",
+      "boardName": "telegram",
+      "timestamp": "2026-02-13T11:15:28.900Z"
+    },
+    {
       "id": "act_1770981280713",
       "type": "chat",
       "icon": "💬",
@@ -118,5 +158,5 @@
       "icon": "📊"
     }
   ],
-  "lastUpdated": "2026-02-13T11:14:40.713Z"
+  "lastUpdated": "2026-02-13T11:16:37.357Z"
 }
