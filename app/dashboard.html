@@ -3653,12 +3653,16 @@
             const text = chatInput.value.trim();
             if (!text) return;
             
+            // Always use flowchat for dashboard messages
+            const channelId = 'flowchat';
+            const channelName = 'FlowChat';
+            
             // Add to UI immediately
             const tempMsg = {
                 text,
                 senderType: 'human',
-                channel: selectedChannel,
-                channelName: channels.find(c => c.id === selectedChannel)?.name || selectedChannel,
+                channel: channelId,
+                channelName: channelName,
                 timestamp: new Date().toISOString()
             };
             
@@ -3676,8 +3680,8 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        channel: selectedChannel,
-                        channelName: channels.find(c => c.id === selectedChannel)?.name || selectedChannel,
+                        channel: channelId,
+                        channelName: channelName,
                         sender: 'Pete',
                         senderType: 'human',
                         text: text,
@@ -3690,35 +3694,6 @@
             } catch (e) {
                 console.error('Error sending message:', e);
             }
-            
-            // Simulate Kai response
-            setTimeout(async () => {
-                const responses = [
-                    "I can help with that! Let me check your kanban boards.",
-                    "Got it. What else would you like me to do?",
-                    "I see. Let me process that for you.",
-                    "Working on it now. Check the Activity tab for updates!"
-                ];
-                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                
-                try {
-                    await fetch('/api/messages', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            channel: selectedChannel,
-                            channelName: channels.find(c => c.id === selectedChannel)?.name || selectedChannel,
-                            sender: 'Kai',
-                            senderType: 'ai',
-                            text: randomResponse,
-                            sessionId: 'flow-dashboard'
-                        })
-                    });
-                    await loadChat();
-                } catch (e) {
-                    console.error('Error saving response:', e);
-                }
-            }, 1000);
         };
 
         // Load chat when tab is clicked

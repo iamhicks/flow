@@ -436,7 +436,187 @@
         "timestamp": "2026-02-13T14:17:22.634Z"
       },
       "timestamp": "2026-02-13T14:17:22.637Z"
+    },
+    {
+      "id": "evt_1770996842309",
+      "type": "chat:message",
+      "data": {
+        "channel": "all",
+        "channelName": "all",
+        "sender": "Pete",
+        "senderType": "human",
+        "text": "nice thanks",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770996842306",
+        "timestamp": "2026-02-13T15:34:02.306Z"
+      },
+      "timestamp": "2026-02-13T15:34:02.309Z"
+    },
+    {
+      "id": "evt_1770996844332",
+      "type": "chat:message",
+      "data": {
+        "channel": "all",
+        "channelName": "all",
+        "sender": "Kai",
+        "senderType": "ai",
+        "text": "I see. Let me process that for you.",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770996844329",
+        "timestamp": "2026-02-13T15:34:04.329Z"
+      },
+      "timestamp": "2026-02-13T15:34:04.332Z"
+    },
+    {
+      "id": "evt_1770996962694",
+      "type": "chat:message",
+      "data": {
+        "channel": "all",
+        "channelName": "all",
+        "sender": "Pete",
+        "senderType": "human",
+        "text": "when I enter \"nice thanks\" just now in flowchat, all messages dissapeared and the reappeared like a page refresh, which does not look good, can we stop that. also my message \"nice thanks\" is on two lines. my message width should be the same as yours.\n\ni also see \"all\" in channel list, should not be there",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770996962681",
+        "timestamp": "2026-02-13T15:36:02.681Z"
+      },
+      "timestamp": "2026-02-13T15:36:02.694Z"
+    },
+    {
+      "id": "evt_1770996964218",
+      "type": "chat:message",
+      "data": {
+        "channel": "all",
+        "channelName": "all",
+        "sender": "Kai",
+        "senderType": "ai",
+        "text": "I see. Let me process that for you.",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770996964215",
+        "timestamp": "2026-02-13T15:36:04.215Z"
+      },
+      "timestamp": "2026-02-13T15:36:04.218Z"
+    },
+    {
+      "id": "evt_1770997022108",
+      "type": "chat:message",
+      "data": {
+        "channel": "all",
+        "channelName": "all",
+        "sender": "Pete",
+        "senderType": "human",
+        "text": "i thnk when i enter a message in flow chat and press send, message list scrolls to the top maybe and that is what happens then scrolls down?",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770997022105",
+        "timestamp": "2026-02-13T15:37:02.105Z"
+      },
+      "timestamp": "2026-02-13T15:37:02.108Z"
+    },
+    {
+      "id": "evt_1770997024045",
+      "type": "chat:message",
+      "data": {
+        "channel": "all",
+        "channelName": "all",
+        "sender": "Kai",
+        "senderType": "ai",
+        "text": "I see. Let me process that for you.",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770997024042",
+        "timestamp": "2026-02-13T15:37:04.042Z"
+      },
+      "timestamp": "2026-02-13T15:37:04.045Z"
+    },
+    {
+      "id": "evt_1770997055640",
+      "type": "chat:message",
+      "data": {
+        "channel": "all",
+        "channelName": "all",
+        "sender": "Pete",
+        "senderType": "human",
+        "text": "what is this message in flowchat each time i send you a message? \"I see. Let me process that for you.\"",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770997055636",
+        "timestamp": "2026-02-13T15:37:35.636Z"
+      },
+      "timestamp": "2026-02-13T15:37:35.640Z"
+    },
+    {
+      "id": "evt_1770997061287",
+      "type": "chat:message",
+      "data": {
+        "channel": "all",
+        "channelName": "all",
+        "sender": "Kai",
+        "senderType": "ai",
+        "text": "Got it. What else would you like me to do?",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770997061284",
+        "timestamp": "2026-02-13T15:37:41.284Z"
+      },
+      "timestamp": "2026-02-13T15:37:41.287Z"
+    },
+    {
+      "id": "evt_1770997172194",
+      "type": "chat:message",
+      "data": {
+        "channel": "all",
+        "channelName": "all",
+        "sender": "Pete",
+        "senderType": "human",
+        "text": "and what is this message? \"Got it. What else would you like me to do?\"",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770997172191",
+        "timestamp": "2026-02-13T15:39:32.191Z"
+      },
+      "timestamp": "2026-02-13T15:39:32.194Z"
+    },
+    {
+      "id": "evt_1770997174163",
+      "type": "chat:message",
+      "data": {
+        "channel": "all",
+        "channelName": "all",
+        "sender": "Kai",
+        "senderType": "ai",
+        "text": "Working on it now. Check the Activity tab for updates!",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770997174161",
+        "timestamp": "2026-02-13T15:39:34.161Z"
+      },
+      "timestamp": "2026-02-13T15:39:34.163Z"
+    },
+    {
+      "id": "evt_1770997211389",
+      "type": "chat:message",
+      "data": {
+        "channel": "all",
+        "channelName": "all",
+        "sender": "Pete",
+        "senderType": "human",
+        "text": "if they are generic replies we should not show them, as it does not sound like you",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770997211386",
+        "timestamp": "2026-02-13T15:40:11.386Z"
+      },
+      "timestamp": "2026-02-13T15:40:11.389Z"
+    },
+    {
+      "id": "evt_1770997213427",
+      "type": "chat:message",
+      "data": {
+        "channel": "all",
+        "channelName": "all",
+        "sender": "Kai",
+        "senderType": "ai",
+        "text": "Working on it now. Check the Activity tab for updates!",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770997213424",
+        "timestamp": "2026-02-13T15:40:13.424Z"
+      },
+      "timestamp": "2026-02-13T15:40:13.427Z"
     }
   ],
-  "lastUpdated": "2026-02-13T14:17:22.637Z"
+  "lastUpdated": "2026-02-13T15:40:13.427Z"
 }
