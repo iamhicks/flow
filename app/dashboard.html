@@ -2020,28 +2020,36 @@
                     <div class="system-container">
                         <div class="system-grid">
                             <!-- Gateway Status Card -->
-                            <div class="system-card">
+                            <div class="system-card system-card-wide">
                                 <div class="system-card-header">
                                     <i class="ph ph-plug"></i>
                                     <span>Gateway Status</span>
-                                    <span class="system-status online">Online</span>
+                                    <span class="system-status" id="gw-status-badge">Checking...</span>
                                 </div>
                                 <div class="system-card-body">
                                     <div class="system-row">
                                         <span class="system-label">Version</span>
-                                        <span class="system-value" id="gw-version">2026.2.6-3</span>
+                                        <span class="system-value" id="gw-version">--</span>
                                     </div>
                                     <div class="system-row">
-                                        <span class="system-label">Port</span>
-                                        <span class="system-value">18789</span>
+                                        <span class="system-label">Response Time</span>
+                                        <span class="system-value" id="gw-ping">--</span>
                                     </div>
                                     <div class="system-row">
-                                        <span class="system-label">Model</span>
-                                        <span class="system-value">Kimi K2.5</span>
+                                        <span class="system-label">Active Sessions</span>
+                                        <span class="system-value" id="gw-sessions">--</span>
                                     </div>
                                     <div class="system-row">
-                                        <span class="system-label">Workspace</span>
-                                        <span class="system-value truncate">~/.openclaw/workspace</span>
+                                        <span class="system-label">Dashboard</span>
+                                        <a href="http://127.0.0.1:18789/" target="_blank" class="system-value" style="color: var(--accent);">Open Control UI →</a>
+                                    </div>
+                                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; gap: 12px;">
+                                        <button class="btn btn-secondary" id="refreshGatewayBtn" style="flex: 1;">
+                                            <i class="ph ph-arrows-clockwise"></i> Refresh
+                                        </button>
+                                        <button class="btn btn-primary" id="restartGatewayBtn" style="flex: 1; background: var(--warning); color: var(--bg-primary);">
+                                            <i class="ph ph-restart"></i> Restart Gateway
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -3080,6 +3088,9 @@
 
                 document.getElementById('sessionCount').textContent = `${sessions.length} active`;
 
+                // Load REAL gateway status
+                await loadGatewayStatus();
+
                 // Load config preview (still static)
                 const configPreview = document.getElementById('configPreview');
                 if (configPreview) {
@@ -3095,6 +3106,70 @@
                 console.error('Error loading system data:', e);
             }
         };
+
+        // Gateway Status
+        const loadGatewayStatus = async () => {
+            try {
+                const response = await fetch('/api/gateway/status?t=' + Date.now());
+                const data = await response.json();
+                
+                const badge = document.getElementById('gw-status-badge');
+                const version = document.getElementById('gw-version');
+                const ping = document.getElementById('gw-ping');
+                const sessions = document.getElementById('gw-sessions');
+                
+                if (data.running) {
+                    badge.textContent = 'Online';
+                    badge.className = 'system-status online';
+                    if (version) version.textContent = data.version || 'Unknown';
+                    if (ping) ping.textContent = data.reachable ? `${data.reachable}ms` : '--';
+                    if (sessions) sessions.textContent = data.sessions || '0';
+                } else {
+                    badge.textContent = 'Offline';
+                    badge.className = 'system-status offline';
+                    if (version) version.textContent = '--';
+                    if (ping) ping.textContent = '--';
+                    if (sessions) sessions.textContent = '--';
+                }
+            } catch (e) {
+                console.error('Error loading gateway status:', e);
+                const badge = document.getElementById('gw-status-badge');
+                if (badge) {
+                    badge.textContent = 'Error';
+                    badge.className = 'system-status offline';
+                }
+            }
+        };
+
+        // Refresh gateway button
+        document.getElementById('refreshGatewayBtn')?.addEventListener('click', loadGatewayStatus);
+
+        // Restart gateway button
+        document.getElementById('restartGatewayBtn')?.addEventListener('click', async () => {
+            if (!confirm('Restart OpenClaw Gateway? This will briefly interrupt service.')) return;
+            
+            try {
+                const btn = document.getElementById('restartGatewayBtn');
+                btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Restarting...';
+                btn.disabled = true;
+                
+                const response = await fetch('/api/gateway/restart', { method: 'POST' });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Gateway restart initiated. Wait 5-10 seconds then refresh.');
+                    setTimeout(loadGatewayStatus, 5000);
+                } else {
+                    alert('Restart failed: ' + (data.error || 'Unknown error'));
+                }
+            } catch (e) {
+                alert('Restart failed: ' + e.message);
+            } finally {
+                const btn = document.getElementById('restartGatewayBtn');
+                btn.innerHTML = '<i class="ph ph-restart"></i> Restart Gateway';
+                btn.disabled = false;
+            }
+        });
 
         // Load system data when tab is clicked
         document.querySelectorAll('.nav-tab').forEach(tab => {

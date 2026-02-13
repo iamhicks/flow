@@ -919,6 +919,68 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // Gateway Status API
+  if (urlPath === '/api/gateway/status' && req.method === 'GET') {
+    try {
+      const { execSync } = require('child_process');
+      const output = execSync('openclaw status 2>/dev/null || echo "Gateway not running"', { encoding: 'utf8', timeout: 5000 });
+      
+      // Parse status output
+      const status = {
+        running: output.includes('Gateway') && !output.includes('not running'),
+        dashboard: 'http://127.0.0.1:18789/',
+        reachable: null,
+        sessions: 0,
+        version: null,
+        raw: output
+      };
+      
+      // Extract reachable time
+      const reachableMatch = output.match(/reachable\s+(\d+)ms/);
+      if (reachableMatch) status.reachable = parseInt(reachableMatch[1]);
+      
+      // Extract session count
+      const sessionsMatch = output.match(/sessions\s+(\d+)/);
+      if (sessionsMatch) status.sessions = parseInt(sessionsMatch[1]);
+      
+      // Extract version
+      const versionMatch = output.match(/node\s+([\d.]+)/);
+      if (versionMatch) status.version = versionMatch[1];
+      
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(status));
+      return;
+    } catch (e) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ running: false, error: e.message }));
+      return;
+    }
+  }
+
+  // Gateway Restart API
+  if (urlPath === '/api/gateway/restart' && req.method === 'POST') {
+    try {
+      const { exec } = require('child_process');
+      
+      // Restart gateway in background
+      exec('openclaw gateway restart 2>&1 &', (error, stdout, stderr) => {
+        if (error) {
+          console.error('Gateway restart error:', error);
+        } else {
+          console.log('Gateway restart initiated:', stdout);
+        }
+      });
+      
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, message: 'Gateway restart initiated' }));
+      return;
+    } catch (e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: e.message }));
+      return;
+    }
+  }
+
   // Static files
   let filePath = req.url;
   

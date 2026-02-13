@@ -134,7 +134,46 @@
         "creator": "User"
       },
       "timestamp": "2026-02-13T12:35:16.108Z"
+    },
+    {
+      "id": "evt_1770986358926",
+      "type": "kanban:taskMoved",
+      "data": {
+        "id": "card_3",
+        "title": "Update website screenshots",
+        "fromColumn": "todo",
+        "column": "backlog",
+        "board": "Flow Mind Website",
+        "actor": "User"
+      },
+      "timestamp": "2026-02-13T12:39:18.926Z"
+    },
+    {
+      "id": "evt_1770986373422",
+      "type": "kanban:taskMoved",
+      "data": {
+        "id": "_076lol2xn",
+        "title": "Gateway Access",
+        "fromColumn": "backlog",
+        "column": "todo",
+        "board": "Flow Mind Website",
+        "actor": "User"
+      },
+      "timestamp": "2026-02-13T12:39:33.422Z"
+    },
+    {
+      "id": "evt_1770986376201",
+      "type": "kanban:taskMoved",
+      "data": {
+        "id": "_tlwrxs8ad",
+        "title": "Flow Left column",
+        "fromColumn": "backlog",
+        "column": "todo",
+        "board": "Flow Mind Website",
+        "actor": "User"
+      },
+      "timestamp": "2026-02-13T12:39:36.201Z"
     }
   ],
-  "lastUpdated": "2026-02-13T12:35:16.108Z"
+  "lastUpdated": "2026-02-13T12:39:36.201Z"
 }

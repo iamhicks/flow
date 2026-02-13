@@ -81,6 +81,23 @@
               "createdAt": "2026-02-13T12:27:04.239Z"
             },
             {
+              "id": "card_3",
+              "title": "Update website screenshots",
+              "description": "New AI chat feature screenshots",
+              "priority": "medium",
+              "labels": [
+                "website",
+                "design"
+              ],
+              "createdAt": "2026-02-12T22:30:00Z"
+            }
+          ]
+        },
+        {
+          "id": "todo",
+          "name": "To Do",
+          "cards": [
+            {
               "id": "_076lol2xn",
               "title": "Gateway Access",
               "description": "openclaw dashboard shows Gateway Access, if it's connected or not and the ability to restart it etc inside dashboard. is this something helpful we could use?",
@@ -95,7 +112,7 @@
             {
               "id": "_tlwrxs8ad",
               "title": "Flow Left column",
-              "description": "",
+              "description": "is the data in the left column real? maybe we can use this space to display important stats or info. This column should be collapsable as well like Mind left column",
               "dueDate": "",
               "priority": "medium",
               "labels": [],
@@ -103,23 +120,6 @@
               "attachments": [],
               "recurring": "",
               "createdAt": "2026-02-13T12:35:15.605Z"
-            }
-          ]
-        },
-        {
-          "id": "todo",
-          "name": "To Do",
-          "cards": [
-            {
-              "id": "card_3",
-              "title": "Update website screenshots",
-              "description": "New AI chat feature screenshots",
-              "priority": "medium",
-              "labels": [
-                "website",
-                "design"
-              ],
-              "createdAt": "2026-02-12T22:30:00Z"
             }
           ]
         },
@@ -347,6 +347,6 @@
     "lastBackup": null,
     "currentBoard": "board_1"
   },
-  "exportDate": "2026-02-13T12:35:16.607Z",
+  "exportDate": "2026-02-13T12:39:36.700Z",
   "version": "1.0"
 }

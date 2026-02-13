@@ -1,6 +1,36 @@
 {
   "activities": [
     {
+      "id": "act_1770986376200",
+      "type": "task",
+      "icon": "📋",
+      "actor": "User",
+      "actorType": "human",
+      "description": "Moved \"Flow Left column\" to todo",
+      "boardName": "Flow Mind Website",
+      "timestamp": "2026-02-13T12:39:36.200Z"
+    },
+    {
+      "id": "act_1770986373422",
+      "type": "task",
+      "icon": "📋",
+      "actor": "User",
+      "actorType": "human",
+      "description": "Moved \"Gateway Access\" to todo",
+      "boardName": "Flow Mind Website",
+      "timestamp": "2026-02-13T12:39:33.422Z"
+    },
+    {
+      "id": "act_1770986358925",
+      "type": "task",
+      "icon": "📋",
+      "actor": "User",
+      "actorType": "human",
+      "description": "Moved \"Update website screenshots\" to backlog",
+      "boardName": "Flow Mind Website",
+      "timestamp": "2026-02-13T12:39:18.925Z"
+    },
+    {
       "id": "act_1770986116108",
       "type": "task",
       "icon": "✅",
@@ -208,5 +238,5 @@
       "icon": "📊"
     }
   ],
-  "lastUpdated": "2026-02-13T12:35:16.108Z"
+  "lastUpdated": "2026-02-13T12:39:36.200Z"
 }
