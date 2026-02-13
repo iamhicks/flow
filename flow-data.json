@@ -102,6 +102,18 @@
               "attachments": [],
               "recurring": "",
               "createdAt": "2026-02-13T13:05:55.908Z"
+            },
+            {
+              "id": "_j1nhuife0",
+              "title": "Kanban Card movement",
+              "description": "when I move a card from one column to another, it moves but thenjumps back to the column i moved it from and then back again to the column i originally moved it to. sometimes I move a card and it does not want to move. when i try the second time it then moves ok into that column\n",
+              "dueDate": "",
+              "priority": "medium",
+              "labels": [],
+              "checklist": [],
+              "attachments": [],
+              "recurring": "",
+              "createdAt": "2026-02-13T13:32:17.119Z"
             }
           ]
         },
@@ -138,19 +150,6 @@
               "recurring": "",
               "createdAt": "2026-02-13T12:55:50.520Z",
               "updatedAt": "2026-02-13T13:02:51.784Z"
-            },
-            {
-              "id": "_nm1w9u9az",
-              "title": "Chat styling",
-              "description": "can you style the chat window and bubble etc just like we did for Mind.\n",
-              "dueDate": "",
-              "priority": "medium",
-              "labels": [],
-              "checklist": [],
-              "attachments": [],
-              "recurring": "",
-              "createdAt": "2026-02-13T12:59:46.784Z",
-              "updatedAt": "2026-02-13T13:02:51.785Z"
             }
           ]
         },
@@ -158,31 +157,6 @@
           "id": "done",
           "name": "Done",
           "cards": [
-            {
-              "id": "card_4",
-              "title": "Testing FLOW kanban ✓ MOVED BY KAI",
-              "description": "Verify Kai can move cards - SUCCESS!",
-              "priority": "high",
-              "labels": [
-                "testing",
-                "flow",
-                "done"
-              ],
-              "createdAt": "2026-02-12T22:30:00Z"
-            },
-            {
-              "id": "_tlwrxs8ad",
-              "title": "Flow Left column",
-              "description": "is the data in the left column real? maybe we can use this space to display important stats or info. This column should be collapsable as well like Mind left column",
-              "dueDate": "",
-              "priority": "medium",
-              "labels": [],
-              "checklist": [],
-              "attachments": [],
-              "recurring": "",
-              "createdAt": "2026-02-13T12:35:15.605Z",
-              "updatedAt": "2026-02-13T12:46:35.028Z"
-            },
             {
               "id": "_v4m1r0xsl",
               "title": "Token Usage",
@@ -195,6 +169,19 @@
               "recurring": "",
               "createdAt": "2026-02-13T12:27:04.239Z",
               "updatedAt": "2026-02-13T13:10:26.533Z"
+            },
+            {
+              "id": "_nm1w9u9az",
+              "title": "Chat styling",
+              "description": "can you style the chat window and bubble etc just like we did for Mind.\n",
+              "dueDate": "",
+              "priority": "medium",
+              "labels": [],
+              "checklist": [],
+              "attachments": [],
+              "recurring": "",
+              "createdAt": "2026-02-13T12:59:46.784Z",
+              "updatedAt": "2026-02-13T13:22:08.881Z"
             }
           ]
         },
@@ -214,6 +201,18 @@
               "createdAt": "2026-02-12T22:30:00Z"
             },
             {
+              "id": "card_4",
+              "title": "Testing FLOW kanban ✓ MOVED BY KAI",
+              "description": "Verify Kai can move cards - SUCCESS!",
+              "priority": "high",
+              "labels": [
+                "testing",
+                "flow",
+                "done"
+              ],
+              "createdAt": "2026-02-12T22:30:00Z"
+            },
+            {
               "id": "_076lol2xn",
               "title": "Gateway Access",
               "description": "openclaw dashboard shows Gateway Access, if it's connected or not and the ability to restart it etc inside dashboard. is this something helpful we could use?",
@@ -225,6 +224,19 @@
               "recurring": "",
               "createdAt": "2026-02-13T12:30:00.014Z",
               "updatedAt": "2026-02-13T12:46:35.015Z"
+            },
+            {
+              "id": "_tlwrxs8ad",
+              "title": "Flow Left column",
+              "description": "is the data in the left column real? maybe we can use this space to display important stats or info. This column should be collapsable as well like Mind left column",
+              "dueDate": "",
+              "priority": "medium",
+              "labels": [],
+              "checklist": [],
+              "attachments": [],
+              "recurring": "",
+              "createdAt": "2026-02-13T12:35:15.605Z",
+              "updatedAt": "2026-02-13T12:46:35.028Z"
             }
           ]
         }
@@ -400,6 +412,6 @@
     "lastBackup": null,
     "currentBoard": "board_1"
   },
-  "lastModified": "2026-02-13T13:19:42.462Z",
+  "lastModified": "2026-02-13T13:33:53.262Z",
   "modifiedBy": "user"
 }

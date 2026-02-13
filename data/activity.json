@@ -1,6 +1,56 @@
 {
   "activities": [
     {
+      "id": "act_1770989598065",
+      "type": "task",
+      "icon": "📋",
+      "actor": "User",
+      "actorType": "human",
+      "description": "Moved \"Kanban Card movement\" to backlog",
+      "boardName": "Flow Mind Website",
+      "timestamp": "2026-02-13T13:33:18.065Z"
+    },
+    {
+      "id": "act_1770989585664",
+      "type": "task",
+      "icon": "📋",
+      "actor": "User",
+      "actorType": "human",
+      "description": "Moved \"Kanban Card movement\" to todo",
+      "boardName": "Flow Mind Website",
+      "timestamp": "2026-02-13T13:33:05.664Z"
+    },
+    {
+      "id": "act_1770989537622",
+      "type": "task",
+      "icon": "✅",
+      "actor": "User",
+      "actorType": "human",
+      "description": "Created task: \"Kanban Card movement\"",
+      "boardName": "Flow Mind Website",
+      "timestamp": "2026-02-13T13:32:17.622Z"
+    },
+    {
+      "id": "act_1770989522883",
+      "type": "task",
+      "icon": "📋",
+      "actor": "User",
+      "actorType": "human",
+      "description": "Moved \"Flow Left column\" to archive",
+      "boardName": "Flow Mind Website",
+      "timestamp": "2026-02-13T13:32:02.883Z"
+    },
+    {
+      "id": "act_1770989492884",
+      "type": "task",
+      "icon": "📋",
+      "actor": "User",
+      "actorType": "human",
+      "description": "Moved \"Testing FLOW kanban ✓ MOVED BY KAI\" to archive",
+      "boardName": "Flow Mind Website",
+      "timestamp": "2026-02-13T13:31:32.884Z"
+    },
+    {
       "id": "act_1770988782464",
       "type": "task",
       "icon": "📋",
@@ -348,5 +398,5 @@
       "icon": "📊"
     }
   ],
-  "lastUpdated": "2026-02-13T13:19:42.464Z"
+  "lastUpdated": "2026-02-13T13:33:18.065Z"
 }

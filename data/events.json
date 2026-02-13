@@ -312,7 +312,71 @@
         "actor": "User"
       },
       "timestamp": "2026-02-13T13:19:42.464Z"
+    },
+    {
+      "id": "evt_1770989492885",
+      "type": "kanban:taskMoved",
+      "data": {
+        "id": "card_4",
+        "title": "Testing FLOW kanban ✓ MOVED BY KAI",
+        "fromColumn": "done",
+        "column": "archive",
+        "board": "Flow Mind Website",
+        "actor": "User"
+      },
+      "timestamp": "2026-02-13T13:31:32.885Z"
+    },
+    {
+      "id": "evt_1770989522884",
+      "type": "kanban:taskMoved",
+      "data": {
+        "id": "_tlwrxs8ad",
+        "title": "Flow Left column",
+        "fromColumn": "done",
+        "column": "archive",
+        "board": "Flow Mind Website",
+        "actor": "User"
+      },
+      "timestamp": "2026-02-13T13:32:02.884Z"
+    },
+    {
+      "id": "evt_1770989537622",
+      "type": "kanban:taskCreated",
+      "data": {
+        "id": "_j1nhuife0",
+        "title": "Kanban Card movement",
+        "column": "backlog",
+        "board": "Flow Mind Website",
+        "creator": "User"
+      },
+      "timestamp": "2026-02-13T13:32:17.622Z"
+    },
+    {
+      "id": "evt_1770989585665",
+      "type": "kanban:taskMoved",
+      "data": {
+        "id": "_j1nhuife0",
+        "title": "Kanban Card movement",
+        "fromColumn": "backlog",
+        "column": "todo",
+        "board": "Flow Mind Website",
+        "actor": "User"
+      },
+      "timestamp": "2026-02-13T13:33:05.665Z"
+    },
+    {
+      "id": "evt_1770989598065",
+      "type": "kanban:taskMoved",
+      "data": {
+        "id": "_j1nhuife0",
+        "title": "Kanban Card movement",
+        "fromColumn": "todo",
+        "column": "backlog",
+        "board": "Flow Mind Website",
+        "actor": "User"
+      },
+      "timestamp": "2026-02-13T13:33:18.065Z"
     }
   ],
-  "lastUpdated": "2026-02-13T13:19:42.464Z"
+  "lastUpdated": "2026-02-13T13:33:18.065Z"
 }
