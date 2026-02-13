@@ -153,6 +153,61 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Workspace .md files API
+  if (urlPath.startsWith('/api/workspace/') && req.method === 'GET') {
+    try {
+      const fileName = urlPath.replace('/api/workspace/', '');
+      // Security: only allow .md files, no directory traversal
+      if (!fileName.endsWith('.md') || fileName.includes('..') || fileName.includes('/')) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid file name' }));
+        return;
+      }
+      const workspacePath = path.join(process.env.HOME, '.openclaw/workspace', fileName);
+      if (fs.existsSync(workspacePath)) {
+        const content = fs.readFileSync(workspacePath, 'utf8');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ content }));
+        return;
+      } else {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'File not found' }));
+        return;
+      }
+    } catch (e) {
+      console.error('Error loading workspace file:', e);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: e.message }));
+      return;
+    }
+  }
+
+  if (urlPath.startsWith('/api/workspace/') && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        const fileName = urlPath.replace('/api/workspace/', '');
+        // Security: only allow .md files, no directory traversal
+        if (!fileName.endsWith('.md') || fileName.includes('..') || fileName.includes('/')) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Invalid file name' }));
+          return;
+        }
+        const { content } = JSON.parse(body);
+        const workspacePath = path.join(process.env.HOME, '.openclaw/workspace', fileName);
+        fs.writeFileSync(workspacePath, content, 'utf8');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true }));
+      } catch (e) {
+        console.error('Error saving workspace file:', e);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message }));
+      }
+    });
+    return;
+  }
+
   if (urlPath === '/api/data' && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => body += chunk);

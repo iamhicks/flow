@@ -1668,9 +1668,47 @@
             trading_journal: `# trading_journal_market_research.md\n\n[Content editable in workspace/trading_journal_market_research.md]`
         };
 
+        // File name mapping
+        const fileNameMap = {
+            soul: 'SOUL.md',
+            identity: 'IDENTITY.md',
+            user: 'USER.md',
+            agents: 'AGENTS.md',
+            memory: 'MEMORY.md',
+            standing_orders: 'STANDING_ORDERS.md',
+            protocol_cost: 'PROTOCOL_COST_EFFICIENCY.md',
+            tools: 'TOOLS.md',
+            heartbeat: 'HEARTBEAT.md',
+            dev_procedure: 'DEV_PROCEDURE.md',
+            bootstrap: 'BOOTSTRAP.md',
+            overnight: 'OVERNIGHT.md',
+            trading_app: 'trading_app_strategy.md',
+            trading_journal: 'trading_journal_market_research.md'
+        };
+
         let currentKaiFile = 'soul';
         const kaiEditor = document.getElementById('kaiEditor');
         const kaiCurrentFile = document.getElementById('kai-current-file');
+
+        // Load file from server
+        const loadKaiFile = async (fileKey) => {
+            const fileName = fileNameMap[fileKey];
+            if (!fileName) return;
+            
+            kaiEditor.value = 'Loading...';
+            try {
+                const response = await fetch(`/api/workspace/${fileName}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    kaiEditor.value = data.content;
+                } else {
+                    // Fall back to placeholder
+                    kaiEditor.value = kaiFiles[fileKey] || `# ${fileName}\n\n[File not found on server]`;
+                }
+            } catch (e) {
+                kaiEditor.value = kaiFiles[fileKey] || `# ${fileName}\n\n[Error loading file]`;
+            }
+        };
 
         // Kai file switching
         document.querySelectorAll('.kai-file-btn').forEach(btn => {
@@ -1679,20 +1717,36 @@
                 btn.classList.add('active');
                 
                 currentKaiFile = btn.dataset.file;
-                kaiCurrentFile.textContent = currentKaiFile.toUpperCase() + '.md';
-                kaiEditor.value = kaiFiles[currentKaiFile] || 'Loading...';
+                kaiCurrentFile.textContent = fileNameMap[currentKaiFile] || currentKaiFile + '.md';
+                loadKaiFile(currentKaiFile);
             });
         });
 
         // Initialize Kai editor
         if (kaiEditor) {
-            kaiEditor.value = kaiFiles.soul;
+            loadKaiFile('soul');
         }
 
         // Kai save button
-        document.getElementById('kaiSaveBtn')?.addEventListener('click', () => {
-            kaiFiles[currentKaiFile] = kaiEditor.value;
-            showToast(`Saved ${currentKaiFile.toUpperCase()}.md`, 'success');
+        document.getElementById('kaiSaveBtn')?.addEventListener('click', async () => {
+            const fileName = fileNameMap[currentKaiFile];
+            if (!fileName) return;
+            
+            try {
+                const response = await fetch(`/api/workspace/${fileName}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: kaiEditor.value })
+                });
+                
+                if (response.ok) {
+                    showToast(`Saved ${fileName}`, 'success');
+                } else {
+                    showToast('Save failed', 'error');
+                }
+            } catch (e) {
+                showToast('Save error: ' + e.message, 'error');
+            }
         });
 
         // Skills Browser Module
