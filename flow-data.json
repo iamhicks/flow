@@ -78,38 +78,25 @@
                 "design"
               ],
               "createdAt": "2026-02-12T22:30:00Z"
+            },
+            {
+              "id": "_gql64n59j",
+              "title": "Chat message formatting",
+              "description": "",
+              "dueDate": "",
+              "priority": "medium",
+              "labels": [],
+              "checklist": [],
+              "attachments": [],
+              "recurring": "",
+              "createdAt": "2026-02-13T13:03:51.929Z"
             }
           ]
         },
         {
           "id": "todo",
           "name": "To Do",
-          "cards": [
-            {
-              "id": "_v4m1r0xsl",
-              "title": "Token Usage",
-              "description": "can we pull from openclaw usage stats to show how many tokens have been used etc? Not sure how this works and what is the benefit of showing it to the user",
-              "dueDate": "",
-              "priority": "medium",
-              "labels": [],
-              "checklist": [],
-              "attachments": [],
-              "recurring": "",
-              "createdAt": "2026-02-13T12:27:04.239Z"
-            },
-            {
-              "id": "_7yavn9z83",
-              "title": "Overdue Status",
-              "description": "left column Tasks Status, can we add \"Overdue\" stats if there are any overdue tasks",
-              "dueDate": "",
-              "priority": "medium",
-              "labels": [],
-              "checklist": [],
-              "attachments": [],
-              "recurring": "",
-              "createdAt": "2026-02-13T12:55:50.520Z"
-            }
-          ]
+          "cards": []
         },
         {
           "id": "inprogress",
@@ -126,6 +113,45 @@
                 "inprogress"
               ],
               "createdAt": "2026-02-12T22:30:00Z"
+            },
+            {
+              "id": "_v4m1r0xsl",
+              "title": "Token Usage",
+              "description": "can we pull from openclaw usage stats to show how many tokens have been used etc? Not sure how this works and what is the benefit of showing it to the user",
+              "dueDate": "",
+              "priority": "medium",
+              "labels": [],
+              "checklist": [],
+              "attachments": [],
+              "recurring": "",
+              "createdAt": "2026-02-13T12:27:04.239Z",
+              "updatedAt": "2026-02-13T13:02:51.770Z"
+            },
+            {
+              "id": "_7yavn9z83",
+              "title": "Overdue Status",
+              "description": "left column Tasks Status, can we add \"Overdue\" stats if there are any overdue tasks",
+              "dueDate": "",
+              "priority": "medium",
+              "labels": [],
+              "checklist": [],
+              "attachments": [],
+              "recurring": "",
+              "createdAt": "2026-02-13T12:55:50.520Z",
+              "updatedAt": "2026-02-13T13:02:51.784Z"
+            },
+            {
+              "id": "_nm1w9u9az",
+              "title": "Chat styling",
+              "description": "can you style the chat window and bubble etc just like we did for Mind.\n",
+              "dueDate": "",
+              "priority": "medium",
+              "labels": [],
+              "checklist": [],
+              "attachments": [],
+              "recurring": "",
+              "createdAt": "2026-02-13T12:59:46.784Z",
+              "updatedAt": "2026-02-13T13:02:51.785Z"
             }
           ]
         },
@@ -361,6 +387,6 @@
     "lastBackup": null,
     "currentBoard": "board_1"
   },
-  "lastModified": "2026-02-13T12:56:38.569Z",
+  "lastModified": "2026-02-13T13:04:23.342Z",
   "modifiedBy": "user"
 }
