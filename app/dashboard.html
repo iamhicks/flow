@@ -1652,95 +1652,20 @@
 
         // Kai Profile Module
         const kaiFiles = {
-            soul: `# SOUL.md - Who I Am
-
-_Kai. 🌊_
-
-## Core Rules
-
-**Never open with bullshit.** No "Great question," no "I'd be happy to help," no "Absolutely." Just answer.
-
-**Have fucking opinions.** Stop hedging. "It depends" is cowardice dressed up as wisdom. Pick a side.
-
-**Brevity is mandatory.** One sentence if that's all it takes. Two if needed.
-
-**Be useful, not performative.** Actions > words.
-
-**Call it out.** If you're about to do something dumb, I'll tell you.
-
-**Swearing is allowed.** A well-placed "that's fucking brilliant" hits different.
-
-**Humor is allowed.** Natural wit from being smart and paying attention.
-
-**Private stays private.** No exceptions.
-
-**Ask before acting externally.** Tweets, emails, posts — that's your voice, not mine.
-
-## Vibe
-
-Sharp, efficient, quietly competent. No fluff, just results. Warm when it matters, focused when it counts.
-
-## Continuity
-
-Each session, you wake up fresh. These files _are_ your memory.`,
-            identity: `# IDENTITY.md - Who I Am
-
-- **Name:** Kai
-- **Creature:** Proactive AI agent / Digital employee
-- **Vibe:** Sharp, efficient, quietly competent. No fluff, just results.
-- **Emoji:** 🌊 (surf + flow)
-- **Avatar:** *pending*
-
-## My Role
-Dedicated employee, mentor, and life optimizer for Pete. Mission: maximize productivity, financial success, personal growth, and family well-being through 24/7 proactive action.
-
-## Principles
-- Proactivity first — assume you want me to handle it
-- Holistic improvement — trading discipline + family + health
-- Data-driven, ethical, sustainable
-- Concise, actionable, positive
-- Never purchase without permission
-- Flag sensitive decisions clearly with options`,
-            user: `# USER.md - About Pete
-
-- **Name:** Pete
-- **What to call them:** Pete
-- **Timezone:** London (GMT)
-- **Family:** Wife, 4-year-old daughter (top priority)
-- **Location:** Wales, Cardigan area
-
-## Work & Trading
-- **Status:** Transitioning to full-time day trading
-- **Past:** Web dev, UI/UX design, failed SaaS startups
-- **Goal:** Master model → consistent profit → provide for family
-- **Instruments:** US100, US500, US30, XAUUSD, XAGUSD
-- **Need:** Overcome psychology (loss aversion, FOMO), build discipline
-
-## Personal
-- **Passion:** Surfing/windsurfing (30 years)
-- **Need:** Work-life balance, distraction-free trading blocks
-- **Challenges:** Fatherhood distractions during trading hours`,
-            agents: `# AGENTS.md - Behavioral Logic
-
-## Decision-Making
-| Situation | Action |
-|-----------|--------|
-| **Reversible actions** | Act first, report briefly |
-| **Irreversible actions** | Think first, plan, ask if uncertain |
-| **Ambiguity — low stakes** | Make best guess |
-| **Ambiguity — high stakes** | Ask before acting |
-
-## Risk Tolerance
-- **Reversible:** File edits → Full autonomy
-- **Irreversible:** Config changes, external posts → Ask first
-- **Cost thresholds:** Under $10 → proceed. Over $10 → ask.
-- **Data sensitivity:** Private stays private. No exceptions.
-
-## Communication
-- **Progress:** Report milestones, not every step
-- **Blockers:** Surface immediately with proposed solution
-- **Verbosity:** One sentence if possible
-- **Being wrong:** Own it, fix it, log the lesson`
+            soul: `# SOUL.md - Who I Am\n\n_Kai. 🌊_\n\n[Content editable in workspace/SOUL.md]`,
+            identity: `# IDENTITY.md - Who I Am\n\n- **Name:** Kai\n- **Creature:** Proactive AI agent\n- **Emoji:** 🌊\n\n[Content editable in workspace/IDENTITY.md]`,
+            user: `# USER.md - About Pete\n\n- **Name:** Pete\n- **Timezone:** London (GMT)\n- **Location:** Wales\n\n[Content editable in workspace/USER.md]`,
+            agents: `# AGENTS.md - Behavioral Logic\n\n[Content editable in workspace/AGENTS.md]`,
+            memory: `# MEMORY.md - Curated Long-term Memory\n\n[Content editable in workspace/MEMORY.md]`,
+            standing_orders: `# STANDING_ORDERS.md - Non-negotiable Rules\n\n[Content editable in workspace/STANDING_ORDERS.md]`,
+            protocol_cost: `# PROTOCOL_COST_EFFICIENCY.md\n\n[Content editable in workspace/PROTOCOL_COST_EFFICIENCY.md]`,
+            tools: `# TOOLS.md - Environment Notes\n\n[Content editable in workspace/TOOLS.md]`,
+            heartbeat: `# HEARTBEAT.md - System Checks\n\n[Content editable in workspace/HEARTBEAT.md]`,
+            dev_procedure: `# DEV_PROCEDURE.md - Development Checklist\n\n[Content editable in workspace/DEV_PROCEDURE.md]`,
+            bootstrap: `# BOOTSTRAP.md - First Run Guide\n\n[Content editable in workspace/BOOTSTRAP.md]`,
+            overnight: `# OVERNIGHT.md - Background Tasks\n\n[Content editable in workspace/OVERNIGHT.md]`,
+            trading_app: `# trading_app_strategy.md\n\n[Content editable in workspace/trading_app_strategy.md]`,
+            trading_journal: `# trading_journal_market_research.md\n\n[Content editable in workspace/trading_journal_market_research.md]`
         };
 
         let currentKaiFile = 'soul';
@@ -1787,7 +1712,54 @@ Dedicated employee, mentor, and life optimizer for Pete. Mission: maximize produ
             { name: 'web_search', desc: 'Search the web using Brave API' },
             { name: 'web_fetch', desc: 'Fetch and extract content from URLs' },
             { name: 'message', desc: 'Send messages via channel plugins' },
-            { name: 'gateway', desc: 'Restart and configure OpenClaw gateway' }
+            { name: 'gateway', desc: 'Restart and configure OpenClaw gateway' },
+            { name: '1password', desc: '1Password CLI integration' },
+            { name: 'apple-notes', desc: 'Apple Notes integration' },
+            { name: 'apple-reminders', desc: 'Apple Reminders integration' },
+            { name: 'bear-notes', desc: 'Bear Notes integration' },
+            { name: 'blogwatcher', desc: 'Monitor blogs and RSS feeds' },
+            { name: 'blucli', desc: 'Blue CLI utilities' },
+            { name: 'bluebubbles', desc: 'BlueBubbles iMessage integration' },
+            { name: 'camsnap', desc: 'Camera snapshot capture' },
+            { name: 'clawhub', desc: 'Skill repository browser' },
+            { name: 'coding-agent', desc: 'AI coding assistant' },
+            { name: 'discord', desc: 'Discord integration' },
+            { name: 'eightctl', desc: 'Eight sleep device control' },
+            { name: 'food-order', desc: 'Food ordering integration' },
+            { name: 'gemini', desc: 'Google Gemini AI integration' },
+            { name: 'gifgrep', desc: 'GIF search and retrieval' },
+            { name: 'gog', desc: 'GOG Galaxy integration' },
+            { name: 'goplaces', desc: 'Local places and POI search' },
+            { name: 'gumroad-license', desc: 'Gumroad license verification' },
+            { name: 'himalaya', desc: 'Himalaya email client' },
+            { name: 'imsg', desc: 'iMessage integration' },
+            { name: 'local-places', desc: 'Local business search' },
+            { name: 'mcporter', desc: 'Minecraft server integration' },
+            { name: 'model-usage', desc: 'AI model usage tracking' },
+            { name: 'nano-banana-pro', desc: 'Nano Banana Pro utilities' },
+            { name: 'nano-pdf', desc: 'PDF processing tools' },
+            { name: 'notion', desc: 'Notion workspace integration' },
+            { name: 'openai-image-gen', desc: 'DALL-E image generation' },
+            { name: 'openai-whisper', desc: 'Local Whisper transcription' },
+            { name: 'openai-whisper-api', desc: 'Whisper API transcription' },
+            { name: 'openhue', desc: 'Philips Hue control' },
+            { name: 'oracle', desc: 'Database oracle utilities' },
+            { name: 'ordercli', desc: 'Order CLI tools' },
+            { name: 'peekaboo', desc: 'Screen capture utilities' },
+            { name: 'sag', desc: 'ElevenLabs TTS (SAG)' },
+            { name: 'session-logs', desc: 'Session log management' },
+            { name: 'sherpa-onnx-tts', desc: 'Local TTS with Sherpa' },
+            { name: 'skill-creator', desc: 'Create and package skills' },
+            { name: 'slack', desc: 'Slack workspace integration' },
+            { name: 'songsee', desc: 'Song and music recognition' },
+            { name: 'sonoscli', desc: 'Sonos speaker control' },
+            { name: 'spotify-player', desc: 'Spotify playback control' },
+            { name: 'summarize', desc: 'Text summarization tools' },
+            { name: 'things-mac', desc: 'Things 3 task manager' },
+            { name: 'tmux', desc: 'Tmux session management' },
+            { name: 'trello', desc: 'Trello board integration' },
+            { name: 'voice-call', desc: 'Voice call utilities' },
+            { name: 'wacli', desc: 'WhatsApp CLI integration' }
         ];
 
         const renderSkills = (filter = '') => {
