@@ -125,6 +125,40 @@
         .main-container {
             display: flex;
             height: calc(100vh - 56px);
+            position: relative;
+        }
+
+        /* Sidebar Toggle */
+        .sidebar-toggle {
+            position: absolute;
+            left: 260px;
+            top: 16px;
+            z-index: 100;
+            width: 24px;
+            height: 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0 6px 6px 0;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .sidebar-toggle.collapsed {
+            left: 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .sidebar-toggle.collapsed i {
+            transform: rotate(180deg);
         }
 
         /* Sidebar */
@@ -134,6 +168,13 @@
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
+            transition: width 0.3s ease, transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            transform: translateX(-100%);
         }
 
         .sidebar-section {
@@ -1650,35 +1691,65 @@
     </div>
 
     <div class="main-container">
+        <!-- Sidebar Toggle -->
+        <button id="sidebarToggle" class="sidebar-toggle" title="Toggle Sidebar">
+            <i class="ph ph-caret-left"></i>
+        </button>
+        
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-section">
-                <div class="sidebar-title">Today's Progress</div>
-                <div class="metric-card">
-                    <div class="metric-label">Tasks Completed</div>
-                    <div class="metric-value">12</div>
+                <div class="sidebar-title">
+                    <i class="ph ph-check-circle"></i> Tasks Status
                 </div>
-                
                 <div class="metric-card">
-                    <div class="metric-label">Time Saved</div>
-                    <div class="metric-value">4.5h</div>
+                    <div class="metric-label">In Progress</div>
+                    <div class="metric-value" id="sidebar-inprogress">--</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">To Do</div>
+                    <div class="metric-value" id="sidebar-todo">--</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Done Today</div>
+                    <div class="metric-value" id="sidebar-done">--</div>
                 </div>
             </div>
             
             <div class="sidebar-section">
-                <div class="sidebar-title">Current Focus</div>
-                <ul class="focus-list">
-                    <li class="focus-item">Fix MIND license system</li>
-                    <li class="focus-item">Test FLOW dashboard sync</li>
-                    <li class="focus-item">Review product landing page</li>
-                </ul>
+                <div class="sidebar-title">
+                    <i class="ph ph-activity"></i> System Health
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Gateway</div>
+                    <div class="metric-value" id="sidebar-gateway" style="font-size: 14px;">--</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Active Sessions</div>
+                    <div class="metric-value" id="sidebar-sessions">--</div>
+                </div>
             </div>
             
             <div class="sidebar-section">
-                <div class="sidebar-title">Next Agent Check-in</div>
-                <div style="padding: 12px; background: var(--bg-tertiary); border-radius: 8px;">
-                    <div style="font-size: 24px; font-weight: 700; color: var(--accent);">2h 15m</div>
-                    <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Morning heartbeat at 07:00</div>
+                <div class="sidebar-title">
+                    <i class="ph ph-brain"></i> Recent Memory
+                </div>
+                <div id="sidebar-memory" style="font-size: 13px; color: var(--text-secondary);">
+                    Loading...
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">
+                    <i class="ph ph-link"></i> Quick Links
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <a href="http://127.0.0.1:18789/" target="_blank" style="color: var(--accent); text-decoration: none; font-size: 13px;">
+                        <i class="ph ph-arrow-square-out"></i> OpenClaw Control
+                    </a>
+                    <a href="#" onclick="document.querySelector('[data-module=\"system\"]').click(); return false;" style="color: var(--accent); text-decoration: none; font-size: 13px;">
+                        <i class="ph ph-gear"></i> System Dashboard
+                    </a>
                 </div>
             </div>
         </aside>
@@ -3170,6 +3241,101 @@
                 btn.disabled = false;
             }
         });
+
+        // Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        
+        // Load saved state
+        const sidebarCollapsed = localStorage.getItem('flow-sidebar-collapsed') === 'true';
+        if (sidebarCollapsed) {
+            sidebar.classList.add('collapsed');
+            sidebarToggle.classList.add('collapsed');
+        }
+        
+        sidebarToggle?.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            sidebarToggle.classList.toggle('collapsed');
+            localStorage.setItem('flow-sidebar-collapsed', sidebar.classList.contains('collapsed'));
+        });
+        
+        // Load Sidebar Data (real stats)
+        const loadSidebarData = async () => {
+            try {
+                // Load kanban stats
+                const response = await fetch('/api/data?t=' + Date.now());
+                const data = await response.json();
+                
+                const board = data.boards?.find(b => b.name === 'Flow Mind Website');
+                if (board) {
+                    const todoCol = board.columns.find(c => c.id === 'todo');
+                    const inProgressCol = board.columns.find(c => c.id === 'inprogress');
+                    const doneCol = board.columns.find(c => c.id === 'done');
+                    
+                    document.getElementById('sidebar-todo').textContent = todoCol?.cards?.length || 0;
+                    document.getElementById('sidebar-inprogress').textContent = inProgressCol?.cards?.length || 0;
+                    document.getElementById('sidebar-done').textContent = doneCol?.cards?.length || 0;
+                }
+                
+                // Load gateway status
+                try {
+                    const gwResponse = await fetch('/api/gateway/status?t=' + Date.now());
+                    const gwData = await gwResponse.json();
+                    
+                    const gwEl = document.getElementById('sidebar-gateway');
+                    if (gwEl) {
+                        gwEl.textContent = gwData.running ? 'Online' : 'Offline';
+                        gwEl.style.color = gwData.running ? 'var(--success)' : 'var(--danger)';
+                    }
+                    
+                    const sessionsEl = document.getElementById('sidebar-sessions');
+                    if (sessionsEl) {
+                        sessionsEl.textContent = gwData.sessions || 0;
+                    }
+                } catch (e) {
+                    console.log('Gateway status unavailable for sidebar');
+                }
+                
+                // Load recent memories
+                try {
+                    const memResponse = await fetch('/api/memory?t=' + Date.now());
+                    const memData = await memResponse.json();
+                    const memories = memData.memories?.slice(0, 3) || [];
+                    
+                    const memEl = document.getElementById('sidebar-memory');
+                    if (memEl) {
+                        if (memories.length > 0) {
+                            memEl.innerHTML = memories.map(m => `
+                                <div style="padding: 8px 0; border-bottom: 1px solid var(--border);"
+                                    onclick="document.querySelector('[data-module=\"memory\"]').click()"
+                                    style="cursor: pointer;"
+                                >
+                                    <div style="font-size: 12px; color: var(--text-primary);"
+                                        title="${m.content}"
+                                    >
+                                        ${m.icon} ${m.content.substring(0, 40)}${m.content.length > 40 ? '...' : ''}
+                                    </div>
+                                    <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;"
+                                    >
+                                        ${m.category} • ${new Date(m.timestamp).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'})}
+                                    </div>
+                                </div>
+                            `).join('');
+                        } else {
+                            memEl.innerHTML = '<div style="color: var(--text-tertiary);">No memories yet</div>';
+                        }
+                    }
+                } catch (e) {
+                    console.log('Memory unavailable for sidebar');
+                }
+            } catch (e) {
+                console.error('Error loading sidebar data:', e);
+            }
+        };
+        
+        // Load sidebar data initially and refresh every 10 seconds
+        loadSidebarData();
+        setInterval(loadSidebarData, 10000);
 
         // Load system data when tab is clicked
         document.querySelectorAll('.nav-tab').forEach(tab => {
