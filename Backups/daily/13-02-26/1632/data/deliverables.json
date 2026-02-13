@@ -1,0 +1,75 @@
+{
+  "deliverables": [
+    {
+      "id": "del_1",
+      "name": "FLOW-product-landing.html",
+      "type": "html",
+      "description": "Complete product landing page for FLOW Dashboard",
+      "status": "ready",
+      "size": "16.9 KB",
+      "path": "./product.html",
+      "createdBy": "Kai",
+      "createdAt": "2026-02-12T22:00:00Z",
+      "linkedTask": "card_new_1",
+      "icon": "🎨",
+      "downloads": 0
+    },
+    {
+      "id": "del_2",
+      "name": "dashboard-mission-control.html",
+      "type": "html",
+      "description": "FLOW Dashboard v2.0 with Activity Stream and Shared Memory modules",
+      "status": "ready",
+      "size": "29.2 KB",
+      "path": "./dashboard.html",
+      "createdBy": "Kai",
+      "createdAt": "2026-02-12T23:15:00Z",
+      "linkedTask": "card_new_2",
+      "icon": "🚀",
+      "downloads": 0
+    },
+    {
+      "id": "del_3",
+      "name": "MIND-license-fix.patch",
+      "type": "code",
+      "description": "Fix for MIND license dialog blank screen issue",
+      "status": "review",
+      "size": "2.1 KB",
+      "path": "./deliverables/mind-license-fix.patch",
+      "createdBy": "Kai",
+      "createdAt": "2026-02-12T22:30:00Z",
+      "linkedTask": "card_2",
+      "icon": "🔧",
+      "downloads": 0
+    },
+    {
+      "id": "del_4",
+      "name": "activity-stream-demo.json",
+      "type": "json",
+      "description": "Sample activity data for testing Activity Stream module",
+      "status": "ready",
+      "size": "4.5 KB",
+      "path": "./data/activity.json",
+      "createdBy": "Kai",
+      "createdAt": "2026-02-12T22:20:00Z",
+      "linkedTask": null,
+      "icon": "📊",
+      "downloads": 0
+    },
+    {
+      "id": "del_5",
+      "name": "FLOW-kanban-server.js",
+      "type": "code",
+      "description": "Node.js server with API endpoints for kanban, activity, memory",
+      "status": "ready",
+      "size": "8.3 KB",
+      "path": "./server.js",
+      "createdBy": "Kai",
+      "createdAt": "2026-02-12T21:00:00Z",
+      "linkedTask": null,
+      "icon": "⚙️",
+      "downloads": 0
+    }
+  ],
+  "lastUpdated": "2026-02-12T23:50:00Z"
+}

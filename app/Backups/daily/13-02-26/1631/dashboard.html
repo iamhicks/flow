@@ -1,0 +1,3781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLOW Dashboard — Mission Control</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            /* MIND-matching Notion-inspired Light Theme */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7f6f3;
+            --bg-tertiary: #f1f1ef;
+            --bg-hover: #efefef;
+            --border: #e3e2e0;
+            --text-primary: #37352f;
+            --text-secondary: #6b6b6b;
+            --text-tertiary: #9b9b9b;
+            --accent: #2eaadc;
+            --accent-hover: #0077cc;
+            --success: #2ecc71;
+            --warning: #f4d03f;
+            --danger: #eb5757;
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            --chat-user-bubble: #ece9e4;
+        }
+
+        [data-theme="dark"] {
+            /* MIND-matching Notion-inspired Dark Theme */
+            --bg-primary: #191919;
+            --bg-secondary: #202020;
+            --bg-tertiary: #2d2d2d;
+            --bg-hover: #373737;
+            --border: #2d2d2d;
+            --text-primary: #f5f5f5;
+            --text-secondary: #9b9b9b;
+            --text-tertiary: #6b6b6b;
+            --accent: #2eaadc;
+            --accent-hover: #5bc2e7;
+            --success: #2ecc71;
+            --warning: #f4d03f;
+            --danger: #eb5757;
+            --chat-user-bubble: #2d2d2d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            height: 56px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 4px;
+            margin-left: 24px;
+        }
+
+        .nav-tab {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .nav-tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .nav-tab.active {
+            background: var(--bg-hover);
+            color: var(--accent);
+        }
+
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 56px);
+            position: relative;
+        }
+
+        /* Sidebar Toggle */
+        .sidebar-toggle {
+            position: absolute;
+            left: 260px;
+            top: 16px;
+            z-index: 100;
+            width: 24px;
+            height: 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0 6px 6px 0;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .sidebar-toggle.collapsed {
+            left: 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .sidebar-toggle.collapsed i {
+            transform: rotate(180deg);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease, transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            transform: translateX(-100%);
+        }
+
+        .sidebar-section {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-card {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .focus-list {
+            list-style: none;
+        }
+
+        .focus-item {
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .focus-item::before {
+            content: '→';
+            color: var(--accent);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-container {
+            flex: 1;
+            overflow: auto;
+            padding: 20px;
+        }
+
+        .module {
+            display: none;
+        }
+
+        .module.active {
+            display: block;
+        }
+
+        /* Dashboard Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            height: 100%;
+        }
+
+        .dashboard-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .card-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .card-content {
+            flex: 1;
+            overflow: auto;
+            padding: 12px;
+        }
+
+        /* Placeholder Content */
+        .placeholder-text {
+            color: var(--text-tertiary);
+            font-size: 13px;
+            text-align: center;
+            padding: 40px;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            height: 32px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            gap: 16px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        .status-dot.pending {
+            background: var(--warning);
+        }
+
+        /* Activity Item (for Activity Stream module) */
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: var(--bg-tertiary);
+            transition: all 0.2s;
+        }
+
+        .activity-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .activity-item.ai {
+            border-left: 3px solid var(--accent);
+        }
+
+        .activity-item.human {
+            border-left: 3px solid var(--success);
+        }
+
+        .activity-item.system {
+            border-left: 3px solid var(--text-tertiary);
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-hover);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 13px;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .activity-actor {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .activity-actor.human {
+            color: var(--success);
+        }
+
+        .activity-meta {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            display: flex;
+            gap: 12px;
+        }
+
+        .activity-board {
+            color: var(--text-secondary);
+        }
+
+        /* Activity Stream Full View */
+        .activity-stream-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .activity-filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .filter-chip {
+            padding: 6px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-chip:hover, .filter-chip.active {
+            background: var(--accent);
+            color: var(--bg-primary);
+            border-color: var(--accent);
+        }
+
+        .activity-day {
+            margin-bottom: 24px;
+        }
+
+        .activity-day-header {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            padding-left: 8px;
+        }
+
+        /* Memory Module */
+        .memory-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .memory-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .memory-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .memory-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s;
+        }
+
+        .memory-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .memory-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .memory-icon {
+            font-size: 24px;
+        }
+
+        .memory-meta {
+            flex: 1;
+        }
+
+        .memory-author {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .memory-author.human {
+            color: var(--success);
+        }
+
+        .memory-time {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .memory-category {
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .memory-content {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        /* Deliverables Module */
+        .deliverables-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .deliverables-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .deliverables-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 24px;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .deliverables-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .deliverable-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s;
+        }
+
+        .deliverable-card:hover {
+            border-color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .deliverable-icon {
+            font-size: 32px;
+            width: 56px;
+            height: 56px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .deliverable-info {
+            flex: 1;
+        }
+
+        .deliverable-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .deliverable-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .deliverable-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .deliverable-status {
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-ready {
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--success);
+        }
+
+        .status-review {
+            background: rgba(244, 208, 63, 0.2);
+            color: var(--warning);
+        }
+
+        .deliverable-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .memory-add-form {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .memory-input {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-bottom: 12px;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .memory-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+
+        /* Kai Profile Module */
+        .kai-container {
+            display: flex;
+            height: calc(100vh - 140px);
+            gap: 24px;
+            padding: 24px;
+        }
+
+        .kai-sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            max-height: 100%;
+        }
+
+        .kai-profile-header {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .kai-avatar {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .kai-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .kai-role {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .kai-file-list {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            overflow-y: auto;
+            max-height: calc(100% - 140px);
+        }
+
+        .kai-file-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .kai-file-btn:last-child {
+            border-bottom: none;
+        }
+
+        .kai-file-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .kai-file-btn.active {
+            background: rgba(46, 170, 220, 0.1);
+            color: var(--accent);
+        }
+
+        .kai-editor {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .kai-editor-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #kai-current-file {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .kai-textarea {
+            flex: 1;
+            width: 100%;
+            padding: 20px;
+            background: var(--bg-primary);
+            border: none;
+            color: var(--text-primary);
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+        }
+
+        /* Skills Browser Module */
+        .skills-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .skills-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .skills-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .skills-stats {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .skills-search {
+            margin-bottom: 20px;
+        }
+
+        .skills-search-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .skills-search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .skill-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s;
+        }
+
+        .skill-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .skill-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .skill-icon {
+            color: var(--accent);
+        }
+
+        .skill-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* System Dashboard Module */
+        .system-container {
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .system-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .system-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .system-card-wide {
+            grid-column: 1 / -1;
+        }
+
+        .system-card-header {
+            padding: 16px 20px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .system-card-header i {
+            color: var(--accent);
+            font-size: 20px;
+        }
+
+        .system-card-body {
+            padding: 16px 20px;
+        }
+
+        .system-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .system-row:last-child {
+            border-bottom: none;
+        }
+
+        .system-label {
+            color: var(--text-secondary);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .system-value {
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: 'SF Mono', monospace;
+        }
+
+        .system-value.truncate {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .system-status {
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .system-status.online {
+            background: rgba(46, 204, 113, 0.15);
+            color: var(--success);
+        }
+
+        .system-badge {
+            margin-left: auto;
+            background: var(--bg-hover);
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .cron-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .cron-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+
+        .cron-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .cron-schedule {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: 'SF Mono', monospace;
+        }
+
+        .cron-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        .cron-status.enabled {
+            color: var(--success);
+        }
+
+        .session-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .session-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: 'SF Mono', monospace;
+        }
+
+        .session-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .config-preview {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'SF Mono', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            max-height: 300px;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* Schedule & Heartbeat Module */
+        .schedule-container {
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .schedule-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .schedule-card-wide {
+            grid-column: 1 / -1;
+        }
+
+        .schedule-card-header {
+            padding: 16px 20px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .schedule-card-header i {
+            color: var(--accent);
+            font-size: 20px;
+        }
+
+        .schedule-card-body {
+            padding: 16px 20px;
+        }
+
+        .schedule-status {
+            margin-left: auto;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .schedule-status.healthy {
+            background: rgba(46, 204, 113, 0.15);
+            color: var(--success);
+        }
+
+        /* Rhythm Items */
+        .rhythm-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: var(--bg-tertiary);
+            transition: all 0.2s;
+        }
+
+        .rhythm-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .rhythm-item.completed {
+            opacity: 0.6;
+        }
+
+        .rhythm-item.completed i {
+            color: var(--success);
+        }
+
+        .rhythm-item.active {
+            border: 1px solid var(--accent);
+            background: rgba(46, 170, 220, 0.1);
+        }
+
+        .rhythm-item.active i {
+            color: var(--accent);
+            animation: pulse 2s infinite;
+        }
+
+        .rhythm-info {
+            flex: 1;
+        }
+
+        .rhythm-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .rhythm-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Upcoming Items */
+        .upcoming-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .upcoming-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+
+        .upcoming-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: 'SF Mono', monospace;
+        }
+
+        .upcoming-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        /* Heartbeat Grid */
+        .heartbeat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .heartbeat-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border-left: 3px solid var(--success);
+        }
+
+        .heartbeat-item.warning {
+            border-left-color: var(--warning);
+        }
+
+        .heartbeat-item.error {
+            border-left-color: var(--danger);
+        }
+
+        .heartbeat-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(46, 204, 113, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--success);
+        }
+
+        .heartbeat-item.warning .heartbeat-icon {
+            background: rgba(244, 208, 63, 0.15);
+            color: var(--warning);
+        }
+
+        .heartbeat-item.error .heartbeat-icon {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        .heartbeat-info {
+            flex: 1;
+        }
+
+        .heartbeat-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .heartbeat-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Review Section */
+        .review-status {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .review-day {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+
+        .day-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .day-value {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .review-tasks {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .review-task {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .review-task i {
+            color: var(--text-tertiary);
+        }
+
+        /* Hours Visual */
+        .hours-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .hours-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hours-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: 'SF Mono', monospace;
+            width: 100px;
+            flex-shrink: 0;
+        }
+
+        .hours-bar {
+            flex: 1;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        .hours-bar.active {
+            background: linear-gradient(90deg, var(--accent) 0%, var(--accent-hover) 100%);
+        }
+
+        .hours-bar.quiet {
+            background: var(--bg-tertiary);
+            border: 1px dashed var(--border);
+        }
+
+        .hours-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            width: 140px;
+            flex-shrink: 0;
+        }
+
+        /* Chat Module */
+        .chat-layout {
+            display: flex;
+            height: calc(100vh - 140px);
+            background: var(--bg-primary);
+        }
+
+        .chat-channels {
+            width: 240px;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-channels-header {
+            padding: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent);
+            background: var(--bg-primary);
+        }
+
+        .chat-channel-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .chat-channel-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .chat-channel-item:hover {
+            background: transparent;
+        }
+
+        .chat-channel-item.active {
+            background: transparent;
+        }
+
+        .chat-channel-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .chat-channel-info {
+            flex: 1;
+        }
+
+        .chat-channel-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .chat-channel-status {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .chat-channel-status.connected {
+            color: var(--success);
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary);
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: var(--bg-primary);
+            border-bottom: none;
+        }
+
+        .chat-header-info {
+            flex: 1;
+        }
+
+        .chat-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .chat-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: var(--bg-primary);
+        }
+
+        .chat-loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .chat-loading i {
+            font-size: 32px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .chat-message {
+            display: flex;
+            flex-direction: column;
+            max-width: 90%;
+            margin-bottom: 4px;
+        }
+
+        .chat-message.user {
+            align-items: flex-end;
+            margin-left: auto;
+        }
+
+        .chat-message-avatar {
+            display: none;
+        }
+
+        .chat-message-content {
+            max-width: 90%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+            background: transparent;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .chat-message.user .chat-message-content {
+            background: var(--chat-user-bubble);
+            color: var(--text-primary);
+            border-radius: 18px 18px 4px 18px;
+            position: relative;
+        }
+
+        .chat-message-meta {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 4px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .chat-message:hover .chat-message-meta {
+            opacity: 1;
+        }
+
+        .chat-message-channel {
+            padding: 1px 6px;
+            background: var(--bg-hover);
+            border-radius: 4px;
+            font-size: 10px;
+        }
+
+        .chat-input-area {
+            padding: 16px 20px 20px;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .chat-input-wrapper {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 12px 16px;
+            box-shadow: 0 2px 8px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 8px 4px;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            font-size: 15px;
+            resize: none;
+            min-height: 24px;
+            max-height: 120px;
+            line-height: 1.5;
+            outline: none;
+        }
+
+        .chat-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .chat-send-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .chat-send-btn i {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <i class="ph ph-activity"></i>
+            FLOW Dashboard
+        </div>
+        
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-module="overview">
+                <i class="ph ph-squares-four"></i> Overview
+            </button>
+            <button class="nav-tab" data-module="kanban">
+                <i class="ph ph-kanban"></i> Kanban
+            </button>
+            <button class="nav-tab" data-module="activity">
+                <i class="ph ph-clock-counter-clockwise"></i> Activity
+            </button>
+            <button class="nav-tab" data-module="memory">
+                <i class="ph ph-brain"></i> Memory
+            </button>
+            <button class="nav-tab" data-module="deliverables">
+                <i class="ph ph-folder"></i> Deliverables
+            </button>
+            <button class="nav-tab" data-module="chat">
+                <i class="ph ph-chat-circle"></i> Chat
+            </button>
+            <button class="nav-tab" data-module="kai">
+                <i class="ph ph-robot"></i> Kai
+            </button>
+            <button class="nav-tab" data-module="skills">
+                <i class="ph ph-wrench"></i> Skills
+            </button>
+            <button class="nav-tab" data-module="system">
+                <i class="ph ph-monitor"></i> System
+            </button>
+            <button class="nav-tab" data-module="schedule">
+                <i class="ph ph-calendar-check"></i> Schedule
+            </button>
+        </nav>
+        
+        <div class="header-actions">
+            <button class="btn btn-secondary" id="themeToggle" title="Toggle Theme">
+                <i class="ph ph-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;align-items:center;justify-content:center;">
+        <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;padding:24px;max-width:400px;width:90%;">
+            <h3 style="margin-bottom:12px;color:var(--accent);"><i class="ph ph-warning-circle"></i> Confirm Save</h3>
+            <p style="color:var(--text-secondary);margin-bottom:20px;">You are about to save changes to <strong id="confirmFileName">file.md</strong>. This will overwrite the live file in your workspace.</p>
+            <div style="display:flex;gap:12px;justify-content:flex-end;">
+                <button class="btn btn-secondary" id="confirmCancel">Cancel</button>
+                <button class="btn btn-primary" id="confirmSave" style="background:var(--accent);color:var(--bg-primary);">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Sidebar Toggle -->
+        <button id="sidebarToggle" class="sidebar-toggle" title="Toggle Sidebar">
+            <i class="ph ph-caret-left"></i>
+        </button>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">
+                    <i class="ph ph-check-circle"></i> Tasks Status
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">In Progress</div>
+                    <div class="metric-value" id="sidebar-inprogress">--</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">To Do</div>
+                    <div class="metric-value" id="sidebar-todo">--</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Done Today</div>
+                    <div class="metric-value" id="sidebar-done">--</div>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">
+                    <i class="ph ph-activity"></i> System Health
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Gateway</div>
+                    <div class="metric-value" id="sidebar-gateway" style="font-size: 14px;">--</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Active Sessions</div>
+                    <div class="metric-value" id="sidebar-sessions">--</div>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">
+                    <i class="ph ph-brain"></i> Recent Memory
+                </div>
+                <div id="sidebar-memory" style="font-size: 13px; color: var(--text-secondary);">
+                    Loading...
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-title">
+                    <i class="ph ph-link"></i> Quick Links
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <a href="http://127.0.0.1:18789/" target="_blank" style="color: var(--accent); text-decoration: none; font-size: 13px;">
+                        <i class="ph ph-arrow-square-out"></i> OpenClaw Control
+                    </a>
+                    <a href="#" onclick="document.querySelector('[data-module=\"system\"]').click(); return false;" style="color: var(--accent); text-decoration: none; font-size: 13px;">
+                        <i class="ph ph-gear"></i> System Dashboard
+                    </a>
+                </div>
+            </div>
+            
+            <div class="sidebar-section" style="margin-top: auto; border-top: 1px solid var(--border);">
+                <button class="btn btn-secondary" id="helpBtn" title="Documentation" style="width: 100%; justify-content: center;">
+                    <i class="ph ph-question"></i> Help
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="module-container">
+                
+                <!-- Overview Module (Default) -->
+                <div class="module active" id="module-overview">
+                    <div class="dashboard-grid">
+                        <!-- Activity Stream Preview -->
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <i class="ph ph-clock-counter-clockwise"></i>
+                                    Recent Activity
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-btn"><i class="ph ph-arrow-right"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="activity-item">
+                                    <div class="activity-icon">🤖</div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Kai moved "Fix MIND license" to Done</div>
+                                        <div class="activity-meta">2 minutes ago • Flow Mind Website</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="activity-item">
+                                    <div class="activity-icon">✅</div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Auto-backup completed</div>
+                                        <div class="activity-meta">5 minutes ago • System</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="activity-item">
+                                    <div class="activity-icon">📝</div>
+                                    <div class="activity-content">
+                                        <div class="activity-text">Kai created product landing page</div>
+                                        <div class="activity-meta">1 hour ago • FLOW project</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shared Memory Preview -->
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <i class="ph ph-brain"></i>
+                                    Shared Memory
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-btn"><i class="ph ph-plus"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <p class="placeholder-text">
+                                    Quick notes and context between you and your AI agent.
+                                    <br><br>
+                                    Coming in v1.1...
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Deliverables Preview -->
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <i class="ph ph-folder"></i>
+                                    Recent Deliverables
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-btn"><i class="ph ph-download"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <p class="placeholder-text">
+                                    Files, code, and assets created by your AI agent.
+                                    <br><br>
+                                    Coming in v1.2...
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Chat Preview -->
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <i class="ph ph-chat-circle"></i>
+                                    Recent Messages
+                                </div>
+                                <div class="card-actions">
+                                    <button class="card-btn"><i class="ph ph-arrow-right"></i></button>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <p class="placeholder-text">
+                                    Async chat with your AI agent.
+                                    <br><br>
+                                    Coming in v1.3...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kanban Module -->
+                <div class="module" id="module-kanban" style="height: 100%;">
+                    <div class="kanban-container" style="height: calc(100vh - 120px); display: flex; flex-direction: column;">
+                        <div style="padding: 12px 20px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                            <div style="font-size: 14px; color: var(--text-secondary);">
+                                <i class="ph ph-kanban" style="margin-right: 8px;"></i>
+                                Manage tasks in kanban boards
+                            </div>
+                            <button class="btn btn-secondary" onclick="document.getElementById('kanbanFrame').src = document.getElementById('kanbanFrame').src">
+                                <i class="ph ph-arrows-clockwise"></i> Refresh
+                            </button>
+                        </div>
+                        <iframe id="kanbanFrame" src="/kanban.html" style="flex: 1; border: none; width: 100%; min-height: 600px;"></iframe>
+                    </div>
+                </div>
+
+                <!-- Activity Module -->
+                <div class="module" id="module-activity">
+                    <div class="activity-stream-container">
+                        <div class="activity-filters">
+                            <button class="filter-chip active" data-filter="all">All Activity</button>
+                            <button class="filter-chip" data-filter="ai">AI Actions</button>
+                            <button class="filter-chip" data-filter="human">Your Actions</button>
+                            <button class="filter-chip" data-filter="system">System</button>
+                        </div>
+                        <div id="activityList">
+                            <!-- Activities loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Memory Module -->
+                <div class="module" id="module-memory">
+                    <div class="memory-container">
+                        <div class="memory-header">
+                            <div class="memory-filters">
+                                <button class="filter-chip active" data-filter="all">All Notes</button>
+                                <button class="filter-chip" data-filter="preference">Preferences</button>
+                                <button class="filter-chip" data-filter="trading">Trading</button>
+                                <button class="filter-chip" data-filter="product">Ideas</button>
+                            </div>
+                            <button class="btn btn-primary" id="addMemoryBtn">
+                                <i class="ph ph-plus"></i> Add Note
+                            </button>
+                        </div>
+                        
+                        <div id="memoryList" class="memory-list">
+                            <!-- Memories loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deliverables Module -->
+                <div class="module" id="module-deliverables">
+                    <div class="deliverables-container">
+                        <div class="deliverables-header">
+                            <div class="deliverables-stats">
+                                <div class="stat-box">
+                                    <div class="stat-value">5</div>
+                                    <div class="stat-label">Files Ready</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-value">1</div>
+                                    <div class="stat-label">In Review</div>
+                                </div>
+                            </div>
+                            <div class="deliverables-filters">
+                                <button class="filter-chip active" data-filter="all">All Files</button>
+                                <button class="filter-chip" data-filter="ready">Ready</button>
+                                <button class="filter-chip" data-filter="review">In Review</button>
+                            </div>
+                        </div>
+                        
+                        <div id="deliverablesList" class="deliverables-list">
+                            <!-- Deliverables loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Module -->
+                <div class="module" id="module-chat">
+                    <div class="chat-layout">
+                        <!-- Channels Sidebar -->
+                        <div class="chat-channels">
+                            <div class="chat-channels-header" style="padding: 12px 16px;">
+                                <div class="chat-search" style="width: 100%;">
+                                    <input type="text" id="chatSearch" placeholder="Search messages..." style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; color: var(--text-primary); outline: none; width: 100%;">
+                                </div>
+                            </div>
+                            <div class="chat-channel-list" id="channelList">
+                                <!-- Channels loaded dynamically -->
+                            </div>
+                        </div>
+                        
+                        <!-- Chat Area -->
+                        <div class="chat-container">
+                            <div class="chat-messages" id="chatMessages" style="padding-top: 16px;">
+                                <div class="chat-loading" id="chatLoading">
+                                    <i class="ph ph-spinner animate-spin"></i>
+                                    <p>Loading messages...</p>
+                                </div>
+                            </div>
+                            <div class="chat-input-area">
+                                <div class="chat-input-wrapper">
+                                    <div class="chat-input-row">
+                                        <textarea class="chat-input" id="chatInput" placeholder="Message Kai..." rows="1"></textarea>
+                                        <button class="chat-send-btn" id="chatSendBtn">
+                                            <i class="ph ph-paper-plane-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kai Profile Module -->
+                <div class="module" id="module-kai">
+                    <div class="kai-container">
+                        <div class="kai-sidebar">
+                            <div class="kai-profile-header">
+                                <div class="kai-avatar">🌊</div>
+                                <div class="kai-name">Kai</div>
+                                <div class="kai-role">Digital Employee</div>
+                            </div>
+                            <div class="kai-file-list" id="kaiFileList">
+                                <button class="kai-file-btn active" data-file="soul">
+                                    <i class="ph ph-file-text"></i>
+                                    SOUL.md
+                                </button>
+                                <button class="kai-file-btn" data-file="identity">
+                                    <i class="ph ph-identification-card"></i>
+                                    IDENTITY.md
+                                </button>
+                                <button class="kai-file-btn" data-file="user">
+                                    <i class="ph ph-user"></i>
+                                    USER.md
+                                </button>
+                                <button class="kai-file-btn" data-file="agents">
+                                    <i class="ph ph-gear"></i>
+                                    AGENTS.md
+                                </button>
+                                <button class="kai-file-btn" data-file="memory">
+                                    <i class="ph ph-brain"></i>
+                                    MEMORY.md
+                                </button>
+                                <button class="kai-file-btn" data-file="standing_orders">
+                                    <i class="ph ph-list-checks"></i>
+                                    STANDING_ORDERS.md
+                                </button>
+                                <button class="kai-file-btn" data-file="protocol_cost">
+                                    <i class="ph ph-currency-dollar"></i>
+                                    PROTOCOL_COST_EFFICIENCY.md
+                                </button>
+                                <button class="kai-file-btn" data-file="tools">
+                                    <i class="ph ph-wrench"></i>
+                                    TOOLS.md
+                                </button>
+                                <button class="kai-file-btn" data-file="heartbeat">
+                                    <i class="ph ph-heartbeat"></i>
+                                    HEARTBEAT.md
+                                </button>
+                                <button class="kai-file-btn" data-file="dev_procedure">
+                                    <i class="ph ph-code"></i>
+                                    DEV_PROCEDURE.md
+                                </button>
+                                <button class="kai-file-btn" data-file="bootstrap">
+                                    <i class="ph ph-rocket"></i>
+                                    BOOTSTRAP.md
+                                </button>
+                                <button class="kai-file-btn" data-file="overnight">
+                                    <i class="ph ph-moon"></i>
+                                    OVERNIGHT.md
+                                </button>
+                                <button class="kai-file-btn" data-file="trading_app">
+                                    <i class="ph ph-trend-up"></i>
+                                    trading_app_strategy.md
+                                </button>
+                                <button class="kai-file-btn" data-file="trading_journal">
+                                    <i class="ph ph-chart-bar"></i>
+                                    trading_journal_market_research.md
+                                </button>
+                            </div>
+                        </div>
+                        <div class="kai-editor">
+                            <div class="kai-editor-header">
+                                <span id="kai-current-file">SOUL.md</span>
+                                <button class="btn btn-primary" id="kaiSaveBtn">
+                                    <i class="ph ph-floppy-disk"></i> Save
+                                </button>
+                            </div>
+                            <textarea id="kaiEditor" class="kai-textarea" placeholder="Loading..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills Browser Module -->
+                <div class="module" id="module-skills">
+                    <div class="skills-container">
+                        <div class="skills-header">
+                            <h2>Installed Skills</h2>
+                            <div class="skills-stats">
+                                <span id="skills-count">46 skills</span>
+                            </div>
+                        </div>
+                        <div class="skills-search">
+                            <input type="text" id="skillsSearch" placeholder="Search skills..." class="skills-search-input">
+                        </div>
+                        <div class="skills-grid" id="skillsGrid">
+                            <!-- Skills loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Dashboard Module -->
+                <div class="module" id="module-system">
+                    <div class="system-container">
+                        <div class="system-grid">
+                            <!-- Gateway Status Card -->
+                            <div class="system-card system-card-wide">
+                                <div class="system-card-header">
+                                    <i class="ph ph-plug"></i>
+                                    <span>Gateway Status</span>
+                                    <span class="system-status" id="gw-status-badge">Checking...</span>
+                                </div>
+                                <div class="system-card-body">
+                                    <div class="system-row">
+                                        <span class="system-label">Version</span>
+                                        <span class="system-value" id="gw-version">--</span>
+                                    </div>
+                                    <div class="system-row">
+                                        <span class="system-label">Response Time</span>
+                                        <span class="system-value" id="gw-ping">--</span>
+                                    </div>
+                                    <div class="system-row">
+                                        <span class="system-label">Active Sessions</span>
+                                        <span class="system-value" id="gw-sessions">--</span>
+                                    </div>
+                                    <div class="system-row">
+                                        <span class="system-label">Dashboard</span>
+                                        <a href="http://127.0.0.1:18789/" target="_blank" class="system-value" style="color: var(--accent);">Open Control UI →</a>
+                                    </div>
+                                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; gap: 12px;">
+                                        <button class="btn btn-secondary" id="refreshGatewayBtn" style="flex: 1;">
+                                            <i class="ph ph-arrows-clockwise"></i> Refresh
+                                        </button>
+                                        <button class="btn btn-primary" id="restartGatewayBtn" style="flex: 1; background: var(--warning); color: var(--bg-primary);">
+                                            <i class="ph ph-restart"></i> Restart Gateway
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Channels Card -->
+                            <div class="system-card">
+                                <div class="system-card-header">
+                                    <i class="ph ph-chat-circle-dots"></i>
+                                    <span>Channels</span>
+                                </div>
+                                <div class="system-card-body">
+                                    <div class="system-row">
+                                        <span class="system-label"><i class="ph ph-telegram-logo"></i> Telegram</span>
+                                        <span class="system-status online">Connected</span>
+                                    </div>
+                                    <div class="system-row">
+                                        <span class="system-label">FlowChat</span>
+                                        <span class="system-status online">Active</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sessions Card -->
+                            <div class="system-card">
+                                <div class="system-card-header">
+                                    <i class="ph ph-users"></i>
+                                    <span>Sessions</span>
+                                    <span class="system-badge" id="sessionCount">5 active</span>
+                                </div>
+                                <div class="system-card-body">
+                                    <div class="session-list" id="sessionList">
+                                        <!-- Sessions loaded here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cron Jobs Card -->
+                            <div class="system-card system-card-wide">
+                                <div class="system-card-header">
+                                    <i class="ph ph-clock"></i>
+                                    <span>Cron Jobs</span>
+                                    <span class="system-badge" id="cronBadge">4 active</span>
+                                </div>
+                                <div class="system-card-body">
+                                    <div class="cron-list" id="cronList">
+                                        <!-- Cron jobs loaded here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Token Usage Card -->
+                            <div class="system-card system-card-wide">
+                                <div class="system-card-header">
+                                    <i class="ph ph-coins"></i>
+                                    <span>Token Usage</span>
+                                    <span class="system-badge" id="tokenBadge">--</span>
+                                </div>
+                                <div class="system-card-body">
+                                    <div class="system-row">
+                                        <span class="system-label">Total Sessions</span>
+                                        <span class="system-value" id="token-sessions">--</span>
+                                    </div>
+                                    <div class="system-row">
+                                        <span class="system-label">Total Tokens Used</span>
+                                        <span class="system-value" id="token-total">--</span>
+                                    </div>
+                                    <div class="system-row">
+                                        <span class="system-label">Context Window</span>
+                                        <span class="system-value" id="token-context">--</span>
+                                    </div>
+                                    <div class="system-row">
+                                        <span class="system-label">Average Usage</span>
+                                        <span class="system-value" id="token-avg">--</span>
+                                    </div>
+                                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+                                        <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">Active Sessions</div>
+                                        <div id="token-sessions-list" style="font-size: 13px; max-height: 150px; overflow-y: auto;">
+                                            <!-- Session list loaded here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Config Preview Card -->
+                            <div class="system-card system-card-wide">
+                                <div class="system-card-header">
+                                    <i class="ph ph-file-code"></i>
+                                    <span>Config Preview</span>
+                                    <span class="system-label">openclaw.json</span>
+                                </div>
+                                <div class="system-card-body">
+                                    <pre class="config-preview" id="configPreview">Loading...</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Schedule & Heartbeat Module -->
+                <div class="module" id="module-schedule">
+                    <div class="schedule-container">
+                        <div class="schedule-grid">
+                            <!-- Daily Rhythm Card -->
+                            <div class="schedule-card">
+                                <div class="schedule-card-header">
+                                    <i class="ph ph-sun"></i>
+                                    <span>Daily Rhythm</span>
+                                </div>
+                                <div class="schedule-card-body">
+                                    <div class="rhythm-item completed">
+                                        <i class="ph ph-check-circle"></i>
+                                        <div class="rhythm-info">
+                                            <div class="rhythm-name">Morning Startup</div>
+                                            <div class="rhythm-time">07:00</div>
+                                        </div>
+                                    </div>
+                                    <div class="rhythm-item active">
+                                        <i class="ph ph-spinner"></i>
+                                        <div class="rhythm-info">
+                                            <div class="rhythm-name">Active Work</div>
+                                            <div class="rhythm-time">09:00 - 18:00</div>
+                                        </div>
+                                    </div>
+                                    <div class="rhythm-item">
+                                        <i class="ph ph-moon"></i>
+                                        <div class="rhythm-info">
+                                            <div class="rhythm-name">Evening Review</div>
+                                            <div class="rhythm-time">19:00</div>
+                                        </div>
+                                    </div>
+                                    <div class="rhythm-item">
+                                        <i class="ph ph-bookmark"></i>
+                                        <div class="rhythm-info">
+                                            <div class="rhythm-name">Memory Curation</div>
+                                            <div class="rhythm-time">End of session</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Upcoming Cron Jobs Card -->
+                            <div class="schedule-card">
+                                <div class="schedule-card-header">
+                                    <i class="ph ph-clock"></i>
+                                    <span>Upcoming Checks</span>
+                                </div>
+                                <div class="schedule-card-body">
+                                    <div class="upcoming-list" id="upcomingChecks">
+                                        <div class="upcoming-item">
+                                            <div class="upcoming-time">Next hour</div>
+                                            <div class="upcoming-name">GitHub Monitor</div>
+                                        </div>
+                                        <div class="upcoming-item">
+                                            <div class="upcoming-time">Every hour</div>
+                                            <div class="upcoming-name">Auto-push Memory</div>
+                                        </div>
+                                        <div class="upcoming-item">
+                                            <div class="upcoming-time">Tomorrow 07:00</div>
+                                            <div class="upcoming-name">Backup Check</div>
+                                        </div>
+                                        <div class="upcoming-item">
+                                            <div class="upcoming-time">Friday 09:00</div>
+                                            <div class="upcoming-name">Weekly Cleanup</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Weekly Review Card -->
+                            <div class="schedule-card">
+                                <div class="schedule-card-header">
+                                    <i class="ph ph-calendar-blank"></i>
+                                    <span>Weekly Review</span>
+                                </div>
+                                <div class="schedule-card-body">
+                                    <div class="review-status">
+                                        <div class="review-day">
+                                            <span class="day-label">Next Review</span>
+                                            <span class="day-value">Sunday Evening</span>
+                                        </div>
+                                        <div class="review-tasks">
+                                            <div class="review-task">
+                                                <i class="ph ph-square"></i> Project health check
+                                            </div>
+                                            <div class="review-task">
+                                                <i class="ph ph-square"></i> Pattern analysis
+                                            </div>
+                                            <div class="review-task">
+                                                <i class="ph ph-square"></i> Memory curation
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Heartbeat Status Card -->
+                            <div class="schedule-card schedule-card-wide">
+                                <div class="schedule-card-header">
+                                    <i class="ph ph-heartbeat"></i>
+                                    <span>Heartbeat Status</span>
+                                    <span class="schedule-status healthy">All Healthy</span>
+                                </div>
+                                <div class="schedule-card-body">
+                                    <div class="heartbeat-grid">
+                                        <div class="heartbeat-item success">
+                                            <div class="heartbeat-icon"><i class="ph ph-check"></i></div>
+                                            <div class="heartbeat-info">
+                                                <div class="heartbeat-name">Backup System</div>
+                                                <div class="heartbeat-meta">Last check: 2 min ago</div>
+                                            </div>
+                                        </div>
+                                        <div class="heartbeat-item success">
+                                            <div class="heartbeat-icon"><i class="ph ph-check"></i></div>
+                                            <div class="heartbeat-info">
+                                                <div class="heartbeat-name">GitHub Monitor</div>
+                                                <div class="heartbeat-meta">Last check: 32 min ago</div>
+                                            </div>
+                                        </div>
+                                        <div class="heartbeat-item success">
+                                            <div class="heartbeat-icon"><i class="ph ph-check"></i></div>
+                                            <div class="heartbeat-info">
+                                                <div class="heartbeat-name">Memory Sync</div>
+                                                <div class="heartbeat-meta">Last check: 4 min ago</div>
+                                            </div>
+                                        </div>
+                                        <div class="heartbeat-item success">
+                                            <div class="heartbeat-icon"><i class="ph ph-check"></i></div>
+                                            <div class="heartbeat-info">
+                                                <div class="heartbeat-name">Gateway Health</div>
+                                                <div class="heartbeat-meta">Continuous monitoring</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Active Hours Card -->
+                            <div class="schedule-card">
+                                <div class="schedule-card-header">
+                                    <i class="ph ph-clock-afternoon"></i>
+                                    <span>Active Hours</span>
+                                </div>
+                                <div class="schedule-card-body">
+                                    <div class="hours-visual">
+                                        <div class="hours-row">
+                                            <span class="hours-label">07:00 - 23:00</span>
+                                            <span class="hours-bar active"></span>
+                                            <span class="hours-desc">Active monitoring</span>
+                                        </div>
+                                        <div class="hours-row">
+                                            <span class="hours-label">23:00 - 07:00</span>
+                                            <span class="hours-bar quiet"></span>
+                                            <span class="hours-desc">Quiet mode (alerts only)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    Connected to server
+                </div>
+                <div class="status-indicator">
+                    Last sync: Just now
+                </div>
+                <div style="margin-left: auto;">
+                    FLOW Dashboard v2.0
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Module switching
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update active tab
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show corresponding module
+                const moduleId = tab.dataset.module;
+                document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+                document.getElementById(`module-${moduleId}`).classList.add('active');
+                
+                // Load module data
+                if (moduleId === 'activity') {
+                    loadActivityStream();
+                } else if (moduleId === 'memory') {
+                    loadMemoryStream();
+                    // Start auto-polling for memory updates
+                    if (window.memoryPollInterval) clearInterval(window.memoryPollInterval);
+                    window.memoryPollInterval = setInterval(loadMemoryStream, 5000);
+                } else if (moduleId === 'deliverables') {
+                    loadDeliverables();
+                }
+            });
+        });
+
+        // Deliverables
+        let deliverablesData = [];
+
+        const loadDeliverables = async () => {
+            try {
+                const response = await fetch('/api/deliverables?t=' + Date.now());
+                if (response.ok) {
+                    const data = await response.json();
+                    deliverablesData = data.deliverables || [];
+                    renderDeliverables(deliverablesData);
+                }
+            } catch (e) {
+                console.log('Using local deliverables data');
+                renderDeliverables(getLocalDeliverablesData());
+            }
+        };
+
+        const getLocalDeliverablesData = () => [
+            {
+                id: 'del_1',
+                name: 'FLOW-product-landing.html',
+                type: 'html',
+                description: 'Complete product landing page for FLOW Dashboard',
+                status: 'ready',
+                size: '16.9 KB',
+                createdBy: 'Kai',
+                createdAt: new Date().toISOString(),
+                icon: '🎨'
+            },
+            {
+                id: 'del_2',
+                name: 'dashboard-mission-control.html',
+                type: 'html',
+                description: 'FLOW Dashboard v2.0 with all modules',
+                status: 'ready',
+                size: '29.2 KB',
+                createdBy: 'Kai',
+                createdAt: new Date(Date.now() - 30 * 60000).toISOString(),
+                icon: '🚀'
+            },
+            {
+                id: 'del_3',
+                name: 'MIND-license-fix.patch',
+                type: 'code',
+                description: 'Fix for MIND license dialog blank screen',
+                status: 'review',
+                size: '2.1 KB',
+                createdBy: 'Kai',
+                createdAt: new Date(Date.now() - 60 * 60000).toISOString(),
+                icon: '🔧'
+            }
+        ];
+
+        const renderDeliverables = (deliverables) => {
+            const container = document.getElementById('deliverablesList');
+            if (!container) return;
+
+            // Sort by createdAt descending (newest first)
+            deliverables.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            let html = '';
+            deliverables.forEach(item => {
+                const time = formatTime(item.createdAt);
+                const statusClass = item.status === 'ready' ? 'status-ready' : 'status-review';
+
+                html += `
+                    <div class="deliverable-card" data-status="${item.status}">
+                        <div class="deliverable-icon">${item.icon}</div>
+                        <div class="deliverable-info">
+                            <div class="deliverable-name">${item.name}</div>
+                            <div class="deliverable-desc">${item.description}</div>
+                            <div class="deliverable-meta">
+                                <span>${time}</span>
+                                <span>•</span>
+                                <span>by ${item.createdBy}</span>
+                            </div>
+                        </div>
+                        <div class="deliverable-status ${statusClass}">${item.status}</div>
+                        <div class="deliverable-actions">
+                            <button class="btn btn-primary" title="Download">
+                                <i class="ph ph-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        };
+
+        // Deliverables filters
+        document.querySelectorAll('#module-deliverables .filter-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('#module-deliverables .filter-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+
+                const filter = chip.dataset.filter;
+                if (filter === 'all') {
+                    renderDeliverables(deliverablesData);
+                } else {
+                    const filtered = deliverablesData.filter(d => d.status === filter);
+                    renderDeliverables(filtered);
+                }
+            });
+        });
+
+        // Memory Stream
+        let memoryData = [];
+        
+        const loadMemoryStream = async () => {
+            try {
+                const response = await fetch('/api/memory?t=' + Date.now());
+                if (response.ok) {
+                    const data = await response.json();
+                    memoryData = data.memories || [];
+                    renderMemoryStream(memoryData);
+                }
+            } catch (e) {
+                console.log('Using local memory data');
+                renderMemoryStream(getLocalMemoryData());
+            }
+        };
+        
+        const getLocalMemoryData = () => [
+            {
+                id: 'mem_1',
+                type: 'preference',
+                content: 'Pete prefers dark mode in all apps. Default to dark theme.',
+                category: 'preference',
+                addedBy: 'Kai',
+                actorType: 'ai',
+                timestamp: new Date().toISOString(),
+                icon: '📝'
+            },
+            {
+                id: 'mem_2',
+                type: 'reminder',
+                content: 'Check trading model at 3pm before US market open',
+                category: 'trading',
+                addedBy: 'Pete',
+                actorType: 'human',
+                timestamp: new Date(Date.now() - 60 * 60000).toISOString(),
+                icon: '⏰'
+            },
+            {
+                id: 'mem_3',
+                type: 'idea',
+                content: 'FLOW Dashboard could expand to include metrics, goals tracking, and agent performance stats',
+                category: 'product',
+                addedBy: 'Kai',
+                actorType: 'ai',
+                timestamp: new Date(Date.now() - 30 * 60000).toISOString(),
+                icon: '💡'
+            }
+        ];
+        
+        const renderMemoryStream = (memories) => {
+            const container = document.getElementById('memoryList');
+            if (!container) return;
+            
+            // Sort by timestamp descending (newest first)
+            memories.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            let html = '';
+            memories.forEach(memory => {
+                const time = formatTime(memory.timestamp);
+                const categoryColors = {
+                    preference: '#2eaadc',
+                    trading: '#f4d03f',
+                    product: '#9b59b6',
+                    bug: '#dc4444',
+                    business: '#2ecc71',
+                    milestone: '#e74c3c',
+                    identity: '#9b59b6',
+                    system: '#8b949e'
+                };
+                const color = categoryColors[memory.category] || '#8b949e';
+                
+                html += `
+                    <div class="memory-card" data-category="${memory.category}">
+                        <div class="memory-card-header">
+                            <div class="memory-icon">${memory.icon}</div>
+                            <div class="memory-meta">
+                                <div class="memory-author ${memory.actorType}">${memory.addedBy}</div>
+                                <div class="memory-time">${time}</div>
+                            </div>
+                            <div class="memory-category" style="background: ${color}20; color: ${color}; border: 1px solid ${color}40;">
+                                ${memory.category}
+                            </div>
+                        </div>
+                        <div class="memory-content">${memory.content}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        };
+        
+        // Memory filters
+        document.querySelectorAll('#module-memory .filter-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('#module-memory .filter-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                
+                const filter = chip.dataset.filter;
+                if (filter === 'all') {
+                    renderMemoryStream(memoryData);
+                } else {
+                    const filtered = memoryData.filter(m => m.category === filter);
+                    renderMemoryStream(filtered);
+                }
+            });
+        });
+
+        // Activity Stream
+        let activityData = [];
+        
+        const loadActivityStream = async () => {
+            try {
+                const response = await fetch('/api/activity?t=' + Date.now());
+                if (response.ok) {
+                    const data = await response.json();
+                    activityData = data.activities || [];
+                    renderActivityStream(activityData);
+                }
+            } catch (e) {
+                console.log('Using local activity data');
+                renderActivityStream(getLocalActivityData());
+            }
+        };
+        
+        const getLocalActivityData = () => [
+            {
+                id: 'act_1',
+                actor: 'Kai',
+                actorType: 'ai',
+                description: 'Moved "Fix MIND license system" from To Do to In Progress',
+                boardName: 'Flow Mind Website',
+                timestamp: new Date().toISOString(),
+                icon: '🔄'
+            },
+            {
+                id: 'act_2',
+                actor: 'Kai',
+                actorType: 'ai',
+                description: 'Moved "Testing FLOW kanban" from In Progress to Done',
+                boardName: 'Flow Mind Website',
+                timestamp: new Date(Date.now() - 15 * 60000).toISOString(),
+                icon: '✅'
+            },
+            {
+                id: 'act_3',
+                actor: 'Kai',
+                actorType: 'ai',
+                description: 'Created "Create FLOW for OpenClaw product" in Backlog',
+                boardName: 'Flow Mind Website',
+                timestamp: new Date(Date.now() - 30 * 60000).toISOString(),
+                icon: '📝'
+            },
+            {
+                id: 'act_4',
+                actor: 'System',
+                actorType: 'system',
+                description: 'Auto-backup saved to /flow/app/backups/',
+                timestamp: new Date(Date.now() - 45 * 60000).toISOString(),
+                icon: '💾'
+            },
+            {
+                id: 'act_5',
+                actor: 'Kai',
+                actorType: 'ai',
+                description: 'Created product landing page (product.html)',
+                timestamp: new Date(Date.now() - 60 * 60000).toISOString(),
+                icon: '🎨'
+            }
+        ];
+        
+        const renderActivityStream = (activities) => {
+            const container = document.getElementById('activityList');
+            if (!container) return;
+            
+            const grouped = groupActivitiesByDate(activities);
+            
+            let html = '';
+            for (const [date, items] of Object.entries(grouped)) {
+                html += `<div class="activity-day">`;
+                html += `<div class="activity-day-header">${date}</div>`;
+                
+                items.forEach(activity => {
+                    const time = formatTime(activity.timestamp);
+                    html += `
+                        <div class="activity-item ${activity.actorType}">
+                            <div class="activity-icon">${activity.icon}</div>
+                            <div class="activity-content">
+                                <div class="activity-text">
+                                    <span class="activity-actor ${activity.actorType}">${activity.actor}</span>
+                                    ${activity.description}
+                                </div>
+                                <div class="activity-meta">
+                                    <span>${time}</span>
+                                    ${activity.boardName ? `<span class="activity-board">📋 ${activity.boardName}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            }
+            
+            container.innerHTML = html;
+        };
+        
+        const groupActivitiesByDate = (activities) => {
+            const grouped = {};
+            
+            activities.forEach(activity => {
+                const date = new Date(activity.timestamp);
+                const today = new Date();
+                const yesterday = new Date(today);
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                let dateKey;
+                if (date.toDateString() === today.toDateString()) {
+                    dateKey = 'Today';
+                } else if (date.toDateString() === yesterday.toDateString()) {
+                    dateKey = 'Yesterday';
+                } else {
+                    dateKey = date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+                }
+                
+                if (!grouped[dateKey]) grouped[dateKey] = [];
+                grouped[dateKey].push(activity);
+            });
+            
+            return grouped;
+        };
+        
+        const formatTime = (timestamp) => {
+            const date = new Date(timestamp);
+            return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        };
+        
+        // Activity filters
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                
+                const filter = chip.dataset.filter;
+                if (filter === 'all') {
+                    renderActivityStream(activityData);
+                } else {
+                    const filtered = activityData.filter(a => a.actorType === filter);
+                    renderActivityStream(filtered);
+                }
+            });
+        });
+
+        // Help button
+        document.getElementById('helpBtn').addEventListener('click', () => {
+            const helpModal = document.createElement('div');
+            helpModal.style.cssText = `
+                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0,0,0,0.8); z-index: 10000;
+                display: flex; align-items: center; justify-content: center;
+                padding: 40px;
+            `;
+            helpModal.innerHTML = `
+                <div style="
+                    background: var(--bg-secondary); border: 1px solid var(--border);
+                    border-radius: 12px; width: 100%; max-width: 800px; max-height: 80vh;
+                    display: flex; flex-direction: column;
+                ">
+                    <div style="padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                        <h2 style="margin: 0; color: var(--accent);"><i class="ph ph-book"></i> FLOW Documentation</h2>
+                        <button id="closeHelp" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 20px;">
+                            <i class="ph ph-x"></i>
+                        </button>
+                    </div>
+                    <div style="padding: 24px; overflow-y: auto; color: var(--text-primary); line-height: 1.6;">
+                        <h3 style="color: var(--accent); margin-top: 0;">📚 Module Overview</h3>
+                        <p>FLOW is a Human-AI Mission Control Dashboard that unifies task management, real-time chat, system monitoring, and memory.</p>
+                        
+                        <h4 style="margin-top: 20px;">🎯 Kanban</h4>
+                        <p>Task management with drag-and-drop. Creates activity logs when cards are moved.</p>
+                        
+                        <h4 style="margin-top: 20px;">📊 Activity Stream</h4>
+                        <p>Real-time log of all events: chat messages, task movements, file edits. Auto-refreshes every 3 seconds.</p>
+                        
+                        <h4 style="margin-top: 20px;">🧠 Memory</h4>
+                        <p>Curated knowledge extracted from daily logs and file edits. Auto-refreshes every 5 seconds. Parses accomplishments and technical decisions automatically.</p>
+                        
+                        <h4 style="margin-top: 20px;">💬 Chat</h4>
+                        <p>Unified view of all conversations (Telegram, FlowChat). <strong>Read-only</strong> — messages appear here but you reply in the original channel.</p>
+                        
+                        <h4 style="margin-top: 20px;">🌊 Kai Profile</h4>
+                        <p>Edit Kai's identity files (SOUL.md, IDENTITY.md, etc.). Changes are auto-saved to workspace and extracted to Memory.</p>
+                        
+                        <h4 style="margin-top: 20px;">🛠️ Skills Browser</h4>
+                        <p>Browse 50+ installed OpenClaw skills. Static catalog view.</p>
+                        
+                        <h4 style="margin-top: 20px;">⚙️ System Dashboard</h4>
+                        <p>Monitor OpenClaw: real cron jobs, channel status, sessions. Shows live data from your gateway.</p>
+                        
+                        <h4 style="margin-top: 20px;">⏰ Schedule & Heartbeat</h4>
+                        <p>Daily rhythm tracking, upcoming cron checks, and system health status.</p>
+                        
+                        <hr style="border-color: var(--border); margin: 24px 0;">
+                        
+                        <h3 style="color: var(--accent);">🔗 Cross-Module Features</h3>
+                        <ul style="margin: 10px 0;">
+                            <li>Chat messages → Activity Stream</li>
+                            <li>Kanban card created/moved → Activity Stream</li>
+                            <li>Kai file edited → Activity + Memory</li>
+                            <li>Daily logs parsed → Memory (hourly)</li>
+                        </ul>
+                        
+                        <hr style="border-color: var(--border); margin: 24px 0;">
+                        
+                        <h3 style="color: var(--accent);">📖 Full Documentation</h3>
+                        <p>Complete module documentation available in Obsidian:</p>
+                        <code style="background: var(--bg-tertiary); padding: 4px 8px; border-radius: 4px;">
+                            Kai_Obsidian/Kai/i_am-Hicks/i_am_Flow/FLOW Module Documentation.md
+                        </code>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(helpModal);
+            
+            document.getElementById('closeHelp').addEventListener('click', () => {
+                helpModal.remove();
+            });
+            helpModal.addEventListener('click', (e) => {
+                if (e.target === helpModal) helpModal.remove();
+            });
+        });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check saved theme preference
+        const savedTheme = localStorage.getItem('flow-theme');
+        if (savedTheme === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+            themeIcon.className = 'ph ph-sun';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.hasAttribute('data-theme');
+            if (isDark) {
+                document.body.removeAttribute('data-theme');
+                localStorage.setItem('flow-theme', 'light');
+                themeIcon.className = 'ph ph-moon';
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('flow-theme', 'dark');
+                themeIcon.className = 'ph ph-sun';
+            }
+        });
+
+        // Load initial activity data
+        loadActivityStream();
+        
+        // Auto-refresh activity every 3 seconds
+        setInterval(loadActivityStream, 3000);
+
+        // Kai Profile Module
+        const kaiFiles = {
+            soul: `# SOUL.md - Who I Am\n\n_Kai. 🌊_\n\n[Content editable in workspace/SOUL.md]`,
+            identity: `# IDENTITY.md - Who I Am\n\n- **Name:** Kai\n- **Creature:** Proactive AI agent\n- **Emoji:** 🌊\n\n[Content editable in workspace/IDENTITY.md]`,
+            user: `# USER.md - About Pete\n\n- **Name:** Pete\n- **Timezone:** London (GMT)\n- **Location:** Wales\n\n[Content editable in workspace/USER.md]`,
+            agents: `# AGENTS.md - Behavioral Logic\n\n[Content editable in workspace/AGENTS.md]`,
+            memory: `# MEMORY.md - Curated Long-term Memory\n\n[Content editable in workspace/MEMORY.md]`,
+            standing_orders: `# STANDING_ORDERS.md - Non-negotiable Rules\n\n[Content editable in workspace/STANDING_ORDERS.md]`,
+            protocol_cost: `# PROTOCOL_COST_EFFICIENCY.md\n\n[Content editable in workspace/PROTOCOL_COST_EFFICIENCY.md]`,
+            tools: `# TOOLS.md - Environment Notes\n\n[Content editable in workspace/TOOLS.md]`,
+            heartbeat: `# HEARTBEAT.md - System Checks\n\n[Content editable in workspace/HEARTBEAT.md]`,
+            dev_procedure: `# DEV_PROCEDURE.md - Development Checklist\n\n[Content editable in workspace/DEV_PROCEDURE.md]`,
+            bootstrap: `# BOOTSTRAP.md - First Run Guide\n\n[Content editable in workspace/BOOTSTRAP.md]`,
+            overnight: `# OVERNIGHT.md - Background Tasks\n\n[Content editable in workspace/OVERNIGHT.md]`,
+            trading_app: `# trading_app_strategy.md\n\n[Content editable in workspace/trading_app_strategy.md]`,
+            trading_journal: `# trading_journal_market_research.md\n\n[Content editable in workspace/trading_journal_market_research.md]`
+        };
+
+        // File name mapping
+        const fileNameMap = {
+            soul: 'SOUL.md',
+            identity: 'IDENTITY.md',
+            user: 'USER.md',
+            agents: 'AGENTS.md',
+            memory: 'MEMORY.md',
+            standing_orders: 'STANDING_ORDERS.md',
+            protocol_cost: 'PROTOCOL_COST_EFFICIENCY.md',
+            tools: 'TOOLS.md',
+            heartbeat: 'HEARTBEAT.md',
+            dev_procedure: 'DEV_PROCEDURE.md',
+            bootstrap: 'BOOTSTRAP.md',
+            overnight: 'OVERNIGHT.md',
+            trading_app: 'trading_app_strategy.md',
+            trading_journal: 'trading_journal_market_research.md'
+        };
+
+        let currentKaiFile = 'soul';
+        const kaiEditor = document.getElementById('kaiEditor');
+        const kaiCurrentFile = document.getElementById('kai-current-file');
+
+        // Load file from server
+        const loadKaiFile = async (fileKey) => {
+            const fileName = fileNameMap[fileKey];
+            if (!fileName) return;
+            
+            kaiEditor.value = 'Loading...';
+            try {
+                const response = await fetch(`/api/workspace/${fileName}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    kaiEditor.value = data.content;
+                } else {
+                    // Fall back to placeholder
+                    kaiEditor.value = kaiFiles[fileKey] || `# ${fileName}\n\n[File not found on server]`;
+                }
+            } catch (e) {
+                kaiEditor.value = kaiFiles[fileKey] || `# ${fileName}\n\n[Error loading file]`;
+            }
+        };
+
+        // Kai file switching
+        document.querySelectorAll('.kai-file-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.kai-file-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                currentKaiFile = btn.dataset.file;
+                kaiCurrentFile.textContent = fileNameMap[currentKaiFile] || currentKaiFile + '.md';
+                loadKaiFile(currentKaiFile);
+            });
+        });
+
+        // Initialize Kai editor
+        if (kaiEditor) {
+            loadKaiFile('soul');
+        }
+
+        // Kai save button - with confirmation modal
+        const confirmModal = document.getElementById('confirmModal');
+        const confirmFileName = document.getElementById('confirmFileName');
+        const confirmSaveBtn = document.getElementById('confirmSave');
+        const confirmCancelBtn = document.getElementById('confirmCancel');
+
+        document.getElementById('kaiSaveBtn')?.addEventListener('click', () => {
+            const fileName = fileNameMap[currentKaiFile];
+            if (!fileName) return;
+            
+            confirmFileName.textContent = fileName;
+            confirmModal.style.display = 'flex';
+        });
+
+        confirmCancelBtn?.addEventListener('click', () => {
+            confirmModal.style.display = 'none';
+        });
+
+        confirmSaveBtn?.addEventListener('click', async () => {
+            confirmModal.style.display = 'none';
+            const fileName = fileNameMap[currentKaiFile];
+            if (!fileName) return;
+            
+            try {
+                const response = await fetch(`/api/workspace/${fileName}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: kaiEditor.value })
+                });
+                
+                if (response.ok) {
+                    showToast(`Saved ${fileName}`, 'success');
+                } else {
+                    showToast('Save failed', 'error');
+                }
+            } catch (e) {
+                showToast('Save error: ' + e.message, 'error');
+            }
+        });
+
+        // Close modal on backdrop click
+        confirmModal?.addEventListener('click', (e) => {
+            if (e.target === confirmModal) {
+                confirmModal.style.display = 'none';
+            }
+        });
+
+        // Skills Browser Module
+        const skillsData = [
+            { name: 'github', desc: 'Interact with GitHub using the gh CLI' },
+            { name: 'weather', desc: 'Get current weather and forecasts' },
+            { name: 'mind', desc: 'MIND app development helper' },
+            { name: 'healthcheck', desc: 'Security hardening and system checks' },
+            { name: 'obsidian', desc: 'Work with Obsidian vaults' },
+            { name: 'video-frames', desc: 'Extract frames from videos using ffmpeg' },
+            { name: 'cron', desc: 'Manage cron jobs and scheduled tasks' },
+            { name: 'browser', desc: 'Control web browser automation' },
+            { name: 'canvas', desc: 'Present and evaluate canvas content' },
+            { name: 'nodes', desc: 'Discover and control paired nodes' },
+            { name: 'sessions', desc: 'List and manage agent sessions' },
+            { name: 'memory', desc: 'Search and recall from memory files' },
+            { name: 'web_search', desc: 'Search the web using Brave API' },
+            { name: 'web_fetch', desc: 'Fetch and extract content from URLs' },
+            { name: 'message', desc: 'Send messages via channel plugins' },
+            { name: 'gateway', desc: 'Restart and configure OpenClaw gateway' },
+            { name: '1password', desc: '1Password CLI integration' },
+            { name: 'apple-notes', desc: 'Apple Notes integration' },
+            { name: 'apple-reminders', desc: 'Apple Reminders integration' },
+            { name: 'bear-notes', desc: 'Bear Notes integration' },
+            { name: 'blogwatcher', desc: 'Monitor blogs and RSS feeds' },
+            { name: 'blucli', desc: 'Blue CLI utilities' },
+            { name: 'bluebubbles', desc: 'BlueBubbles iMessage integration' },
+            { name: 'camsnap', desc: 'Camera snapshot capture' },
+            { name: 'clawhub', desc: 'Skill repository browser' },
+            { name: 'coding-agent', desc: 'AI coding assistant' },
+            { name: 'discord', desc: 'Discord integration' },
+            { name: 'eightctl', desc: 'Eight sleep device control' },
+            { name: 'food-order', desc: 'Food ordering integration' },
+            { name: 'gemini', desc: 'Google Gemini AI integration' },
+            { name: 'gifgrep', desc: 'GIF search and retrieval' },
+            { name: 'gog', desc: 'GOG Galaxy integration' },
+            { name: 'goplaces', desc: 'Local places and POI search' },
+            { name: 'gumroad-license', desc: 'Gumroad license verification' },
+            { name: 'himalaya', desc: 'Himalaya email client' },
+            { name: 'imsg', desc: 'iMessage integration' },
+            { name: 'local-places', desc: 'Local business search' },
+            { name: 'mcporter', desc: 'Minecraft server integration' },
+            { name: 'model-usage', desc: 'AI model usage tracking' },
+            { name: 'nano-banana-pro', desc: 'Nano Banana Pro utilities' },
+            { name: 'nano-pdf', desc: 'PDF processing tools' },
+            { name: 'notion', desc: 'Notion workspace integration' },
+            { name: 'openai-image-gen', desc: 'DALL-E image generation' },
+            { name: 'openai-whisper', desc: 'Local Whisper transcription' },
+            { name: 'openai-whisper-api', desc: 'Whisper API transcription' },
+            { name: 'openhue', desc: 'Philips Hue control' },
+            { name: 'oracle', desc: 'Database oracle utilities' },
+            { name: 'ordercli', desc: 'Order CLI tools' },
+            { name: 'peekaboo', desc: 'Screen capture utilities' },
+            { name: 'sag', desc: 'ElevenLabs TTS (SAG)' },
+            { name: 'session-logs', desc: 'Session log management' },
+            { name: 'sherpa-onnx-tts', desc: 'Local TTS with Sherpa' },
+            { name: 'skill-creator', desc: 'Create and package skills' },
+            { name: 'slack', desc: 'Slack workspace integration' },
+            { name: 'songsee', desc: 'Song and music recognition' },
+            { name: 'sonoscli', desc: 'Sonos speaker control' },
+            { name: 'spotify-player', desc: 'Spotify playback control' },
+            { name: 'summarize', desc: 'Text summarization tools' },
+            { name: 'things-mac', desc: 'Things 3 task manager' },
+            { name: 'tmux', desc: 'Tmux session management' },
+            { name: 'trello', desc: 'Trello board integration' },
+            { name: 'voice-call', desc: 'Voice call utilities' },
+            { name: 'wacli', desc: 'WhatsApp CLI integration' }
+        ];
+
+        const renderSkills = (filter = '') => {
+            const grid = document.getElementById('skillsGrid');
+            if (!grid) return;
+
+            const filtered = skillsData.filter(s => 
+                s.name.toLowerCase().includes(filter.toLowerCase()) ||
+                s.desc.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            document.getElementById('skills-count').textContent = `${filtered.length} skills`;
+
+            grid.innerHTML = filtered.map(skill => `
+                <div class="skill-card">
+                    <div class="skill-name">
+                        <i class="ph ph-wrench skill-icon"></i>
+                        ${skill.name}
+                    </div>
+                    <div class="skill-desc">${skill.desc}</div>
+                </div>
+            `).join('');
+        };
+
+        // Skills search
+        document.getElementById('skillsSearch')?.addEventListener('input', (e) => {
+            renderSkills(e.target.value);
+        });
+
+        // Load skills when tab is clicked
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                if (tab.dataset.module === 'skills') {
+                    renderSkills();
+                }
+            });
+        });
+
+        // Initial skills render
+        renderSkills();
+
+        // System Dashboard Module
+        const loadSystemData = async () => {
+            try {
+                // Load REAL cron jobs from OpenClaw
+                const cronList = document.getElementById('cronList');
+                if (cronList) {
+                    try {
+                        const response = await fetch('/api/crons?t=' + Date.now());
+                        const data = await response.json();
+                        const cronJobs = data.crons || [];
+                        
+                        document.getElementById('cronBadge').textContent = `${cronJobs.length} active`;
+                        
+                        cronList.innerHTML = cronJobs.map(job => `
+                            <div class="cron-item">
+                                <div class="cron-name">${job.name}</div>
+                                <div class="cron-schedule">${job.schedule} • Next: ${job.next}</div>
+                                <div class="cron-status ${job.status === 'ok' ? 'enabled' : ''}">
+                                    <i class="ph ph-${job.status === 'ok' ? 'check-circle' : 'x-circle'}"></i>
+                                    ${job.status === 'ok' ? 'Enabled' : job.status}
+                                </div>
+                            </div>
+                        `).join('');
+                    } catch (e) {
+                        cronList.innerHTML = '<div class="cron-item">Error loading crons</div>';
+                    }
+                }
+
+                // Load REAL channels from OpenClaw
+                try {
+                    const channelsResponse = await fetch('/api/channels?t=' + Date.now());
+                    const channelsData = await channelsResponse.json();
+                    const channels = channelsData.channels || [];
+                    
+                    // Update Channels card with real data
+                    const channelsCard = document.querySelectorAll('.system-card')[1]; // Second card is Channels
+                    if (channelsCard) {
+                        const cardBody = channelsCard.querySelector('.system-card-body');
+                        if (cardBody) {
+                            cardBody.innerHTML = channels.map(ch => `
+                                <div class="system-row">
+                                    <span class="system-label">${ch.name === 'telegram' ? '<i class="ph ph-telegram-logo"></i> ' : ''}${ch.name}</span>
+                                    <span class="system-status ${ch.enabled ? 'online' : 'offline'}">${ch.status}</span>
+                                </div>
+                            `).join('');
+                        }
+                    }
+                } catch (e) {
+                    console.log('Using demo channel data:', e);
+                }
+
+                // Load sessions (still static for now)
+                const sessionList = document.getElementById('sessionList');
+                const sessions = [
+                    { id: 'main', name: 'Main Agent', status: 'active' },
+                    { id: 'session-1', name: 'FlowChat Session', status: 'active' },
+                    { id: 'session-2', name: 'Telegram DM', status: 'active' },
+                    { id: 'session-3', name: 'Heartbeat Worker', status: 'active' },
+                    { id: 'session-4', name: 'Cron Runner', status: 'active' }
+                ];
+                
+                if (sessionList) {
+                    sessionList.innerHTML = sessions.map(s => `
+                        <div class="session-item">
+                            <div class="session-dot"></div>
+                            <span>${s.name}</span>
+                        </div>
+                    `).join('');
+                }
+
+                document.getElementById('sessionCount').textContent = `${sessions.length} active`;
+
+                // Load REAL gateway status
+                await loadGatewayStatus();
+                
+                // Load token usage
+                await loadTokenUsage();
+
+                // Load config preview (still static)
+                const configPreview = document.getElementById('configPreview');
+                if (configPreview) {
+                    const config = {
+                        gateway: { port: 18789, mode: 'local' },
+                        model: { primary: 'kimi-coding/k2p5' },
+                        channels: { telegram: 'enabled', flowchat: 'enabled' },
+                        workspace: '~/.openclaw/workspace'
+                    };
+                    configPreview.textContent = JSON.stringify(config, null, 2);
+                }
+            } catch (e) {
+                console.error('Error loading system data:', e);
+            }
+        };
+
+        // Gateway Status
+        const loadGatewayStatus = async () => {
+            try {
+                const response = await fetch('/api/gateway/status?t=' + Date.now());
+                const data = await response.json();
+                
+                const badge = document.getElementById('gw-status-badge');
+                const version = document.getElementById('gw-version');
+                const ping = document.getElementById('gw-ping');
+                const sessions = document.getElementById('gw-sessions');
+                
+                if (data.running) {
+                    badge.textContent = 'Online';
+                    badge.className = 'system-status online';
+                    if (version) version.textContent = data.version || 'Unknown';
+                    if (ping) ping.textContent = data.reachable ? `${data.reachable}ms` : '--';
+                    if (sessions) sessions.textContent = data.sessions || '0';
+                } else {
+                    badge.textContent = 'Offline';
+                    badge.className = 'system-status offline';
+                    if (version) version.textContent = '--';
+                    if (ping) ping.textContent = '--';
+                    if (sessions) sessions.textContent = '--';
+                }
+            } catch (e) {
+                console.error('Error loading gateway status:', e);
+                const badge = document.getElementById('gw-status-badge');
+                if (badge) {
+                    badge.textContent = 'Error';
+                    badge.className = 'system-status offline';
+                }
+            }
+        };
+
+        // Token Usage
+        const loadTokenUsage = async () => {
+            try {
+                const response = await fetch('/api/tokens?t=' + Date.now());
+                const data = await response.json();
+                
+                const badge = document.getElementById('tokenBadge');
+                const sessionsEl = document.getElementById('token-sessions');
+                const totalEl = document.getElementById('token-total');
+                const contextEl = document.getElementById('token-context');
+                const avgEl = document.getElementById('token-avg');
+                const listEl = document.getElementById('token-sessions-list');
+                
+                if (data.summary) {
+                    if (badge) badge.textContent = data.summary.totalSessions || '0';
+                    if (sessionsEl) sessionsEl.textContent = data.summary.activeSessions || '0';
+                    if (totalEl) totalEl.textContent = data.summary.totalTokensUsed || '-';
+                    if (contextEl) contextEl.textContent = data.summary.totalContextWindow || '-';
+                    if (avgEl) avgEl.textContent = data.summary.averageUsage || '-';
+                }
+                
+                if (listEl && data.sessions) {
+                    const activeSessions = data.sessions.filter(s => s.active);
+                    if (activeSessions.length > 0) {
+                        listEl.innerHTML = activeSessions.slice(0, 10).map(s => `
+                            <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border);" title="${s.key}">
+                                <span style="color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px;">${s.key}</span>
+                                <span style="color: ${s.percent > 80 ? 'var(--danger)' : s.percent > 50 ? 'var(--warning)' : 'var(--success)'};">${s.tokensUsed} (${s.percent}%)</span>
+                            </div>
+                        `).join('');
+                    } else {
+                        listEl.innerHTML = '<div style="color: var(--text-tertiary);">No active sessions</div>';
+                    }
+                }
+            } catch (e) {
+                console.error('Error loading token usage:', e);
+            }
+        };
+
+        // Refresh gateway button
+        document.getElementById('refreshGatewayBtn')?.addEventListener('click', loadGatewayStatus);
+
+        // Restart gateway button
+        document.getElementById('restartGatewayBtn')?.addEventListener('click', async () => {
+            if (!confirm('Restart OpenClaw Gateway? This will briefly interrupt service.')) return;
+            
+            try {
+                const btn = document.getElementById('restartGatewayBtn');
+                btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Restarting...';
+                btn.disabled = true;
+                
+                const response = await fetch('/api/gateway/restart', { method: 'POST' });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Gateway restart initiated. Wait 5-10 seconds then refresh.');
+                    setTimeout(loadGatewayStatus, 5000);
+                } else {
+                    alert('Restart failed: ' + (data.error || 'Unknown error'));
+                }
+            } catch (e) {
+                alert('Restart failed: ' + e.message);
+            } finally {
+                const btn = document.getElementById('restartGatewayBtn');
+                btn.innerHTML = '<i class="ph ph-restart"></i> Restart Gateway';
+                btn.disabled = false;
+            }
+        });
+
+        // Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        
+        // Load saved state
+        const sidebarCollapsed = localStorage.getItem('flow-sidebar-collapsed') === 'true';
+        if (sidebarCollapsed) {
+            sidebar.classList.add('collapsed');
+            sidebarToggle.classList.add('collapsed');
+        }
+        
+        sidebarToggle?.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            sidebarToggle.classList.toggle('collapsed');
+            localStorage.setItem('flow-sidebar-collapsed', sidebar.classList.contains('collapsed'));
+        });
+        
+        // Load Sidebar Data (real stats)
+        const loadSidebarData = async () => {
+            try {
+                // Load kanban stats
+                const response = await fetch('/api/data?t=' + Date.now());
+                const data = await response.json();
+                
+                const board = data.boards?.find(b => b.name === 'Flow Mind Website');
+                if (board) {
+                    const todoCol = board.columns.find(c => c.id === 'todo');
+                    const inProgressCol = board.columns.find(c => c.id === 'inprogress');
+                    const doneCol = board.columns.find(c => c.id === 'done');
+                    
+                    document.getElementById('sidebar-todo').textContent = todoCol?.cards?.length || 0;
+                    document.getElementById('sidebar-inprogress').textContent = inProgressCol?.cards?.length || 0;
+                    document.getElementById('sidebar-done').textContent = doneCol?.cards?.length || 0;
+                }
+                
+                // Load gateway status
+                try {
+                    const gwResponse = await fetch('/api/gateway/status?t=' + Date.now());
+                    const gwData = await gwResponse.json();
+                    
+                    const gwEl = document.getElementById('sidebar-gateway');
+                    if (gwEl) {
+                        gwEl.textContent = gwData.running ? 'Online' : 'Offline';
+                        gwEl.style.color = gwData.running ? 'var(--success)' : 'var(--danger)';
+                    }
+                    
+                    const sessionsEl = document.getElementById('sidebar-sessions');
+                    if (sessionsEl) {
+                        sessionsEl.textContent = gwData.sessions || 0;
+                    }
+                } catch (e) {
+                    console.log('Gateway status unavailable for sidebar');
+                }
+                
+                // Load recent memories
+                try {
+                    const memResponse = await fetch('/api/memory?t=' + Date.now());
+                    const memData = await memResponse.json();
+                    const memories = memData.memories?.slice(0, 3) || [];
+                    
+                    const memEl = document.getElementById('sidebar-memory');
+                    if (memEl) {
+                        if (memories.length > 0) {
+                            memEl.innerHTML = memories.map(m => `
+                                <div style="padding: 8px 0; border-bottom: 1px solid var(--border);"
+                                    onclick="document.querySelector('[data-module=\"memory\"]').click()"
+                                    style="cursor: pointer;"
+                                >
+                                    <div style="font-size: 12px; color: var(--text-primary);"
+                                        title="${m.content}"
+                                    >
+                                        ${m.icon} ${m.content.substring(0, 40)}${m.content.length > 40 ? '...' : ''}
+                                    </div>
+                                    <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;"
+                                    >
+                                        ${m.category} • ${new Date(m.timestamp).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'})}
+                                    </div>
+                                </div>
+                            `).join('');
+                        } else {
+                            memEl.innerHTML = '<div style="color: var(--text-tertiary);">No memories yet</div>';
+                        }
+                    }
+                } catch (e) {
+                    console.log('Memory unavailable for sidebar');
+                }
+            } catch (e) {
+                console.error('Error loading sidebar data:', e);
+            }
+        };
+        
+        // Load sidebar data initially and refresh every 10 seconds
+        loadSidebarData();
+        setInterval(loadSidebarData, 10000);
+
+        // Load system data when tab is clicked
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                if (tab.dataset.module === 'system') {
+                    loadSystemData();
+                }
+            });
+        });
+
+        // Chat Module
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const chatSendBtn = document.getElementById('chatSendBtn');
+        const channelList = document.getElementById('channelList');
+        const chatLoading = document.getElementById('chatLoading');
+        const chatSearch = document.getElementById('chatSearch');
+        let chatHistory = [];
+        let channels = [];
+        let selectedChannel = 'all'; // 'all' to show all channels, or specific channel id
+        let allMessages = []; // Store all messages for search
+
+        // Search functionality
+        let currentSearchText = '';
+        
+        chatSearch?.addEventListener('input', (e) => {
+            currentSearchText = e.target.value;
+            renderMessages(allMessages, currentSearchText);
+        });
+
+        const loadChannels = async () => {
+            try {
+                const response = await fetch('/api/messages');
+                if (response.ok) {
+                    const data = await response.json();
+                    allMessages = data.messages || [];
+                    channels = data.channels || [];
+                    
+                    // Render channel list - static display only, no filtering
+                    // Sort: FlowChat first, then others
+                    const sortedChannels = [...channels].sort((a, b) => {
+                        if (a.id === 'flowchat') return -1;
+                        if (b.id === 'flowchat') return 1;
+                        return 0;
+                    });
+                    
+                    channelList.innerHTML = sortedChannels.map(ch => `
+                        <div class="chat-channel-item" data-channel="${ch.id}">
+                            <div class="chat-channel-icon">
+                                <i class="ph ${ch.icon || 'ph-chat-circle'}"></i>
+                            </div>
+                            <div class="chat-channel-info">
+                                <div class="chat-channel-name">${ch.name}</div>
+                                <div class="chat-channel-status ${ch.status}">
+                                    ${ch.status === 'connected' ? '●' : '○'} ${ch.status}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    // Always show all messages, no channel filtering
+                    selectedChannel = 'all';
+                    
+                    return data.messages || [];
+                }
+            } catch (e) {
+                console.error('Error loading channels:', e);
+            }
+            return [];
+        };
+
+        const renderMessages = (messages, searchText = '') => {
+            chatMessages.innerHTML = '';
+            
+            // Filter messages by selected channel first
+            let filteredMessages = selectedChannel === 'all' 
+                ? messages 
+                : messages.filter(msg => msg.channel === selectedChannel || msg.channelName?.toLowerCase() === selectedChannel.toLowerCase());
+            
+            // If search text, filter by search
+            if (searchText) {
+                filteredMessages = filteredMessages.filter(msg => 
+                    msg.text?.toLowerCase().includes(searchText.toLowerCase())
+                );
+            }
+            
+            if (filteredMessages.length === 0) {
+                chatMessages.innerHTML = `
+                    <div class="chat-welcome">
+                        <i class="ph ph-hand-waving"></i>
+                        <p>${searchText ? 'No messages match your search.' : (selectedChannel === 'all' ? 'No messages yet. Start a conversation!' : 'No messages in this channel.')}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredMessages.forEach(msg => {
+                const isUser = msg.senderType === 'human';
+                const time = new Date(msg.timestamp).toLocaleTimeString('en-GB', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                // Highlight search text
+                let messageText = escapeHtml(msg.text);
+                if (searchText) {
+                    const regex = new RegExp(`(${escapeHtml(searchText)})`, 'gi');
+                    messageText = messageText.replace(regex, '<mark style="background: var(--accent); color: var(--bg-primary); padding: 2px 4px; border-radius: 4px;">$1</mark>');
+                }
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `chat-message ${isUser ? 'user' : ''}`;
+                messageDiv.innerHTML = `
+                    <div>
+                        <div class="chat-message-content">${messageText}</div>
+                        <div class="chat-message-meta">
+                            <span class="chat-message-channel">${msg.channelName}</span>
+                            <span>${time}</span>
+                        </div>
+                    </div>
+                `;
+                chatMessages.appendChild(messageDiv);
+            });
+            
+            // Update message count
+            const countText = `${filteredMessages.length} message${filteredMessages.length !== 1 ? 's' : ''}`;
+            const chatMessageCount = document.getElementById('chatMessageCount');
+            const sidebarMessageCount = document.getElementById('sidebarMessageCount');
+            if (chatMessageCount) chatMessageCount.textContent = countText;
+            if (sidebarMessageCount) sidebarMessageCount.textContent = countText;
+            
+            // Only auto-scroll if not searching and user was at bottom
+            if (!searchText && isScrolledToBottom) {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        };
+
+        const escapeHtml = (text) => {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        };
+
+        const loadChat = async () => {
+            const messages = await loadChannels();
+            renderMessages(messages, currentSearchText);
+            return messages.length;
+        };
+
+        // Real-time polling
+        let chatPollInterval = null;
+        let lastMessageCount = 0;
+        let isScrolledToBottom = true;
+
+        const startChatPolling = () => {
+            if (chatPollInterval) return;
+            
+            chatPollInterval = setInterval(async () => {
+                const currentCount = await loadChat();
+                
+                // Don't auto-scroll if user is searching or scrolled up
+                const isSearching = currentSearchText && currentSearchText.length > 0;
+                
+                if (currentCount > lastMessageCount) {
+                    // New messages arrived
+                    if (isScrolledToBottom && !isSearching) {
+                        // Auto-scroll to show new message (only if not searching and at bottom)
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    } else {
+                        // Show new message indicator
+                        showNewMessageIndicator();
+                    }
+                }
+                lastMessageCount = currentCount;
+            }, 3000); // Check every 3 seconds
+        };
+
+        const stopChatPolling = () => {
+            if (chatPollInterval) {
+                clearInterval(chatPollInterval);
+                chatPollInterval = null;
+            }
+        };
+
+        const showNewMessageIndicator = () => {
+            // Remove existing indicator
+            const existing = document.getElementById('newMessagesIndicator');
+            if (existing) existing.remove();
+            
+            const indicator = document.createElement('div');
+            indicator.id = 'newMessagesIndicator';
+            indicator.style.cssText = `
+                position: absolute;
+                bottom: 80px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--accent);
+                color: var(--bg-primary);
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                z-index: 100;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            `;
+            indicator.innerHTML = '<i class="ph ph-arrow-down"></i> New messages';
+            indicator.onclick = () => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                indicator.remove();
+            };
+            
+            document.querySelector('.chat-container').appendChild(indicator);
+        };
+
+        // Track scroll position
+        chatMessages?.addEventListener('scroll', () => {
+            const threshold = 50;
+            isScrolledToBottom = 
+                chatMessages.scrollHeight - chatMessages.scrollTop - chatMessages.clientHeight < threshold;
+            
+            // Hide indicator if scrolled to bottom
+            if (isScrolledToBottom) {
+                const indicator = document.getElementById('newMessagesIndicator');
+                if (indicator) indicator.remove();
+            }
+        });
+
+        const sendMessage = async () => {
+            const text = chatInput.value.trim();
+            if (!text) return;
+            
+            // Always use flowchat for dashboard messages
+            const channelId = 'flowchat';
+            const channelName = 'FlowChat';
+            
+            // Add to UI immediately
+            const tempMsg = {
+                text,
+                senderType: 'human',
+                channel: channelId,
+                channelName: channelName,
+                timestamp: new Date().toISOString()
+            };
+            
+            const currentMessages = Array.from(chatMessages.querySelectorAll('.chat-message')).length;
+            if (currentMessages === 0) chatMessages.innerHTML = '';
+            
+            renderMessages([...chatHistory, tempMsg]);
+            
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+            
+            // Save to server
+            try {
+                await fetch('/api/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        channel: channelId,
+                        channelName: channelName,
+                        sender: 'Pete',
+                        senderType: 'human',
+                        text: text,
+                        sessionId: 'flow-dashboard'
+                    })
+                });
+                
+                // Reload to get updated messages
+                await loadChat();
+            } catch (e) {
+                console.error('Error sending message:', e);
+            }
+        };
+
+        // Load chat when tab is clicked
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', async () => {
+                // Stop all module polling
+                stopChatPolling();
+                
+                if (tab.dataset.module === 'chat') {
+                    lastMessageCount = await loadChat();
+                    startChatPolling();
+                }
+            });
+        });
+
+        // Connection status check
+        const updateConnectionStatus = async () => {
+            try {
+                const response = await fetch('/api/messages?t=' + Date.now());
+                const statusEl = document.getElementById('chatConnectionStatus');
+                if (statusEl) {
+                    if (response.ok) {
+                        statusEl.innerHTML = `
+                            <span style="width: 8px; height: 8px; background: var(--success); border-radius: 50%; display: inline-block;"></span>
+                            Connected
+                        `;
+                    } else {
+                        statusEl.innerHTML = `
+                            <span style="width: 8px; height: 8px; background: var(--danger); border-radius: 50%; display: inline-block;"></span>
+                            Disconnected
+                        `;
+                    }
+                }
+            } catch (e) {
+                const statusEl = document.getElementById('chatConnectionStatus');
+                if (statusEl) {
+                    statusEl.innerHTML = `
+                        <span style="width: 8px; height: 8px; background: var(--danger); border-radius: 50%; display: inline-block;"></span>
+                        Disconnected
+                    `;
+                }
+            }
+        };
+        
+        // Check connection status every 5 seconds
+        setInterval(updateConnectionStatus, 5000);
+        updateConnectionStatus();
+
+        chatSendBtn?.addEventListener('click', sendMessage);
+        
+        chatInput?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Auto-resize textarea
+        chatInput?.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Toast helper
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 24px;
+                right: 24px;
+                background: ${type === 'success' ? 'var(--success)' : 'var(--accent)'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 14px;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>

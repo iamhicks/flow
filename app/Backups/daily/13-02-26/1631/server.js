@@ -716,7 +716,8 @@ const server = http.createServer(async (req, res) => {
         // Emit event for cross-module communication
         EventBus.emit('chat:message', newMessage);
         
-        // Create notification for instant delivery via OpenClaw webhook
+        // Create notification for instant delivery (without writing to session log)
+        // This avoids circular sync issues
         if (newMessage.senderType === 'human') {
           try {
             const notifyPath = path.join(process.env.HOME, '.openclaw/workspace/.flowchat-notify');
@@ -728,28 +729,6 @@ const server = http.createServer(async (req, res) => {
               channel: newMessage.channel
             }));
             console.log('FlowChat notification created for instant delivery');
-            
-            // CALL OPENCLAW WEBHOOK for instant delivery
-            const webhookReq = http.request({
-              hostname: 'localhost',
-              port: 18789,
-              path: '/hooks/wake',
-              method: 'POST',
-              headers: {
-                'Authorization': 'Bearer flow-chat-secret-2024',
-                'Content-Type': 'application/json'
-              }
-            }, (res) => {
-              console.log('OpenClaw webhook response:', res.statusCode);
-            });
-            webhookReq.on('error', (e) => {
-              console.error('Webhook error:', e.message);
-            });
-            webhookReq.write(JSON.stringify({
-              text: `[FlowChat] ${newMessage.sender}: ${newMessage.text}`,
-              mode: 'now'
-            }));
-            webhookReq.end();
           } catch (e) {
             console.error('Error creating notification:', e);
           }
