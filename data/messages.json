@@ -1,26 +1,6 @@
 {
   "messages": [
     {
-      "id": "e4ec38a8",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Done! Changes made:\n\n1. ✅ Tabs bar moved to very top\n2. ✅ Theme button in tabs bar (right side)\n3. ✅ More button moved to note meta area\n4. ✅ AI chat header/scroll positioned below tabs (40px offset)\n5. ✅ Old header hidden (but elements preserved for JS compatibility)\n\nClose and restart!",
-      "timestamp": "2026-02-12T15:55:49.860Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "1832571c",
-      "channel": "telegram",
-      "channelName": "Telegram",
-      "sender": "Pete",
-      "senderType": "human",
-      "text": "looks good now thanks. cana you remove the shadow behind the message box. the vertical line seperating ai chat and note - there seems to be a slight break in it just above the message box ai chat delete button not wokring, when i click on it nothing happens\n[message_id: 4423]",
-      "timestamp": "2026-02-12T16:00:52.408Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
       "id": "e390af0b",
       "channel": "webchat",
       "channelName": "WebChat",
@@ -4997,6 +4977,26 @@
       "text": "works but now when i scroll up through the results ans stop, messages scroll/jump back down to newest message\n[message_id: 4796]",
       "timestamp": "2026-02-13T14:45:51.902Z",
       "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "dae1af20",
+      "channel": "webchat",
+      "channelName": "WebChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "**✅ Fixed!**\n\nNow when you search and scroll up, it won't auto-scroll you back down. The scroll position is preserved while browsing search results.\n\n**Refresh dashboard** and try it! 🔍",
+      "timestamp": "2026-02-13T14:47:16.295Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "a21b7024",
+      "channel": "telegram",
+      "channelName": "Telegram",
+      "sender": "Pete",
+      "senderType": "human",
+      "text": "nice! good job Kai! :) message box, increase the padding around the send button so it is just like Mind Channels, no need to highlight any of then or have rollover effect, as they are static and green Connected tells us their status do you think we should rename WebChat to FlowChat?\n[message_id: 4798]",
+      "timestamp": "2026-02-13T14:52:02.456Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
     }
   ],
   "channels": [
@@ -5037,5 +5037,5 @@
       "icon": "ph-chat-circle"
     }
   ],
-  "lastUpdated": "2026-02-13T14:46:55.301Z"
+  "lastUpdated": "2026-02-13T14:54:42.666Z"
 }

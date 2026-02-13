@@ -131,8 +131,8 @@ const syncMessagesFromSessions = async () => {
                 if (text.includes('HEARTBEAT_OK') || text.includes('[cron:')) continue;
                 
                 // Detect channel from content
-                let channel = 'webchat';
-                let channelName = 'WebChat';
+                let channel = 'flowchat';
+                let channelName = 'FlowChat';
                 
                 if (text.includes('[Telegram') || text.includes('telegram')) {
                   channel = 'telegram';
@@ -889,7 +889,7 @@ const server = http.createServer(async (req, res) => {
         const sessionsPath = path.join(process.env.HOME, '.openclaw/agents/main/sessions');
         if (fs.existsSync(sessionsPath)) {
           channels.push({
-            name: 'webchat',
+            name: 'flowchat',
             enabled: true,
             status: 'active'
           });

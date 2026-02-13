@@ -1419,11 +1419,11 @@
         }
 
         .chat-channel-item:hover {
-            background: var(--bg-hover);
+            background: transparent;
         }
 
         .chat-channel-item.active {
-            background: rgba(46, 170, 220, 0.1);
+            background: transparent;
         }
 
         .chat-channel-item.filtered {
@@ -1992,9 +1992,9 @@
                                     <p>Loading messages...</p>
                                 </div>
                             </div>
-                            <div class="chat-input-area" style="position: relative;">
-                                <textarea class="chat-input" id="chatInput" placeholder="Message Kai..." rows="1" style="padding-right: 48px;"></textarea>
-                                <button class="chat-send-btn" id="chatSendBtn" style="position: absolute; right: 28px; bottom: 24px; width: 36px; height: 36px;">
+                            <div class="chat-input-area" style="position: relative; padding: 12px 16px;">
+                                <textarea class="chat-input" id="chatInput" placeholder="Message Kai..." rows="1" style="padding: 12px 48px 12px 16px; border-radius: 24px;"></textarea>
+                                <button class="chat-send-btn" id="chatSendBtn" style="position: absolute; right: 28px; bottom: 20px; width: 32px; height: 32px;">
                                     <i class="ph ph-paper-plane-right"></i>
                                 </button>
                             </div>
@@ -2835,7 +2835,7 @@
                         <p>Curated knowledge extracted from daily logs and file edits. Auto-refreshes every 5 seconds. Parses accomplishments and technical decisions automatically.</p>
                         
                         <h4 style="margin-top: 20px;">💬 Chat</h4>
-                        <p>Unified view of all conversations (Telegram, WebChat). <strong>Read-only</strong> — messages appear here but you reply in the original channel.</p>
+                        <p>Unified view of all conversations (Telegram, FlowChat). <strong>Read-only</strong> — messages appear here but you reply in the original channel.</p>
                         
                         <h4 style="margin-top: 20px;">🌊 Kai Profile</h4>
                         <p>Edit Kai's identity files (SOUL.md, IDENTITY.md, etc.). Changes are auto-saved to workspace and extracted to Memory.</p>
