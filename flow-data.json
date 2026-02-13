@@ -69,18 +69,6 @@
               "createdAt": "2026-02-13T08:48:16.912Z"
             },
             {
-              "id": "_v4m1r0xsl",
-              "title": "Token Usage",
-              "description": "can we pull from openclaw usage stats to show how many tokens have been used etc? Not sure how this works and what is the benefit of showing it to the user",
-              "dueDate": "",
-              "priority": "medium",
-              "labels": [],
-              "checklist": [],
-              "attachments": [],
-              "recurring": "",
-              "createdAt": "2026-02-13T12:27:04.239Z"
-            },
-            {
               "id": "card_3",
               "title": "Update website screenshots",
               "description": "New AI chat feature screenshots",
@@ -96,7 +84,20 @@
         {
           "id": "todo",
           "name": "To Do",
-          "cards": []
+          "cards": [
+            {
+              "id": "_v4m1r0xsl",
+              "title": "Token Usage",
+              "description": "can we pull from openclaw usage stats to show how many tokens have been used etc? Not sure how this works and what is the benefit of showing it to the user",
+              "dueDate": "",
+              "priority": "medium",
+              "labels": [],
+              "checklist": [],
+              "attachments": [],
+              "recurring": "",
+              "createdAt": "2026-02-13T12:27:04.239Z"
+            }
+          ]
         },
         {
           "id": "inprogress",
@@ -348,6 +349,6 @@
     "lastBackup": null,
     "currentBoard": "board_1"
   },
-  "lastModified": "2026-02-13T12:46:35.028Z",
+  "lastModified": "2026-02-13T12:54:01.217Z",
   "modifiedBy": "user"
 }

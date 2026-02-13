@@ -2070,11 +2070,27 @@
             
             // Auto-backup to file (debounced)
             clearTimeout(window.exportTimeout);
-            window.exportTimeout = setTimeout(() => {
+            window.exportTimeout = setTimeout(async () => {
                 if (backupFileHandle) {
                     saveBackupToFile();
                 } else {
-                    fallbackExport();
+                    // Try to load from IndexedDB first
+                    const savedHandle = await loadHandleFromDB();
+                    if (savedHandle) {
+                        try {
+                            const permission = await savedHandle.requestPermission({ mode: 'readwrite' });
+                            if (permission === 'granted') {
+                                backupFileHandle = savedHandle;
+                                await saveBackupToFile();
+                                return;
+                            }
+                        } catch (e) {
+                            console.log('Permission denied for saved handle');
+                        }
+                    }
+                    // Only prompt if no handle found
+                    // Don't auto-prompt - let user click backup status to set folder
+                    console.log('No backup folder configured, skipping auto-backup');
                 }
             }, 1000);
         };
