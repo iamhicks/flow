@@ -1,56 +1,6 @@
 {
   "messages": [
     {
-      "id": "cf645981",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Restored the `hidden` class — close and restart!",
-      "timestamp": "2026-02-12T15:52:12.709Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "4a6204fd",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Pete",
-      "senderType": "human",
-      "text": "[Thu 2026-02-12 15:53 GMT] same broken\n[message_id: 3c522ec0-a771-44f1-bc77-24e88f0141a3]",
-      "timestamp": "2026-02-12T15:53:15.949Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "cf9a27c2",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Let me revert to a working version and try again:",
-      "timestamp": "2026-02-12T15:53:26.428Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "b37144eb",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Reverted to working version. Let me make the layout changes more carefully this time. First, let me check the current structure:",
-      "timestamp": "2026-02-12T15:53:42.401Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "63a6c313",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Let me make the layout changes step by step. First, move the tabs bar to the top and add theme button:",
-      "timestamp": "2026-02-12T15:54:20.495Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
       "id": "482b28d8",
       "channel": "webchat",
       "channelName": "WebChat",
@@ -4997,6 +4947,56 @@
       "text": "yeah search box. also can you put send button inside the message field just like Mind\n[message_id: 4789]",
       "timestamp": "2026-02-13T14:38:24.283Z",
       "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "0779bf12",
+      "channel": "webchat",
+      "channelName": "WebChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "**✅ Changes done:**\n\n1. **Search box** in chat header — type to filter messages (highlights matching text)\n2. **Send button inside message field** — positioned bottom-right inside the textarea (like MIND)\n\n**Refresh dashboard** to see the new chat UI! 🔍",
+      "timestamp": "2026-02-13T14:40:51.980Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "6281c0e9",
+      "channel": "telegram",
+      "channelName": "Telegram",
+      "sender": "Pete",
+      "senderType": "human",
+      "text": "btw its so cool we can brain storm stuff to develop these features!\n[message_id: 4790]",
+      "timestamp": "2026-02-13T14:40:53.349Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "7ec7e12d",
+      "channel": "webchat",
+      "channelName": "WebChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "Yeah it is! 🚀 \n\nLove how we can just riff on ideas and build them in real-time. The back-and-forth is way better than me guessing what you want.\n\nWhat's next? Still got \"Overdue Status\" and maybe screenshot paste in the backlog?",
+      "timestamp": "2026-02-13T14:41:06.214Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "f7db4679",
+      "channel": "telegram",
+      "channelName": "Telegram",
+      "sender": "Pete",
+      "senderType": "human",
+      "text": "when i type Kai into search it highlights all messages with Kai, but when I start to scroll through messages the search results seem to get broken and we are back to all messages\n[message_id: 4793]",
+      "timestamp": "2026-02-13T14:42:44.642Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "7954850f",
+      "channel": "webchat",
+      "channelName": "WebChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "Bug! The polling refreshes messages and breaks the search filter. Fixing now:",
+      "timestamp": "2026-02-13T14:42:56.150Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
     }
   ],
   "channels": [
@@ -5037,5 +5037,5 @@
       "icon": "ph-chat-circle"
     }
   ],
-  "lastUpdated": "2026-02-13T14:40:30.942Z"
+  "lastUpdated": "2026-02-13T14:43:49.963Z"
 }

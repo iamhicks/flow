@@ -3453,14 +3453,11 @@
         let allMessages = []; // Store all messages for search
 
         // Search functionality
+        let currentSearchText = '';
+        
         chatSearch?.addEventListener('input', (e) => {
-            const searchText = e.target.value.toLowerCase();
-            const filtered = allMessages.filter(msg => 
-                msg.text?.toLowerCase().includes(searchText) ||
-                msg.sender?.toLowerCase().includes(searchText) ||
-                msg.channelName?.toLowerCase().includes(searchText)
-            );
-            renderMessages(filtered, searchText);
+            currentSearchText = e.target.value;
+            renderMessages(allMessages, currentSearchText);
         });
 
         const loadChannels = async () => {
@@ -3578,7 +3575,7 @@
 
         const loadChat = async () => {
             const messages = await loadChannels();
-            renderMessages(messages);
+            renderMessages(messages, currentSearchText);
             return messages.length;
         };
 
