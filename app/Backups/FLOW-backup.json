@@ -45,16 +45,16 @@
               "createdAt": "2026-02-12T23:00:00Z"
             },
             {
-              "id": "_zkf70fwwf",
-              "title": "Responsabilities",
-              "description": "add a new field to the kanban card, who is responsible for that task, Agent or Human, as agent could be waiting for the human before proceeding",
+              "id": "_f7mug076w",
+              "title": "Auto backups",
+              "description": "",
               "dueDate": "",
               "priority": "medium",
               "labels": [],
               "checklist": [],
               "attachments": [],
               "recurring": "",
-              "createdAt": "2026-02-12T23:09:57.108Z"
+              "createdAt": "2026-02-13T08:48:16.912Z"
             }
           ]
         },
@@ -299,6 +299,6 @@
     "lastBackup": null,
     "currentBoard": "board_1"
   },
-  "exportDate": "2026-02-13T07:36:23.008Z",
+  "exportDate": "2026-02-13T08:48:17.914Z",
   "version": "1.0"
 }

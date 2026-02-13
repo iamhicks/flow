@@ -900,11 +900,23 @@
             <button class="btn btn-secondary" id="syncBtn">
                 <i class="ph ph-arrows-clockwise"></i> Sync
             </button>
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" onclick="document.getElementById('kanbanFrame').src=document.getElementById('kanbanFrame').src">
                 <i class="ph ph-plus"></i> New Task
             </button>
         </div>
     </header>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;align-items:center;justify-content:center;">
+        <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;padding:24px;max-width:400px;width:90%;">
+            <h3 style="margin-bottom:12px;color:var(--accent);"><i class="ph ph-warning-circle"></i> Confirm Save</h3>
+            <p style="color:var(--text-secondary);margin-bottom:20px;">You are about to save changes to <strong id="confirmFileName">file.md</strong>. This will overwrite the live file in your workspace.</p>
+            <div style="display:flex;gap:12px;justify-content:flex-end;">
+                <button class="btn btn-secondary" id="confirmCancel">Cancel</button>
+                <button class="btn btn-primary" id="confirmSave" style="background:var(--accent);color:var(--bg-primary);">Save Changes</button>
+            </div>
+        </div>
+    </div>
 
     <div class="main-container">
         <!-- Sidebar -->
@@ -1727,8 +1739,26 @@
             loadKaiFile('soul');
         }
 
-        // Kai save button
-        document.getElementById('kaiSaveBtn')?.addEventListener('click', async () => {
+        // Kai save button - with confirmation modal
+        const confirmModal = document.getElementById('confirmModal');
+        const confirmFileName = document.getElementById('confirmFileName');
+        const confirmSaveBtn = document.getElementById('confirmSave');
+        const confirmCancelBtn = document.getElementById('confirmCancel');
+
+        document.getElementById('kaiSaveBtn')?.addEventListener('click', () => {
+            const fileName = fileNameMap[currentKaiFile];
+            if (!fileName) return;
+            
+            confirmFileName.textContent = fileName;
+            confirmModal.style.display = 'flex';
+        });
+
+        confirmCancelBtn?.addEventListener('click', () => {
+            confirmModal.style.display = 'none';
+        });
+
+        confirmSaveBtn?.addEventListener('click', async () => {
+            confirmModal.style.display = 'none';
             const fileName = fileNameMap[currentKaiFile];
             if (!fileName) return;
             
@@ -1746,6 +1776,13 @@
                 }
             } catch (e) {
                 showToast('Save error: ' + e.message, 'error');
+            }
+        });
+
+        // Close modal on backdrop click
+        confirmModal?.addEventListener('click', (e) => {
+            if (e.target === confirmModal) {
+                confirmModal.style.display = 'none';
             }
         });
 

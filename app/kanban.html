@@ -1981,6 +1981,25 @@
                 settings: store.settings
             }));
             
+            // Auto-save to server (debounced)
+            clearTimeout(window.serverSaveTimeout);
+            window.serverSaveTimeout = setTimeout(async () => {
+                try {
+                    await fetch('/api/data', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            boards: store.boards,
+                            archivedCards: store.archivedCards,
+                            customLabels: store.customLabels,
+                            settings: store.settings
+                        })
+                    });
+                } catch (e) {
+                    console.log('Server save failed, keeping localStorage backup');
+                }
+            }, 500);
+            
             // Auto-backup to file (debounced)
             clearTimeout(window.exportTimeout);
             window.exportTimeout = setTimeout(() => {
