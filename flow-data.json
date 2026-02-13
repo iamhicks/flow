@@ -14,7 +14,10 @@
               "title": "Add AI suggestions to tasks",
               "description": "Integrate Ollama for smart task recommendations",
               "priority": "medium",
-              "labels": ["ai", "feature"],
+              "labels": [
+                "ai",
+                "feature"
+              ],
               "createdAt": "2026-02-12T22:30:00Z"
             },
             {
@@ -22,7 +25,11 @@
               "title": "Create FLOW for OpenClaw product",
               "description": "Package kanban+AI collaboration as standalone product for OpenClaw community. Landing page, docs, $29 pricing.",
               "priority": "high",
-              "labels": ["product", "openclaw", "launch"],
+              "labels": [
+                "product",
+                "openclaw",
+                "launch"
+              ],
               "createdAt": "2026-02-12T22:58:00Z"
             },
             {
@@ -30,8 +37,24 @@
               "title": "Expand FLOW into Agent Dashboard",
               "description": "Full collaboration hub: Activity Log, Shared Memory, Deliverables, Schedule, Chat, Metrics, Goals. Human-AI mission control.",
               "priority": "high",
-              "labels": ["product", "dashboard", "v2"],
+              "labels": [
+                "product",
+                "dashboard",
+                "v2"
+              ],
               "createdAt": "2026-02-12T23:00:00Z"
+            },
+            {
+              "id": "_f7mug076w",
+              "title": "Auto backups",
+              "description": "are we able to setup an auto backup, not sure what it should be. maybe /workspace/ everything inside of it.\nThe sessions back you did for me, is that custom? as i cold not see Sessions folder inside /workspace/\n Kanban. Anything else you can think of, or would you backup everything inside flow?\n\n",
+              "dueDate": "",
+              "priority": "medium",
+              "labels": [],
+              "checklist": [],
+              "attachments": [],
+              "recurring": "",
+              "createdAt": "2026-02-13T08:48:16.912Z"
             }
           ]
         },
@@ -44,7 +67,10 @@
               "title": "Update website screenshots",
               "description": "New AI chat feature screenshots",
               "priority": "medium",
-              "labels": ["website", "design"],
+              "labels": [
+                "website",
+                "design"
+              ],
               "createdAt": "2026-02-12T22:30:00Z"
             }
           ]
@@ -58,7 +84,11 @@
               "title": "Fix MIND license system 🔄 KAI MOVED",
               "description": "Redo implementation properly - Kai moved this to In Progress",
               "priority": "high",
-              "labels": ["bug", "mind", "inprogress"],
+              "labels": [
+                "bug",
+                "mind",
+                "inprogress"
+              ],
               "createdAt": "2026-02-12T22:30:00Z"
             }
           ]
@@ -72,7 +102,10 @@
               "title": "Create FLOW kanban app",
               "description": "Built drag-and-drop board",
               "priority": "high",
-              "labels": ["done", "flow"],
+              "labels": [
+                "done",
+                "flow"
+              ],
               "createdAt": "2026-02-12T22:30:00Z"
             },
             {
@@ -80,7 +113,11 @@
               "title": "Testing FLOW kanban ✓ MOVED BY KAI",
               "description": "Verify Kai can move cards - SUCCESS!",
               "priority": "high",
-              "labels": ["testing", "flow", "done"],
+              "labels": [
+                "testing",
+                "flow",
+                "done"
+              ],
               "createdAt": "2026-02-12T22:30:00Z"
             }
           ]
@@ -106,7 +143,9 @@
               "title": "Launch on Product Hunt",
               "description": "Prepare MIND launch campaign",
               "priority": "medium",
-              "labels": ["marketing"],
+              "labels": [
+                "marketing"
+              ],
               "createdAt": "2026-02-12T22:30:00Z"
             }
           ]
@@ -120,7 +159,9 @@
               "title": "Research EDGE features",
               "description": "Browser automation possibilities",
               "priority": "low",
-              "labels": ["research"],
+              "labels": [
+                "research"
+              ],
               "createdAt": "2026-02-12T22:30:00Z"
             }
           ]
@@ -156,7 +197,9 @@
               "title": "Auto-git commit script",
               "description": "Detect changes and auto-push",
               "priority": "low",
-              "labels": ["automation"],
+              "labels": [
+                "automation"
+              ],
               "createdAt": "2026-02-12T22:30:00Z"
             }
           ]
@@ -170,7 +213,9 @@
               "title": "Document OpenClaw setup",
               "description": "Setup guide for new machines",
               "priority": "medium",
-              "labels": ["docs"],
+              "labels": [
+                "docs"
+              ],
               "createdAt": "2026-02-12T22:30:00Z"
             }
           ]
@@ -189,7 +234,10 @@
               "title": "Set up FLOW auto-backup",
               "description": "File System Access API working",
               "priority": "high",
-              "labels": ["done", "backup"],
+              "labels": [
+                "done",
+                "backup"
+              ],
               "createdAt": "2026-02-12T22:30:00Z"
             }
           ]
@@ -204,16 +252,53 @@
   ],
   "archivedCards": [],
   "customLabels": [
-    { "id": "l1", "name": "feature", "color": "#2eaadc" },
-    { "id": "l2", "name": "bug", "color": "#dc4444" },
-    { "id": "l3", "name": "done", "color": "#2ecc71" },
-    { "id": "l4", "name": "high", "color": "#dc4444" },
-    { "id": "l5", "name": "mind", "color": "#f5a623" },
-    { "id": "l6", "name": "flow", "color": "#9b59b6" },
-    { "id": "l7", "name": "ai", "color": "#e74c3c" },
-    { "id": "l8", "name": "website", "color": "#3498db" }
+    {
+      "id": "l1",
+      "name": "feature",
+      "color": "#2eaadc"
+    },
+    {
+      "id": "l2",
+      "name": "bug",
+      "color": "#dc4444"
+    },
+    {
+      "id": "l3",
+      "name": "done",
+      "color": "#2ecc71"
+    },
+    {
+      "id": "l4",
+      "name": "high",
+      "color": "#dc4444"
+    },
+    {
+      "id": "l5",
+      "name": "mind",
+      "color": "#f5a623"
+    },
+    {
+      "id": "l6",
+      "name": "flow",
+      "color": "#9b59b6"
+    },
+    {
+      "id": "l7",
+      "name": "ai",
+      "color": "#e74c3c"
+    },
+    {
+      "id": "l8",
+      "name": "website",
+      "color": "#3498db"
+    }
   ],
-  "settings": { "currentBoard": "board_1" },
-  "lastModified": "2026-02-12T22:37:00Z",
-  "modifiedBy": "kai"
+  "settings": {
+    "autoSave": true,
+    "backupReminder": true,
+    "lastBackup": null,
+    "currentBoard": "board_1"
+  },
+  "lastModified": "2026-02-13T09:00:13.698Z",
+  "modifiedBy": "user"
 }

@@ -860,6 +860,180 @@
             color: var(--text-secondary);
             line-height: 1.5;
         }
+
+        /* System Dashboard Module */
+        .system-container {
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .system-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .system-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .system-card-wide {
+            grid-column: 1 / -1;
+        }
+
+        .system-card-header {
+            padding: 16px 20px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .system-card-header i {
+            color: var(--accent);
+            font-size: 20px;
+        }
+
+        .system-card-body {
+            padding: 16px 20px;
+        }
+
+        .system-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .system-row:last-child {
+            border-bottom: none;
+        }
+
+        .system-label {
+            color: var(--text-secondary);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .system-value {
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: 'SF Mono', monospace;
+        }
+
+        .system-value.truncate {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .system-status {
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .system-status.online {
+            background: rgba(46, 204, 113, 0.15);
+            color: var(--success);
+        }
+
+        .system-badge {
+            margin-left: auto;
+            background: var(--bg-hover);
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .cron-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .cron-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+
+        .cron-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .cron-schedule {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: 'SF Mono', monospace;
+        }
+
+        .cron-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        .cron-status.enabled {
+            color: var(--success);
+        }
+
+        .session-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .session-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: 'SF Mono', monospace;
+        }
+
+        .session-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .config-preview {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'SF Mono', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            max-height: 300px;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
     </style>
 </head>
 <body>
@@ -893,6 +1067,9 @@
             </button>
             <button class="nav-tab" data-module="skills">
                 <i class="ph ph-wrench"></i> Skills
+            </button>
+            <button class="nav-tab" data-module="system">
+                <i class="ph ph-monitor"></i> System
             </button>
         </nav>
         
@@ -1237,6 +1414,98 @@
                         </div>
                         <div class="skills-grid" id="skillsGrid">
                             <!-- Skills loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Dashboard Module -->
+                <div class="module" id="module-system">
+                    <div class="system-container">
+                        <div class="system-grid">
+                            <!-- Gateway Status Card -->
+                            <div class="system-card">
+                                <div class="system-card-header">
+                                    <i class="ph ph-plug"></i>
+                                    <span>Gateway Status</span>
+                                    <span class="system-status online">Online</span>
+                                </div>
+                                <div class="system-card-body">
+                                    <div class="system-row">
+                                        <span class="system-label">Version</span>
+                                        <span class="system-value" id="gw-version">2026.2.6-3</span>
+                                    </div>
+                                    <div class="system-row">
+                                        <span class="system-label">Port</span>
+                                        <span class="system-value">18789</span>
+                                    </div>
+                                    <div class="system-row">
+                                        <span class="system-label">Model</span>
+                                        <span class="system-value">Kimi K2.5</span>
+                                    </div>
+                                    <div class="system-row">
+                                        <span class="system-label">Workspace</span>
+                                        <span class="system-value truncate">~/.openclaw/workspace</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Channels Card -->
+                            <div class="system-card">
+                                <div class="system-card-header">
+                                    <i class="ph ph-chat-circle-dots"></i>
+                                    <span>Channels</span>
+                                </div>
+                                <div class="system-card-body">
+                                    <div class="system-row">
+                                        <span class="system-label"><i class="ph ph-telegram-logo"></i> Telegram</span>
+                                        <span class="system-status online">Connected</span>
+                                    </div>
+                                    <div class="system-row">
+                                        <span class="system-label">Webchat</span>
+                                        <span class="system-status online">Active</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cron Jobs Card -->
+                            <div class="system-card system-card-wide">
+                                <div class="system-card-header">
+                                    <i class="ph ph-clock"></i>
+                                    <span>Cron Jobs</span>
+                                    <span class="system-badge">4 active</span>
+                                </div>
+                                <div class="system-card-body">
+                                    <div class="cron-list" id="cronList">
+                                        <!-- Cron jobs loaded here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sessions Card -->
+                            <div class="system-card">
+                                <div class="system-card-header">
+                                    <i class="ph ph-users"></i>
+                                    <span>Sessions</span>
+                                    <span class="system-badge" id="sessionCount">5 active</span>
+                                </div>
+                                <div class="system-card-body">
+                                    <div class="session-list" id="sessionList">
+                                        <!-- Sessions loaded here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Config Preview Card -->
+                            <div class="system-card system-card-wide">
+                                <div class="system-card-header">
+                                    <i class="ph ph-file-code"></i>
+                                    <span>Config Preview</span>
+                                    <span class="system-label">openclaw.json</span>
+                                </div>
+                                <div class="system-card-body">
+                                    <pre class="config-preview" id="configPreview">Loading...</pre>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1891,6 +2160,77 @@
 
         // Initial skills render
         renderSkills();
+
+        // System Dashboard Module
+        const loadSystemData = async () => {
+            try {
+                // Load cron jobs
+                const cronList = document.getElementById('cronList');
+                const cronJobs = [
+                    { name: 'GitHub Monitor', schedule: 'Every 2 hours', enabled: true },
+                    { name: 'Auto-Push Memory', schedule: 'Every hour', enabled: true },
+                    { name: 'Backup Check', schedule: 'Daily at 07:00', enabled: true },
+                    { name: 'Friday Cleanup', schedule: 'Fridays at 09:00', enabled: true }
+                ];
+                
+                if (cronList) {
+                    cronList.innerHTML = cronJobs.map(job => `
+                        <div class="cron-item">
+                            <div class="cron-name">${job.name}</div>
+                            <div class="cron-schedule">${job.schedule}</div>
+                            <div class="cron-status ${job.enabled ? 'enabled' : ''}">
+                                <i class="ph ph-${job.enabled ? 'check-circle' : 'x-circle'}"></i>
+                                ${job.enabled ? 'Enabled' : 'Disabled'}
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                // Load sessions
+                const sessionList = document.getElementById('sessionList');
+                const sessions = [
+                    { id: 'main', name: 'Main Agent', status: 'active' },
+                    { id: 'session-1', name: 'Webchat Session', status: 'active' },
+                    { id: 'session-2', name: 'Telegram DM', status: 'active' },
+                    { id: 'session-3', name: 'Heartbeat Worker', status: 'active' },
+                    { id: 'session-4', name: 'Cron Runner', status: 'active' }
+                ];
+                
+                if (sessionList) {
+                    sessionList.innerHTML = sessions.map(s => `
+                        <div class="session-item">
+                            <div class="session-dot"></div>
+                            <span>${s.name}</span>
+                        </div>
+                    `).join('');
+                }
+
+                document.getElementById('sessionCount').textContent = `${sessions.length} active`;
+
+                // Load config preview
+                const configPreview = document.getElementById('configPreview');
+                if (configPreview) {
+                    const config = {
+                        gateway: { port: 18789, mode: 'local' },
+                        model: { primary: 'kimi-coding/k2p5' },
+                        channels: { telegram: 'enabled', webchat: 'enabled' },
+                        workspace: '~/.openclaw/workspace'
+                    };
+                    configPreview.textContent = JSON.stringify(config, null, 2);
+                }
+            } catch (e) {
+                console.error('Error loading system data:', e);
+            }
+        };
+
+        // Load system data when tab is clicked
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                if (tab.dataset.module === 'system') {
+                    loadSystemData();
+                }
+            });
+        });
 
         // Toast helper
         function showToast(message, type = 'info') {
