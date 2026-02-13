@@ -43,6 +43,18 @@
                 "v2"
               ],
               "createdAt": "2026-02-12T23:00:00Z"
+            },
+            {
+              "id": "_zkf70fwwf",
+              "title": "Responsabilities",
+              "description": "add a new field to the kanban card, who is responsible for that task, Agent or Human, as agent could be waiting for the human before proceeding",
+              "dueDate": "",
+              "priority": "medium",
+              "labels": [],
+              "checklist": [],
+              "attachments": [],
+              "recurring": "",
+              "createdAt": "2026-02-12T23:09:57.108Z"
             }
           ]
         },
@@ -287,6 +299,6 @@
     "lastBackup": null,
     "currentBoard": "board_1"
   },
-  "exportDate": "2026-02-12T23:11:42.169Z",
+  "exportDate": "2026-02-13T07:36:23.008Z",
   "version": "1.0"
 }

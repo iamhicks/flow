@@ -1488,6 +1488,10 @@
                             <div class="template-icon"><i class="ph ph-pencil-simple" style="font-size: 32px; color: var(--accent-blue);"></i></div>
                             <div class="template-name">Content Plan</div>
                         </div>
+                        <div class="template-card" data-template="kai">
+                            <div class="template-icon"><i class="ph ph-robot" style="font-size: 32px; color: var(--accent-purple);"></i></div>
+                            <div class="template-name">Kai Modules</div>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
@@ -1535,7 +1539,7 @@
             </div>
             <div class="modal-body">
                 <p style="margin-bottom: 16px; color: var(--text-secondary);">Select a template to add to your current board:</p>
-                <div class="template-grid" id="applyTemplateGrid">
+                    <div class="template-grid" id="applyTemplateGrid">
                     <div class="template-card" data-template="todo">
                         <div class="template-icon"><i class="ph ph-check-circle" style="font-size: 32px; color: var(--accent-green);"></i></div>
                         <div class="template-name">To Do List</div>
@@ -1551,6 +1555,10 @@
                     <div class="template-card" data-template="goals">
                         <div class="template-icon"><i class="ph ph-target" style="font-size: 32px; color: var(--accent-purple);"></i></div>
                         <div class="template-name">Goals</div>
+                    </div>
+                    <div class="template-card" data-template="kai">
+                        <div class="template-icon"><i class="ph ph-robot" style="font-size: 32px; color: var(--accent-purple);"></i></div>
+                        <div class="template-name">Kai Modules</div>
                     </div>
                 </div>
             </div>
@@ -1786,6 +1794,53 @@
                     { id: 'thisquarter', name: 'This Quarter', cards: [] },
                     { id: 'thismonth', name: 'This Month', cards: [] },
                     { id: 'thisweek', name: 'This Week', cards: [] }
+                ]
+            },
+            kai: {
+                columns: [
+                    { 
+                        id: 'backlog', 
+                        name: 'Backlog', 
+                        cards: [
+                            { 
+                                id: '_sys1', 
+                                title: '🔧 System Dashboard', 
+                                description: 'View OpenClaw gateway status, sessions, crons, and usage metrics. Read-only integration with :18789/overview API.',
+                                priority: 'medium',
+                                labels: ['integration', 'system']
+                            },
+                            { 
+                                id: '_sys2', 
+                                title: '📦 Install New Skills', 
+                                description: 'Ability to install skills from clawhub.com with user confirmation. CLI integration for "openclaw skills install".',
+                                priority: 'low',
+                                labels: ['future', 'cli']
+                            }
+                        ]
+                    },
+                    { 
+                        id: 'todo', 
+                        name: 'To Do', 
+                        cards: [
+                            { 
+                                id: '_kai1', 
+                                title: '🌊 Kai Profile / Soul Editor', 
+                                description: 'Visual editor for SOUL.md, IDENTITY.md, USER.md, AGENTS.md. Tabbed markdown editor with syntax highlighting and live preview. Save back to ~/.openclaw/workspace/',
+                                priority: 'high',
+                                labels: ['editor', 'core']
+                            },
+                            { 
+                                id: '_kai2', 
+                                title: '🛠️ Skills Browser / Manager', 
+                                description: 'Browse all 46 installed skills. Grid view with search/filter. Display name, description, usage examples. Source: /usr/local/lib/node_modules/openclaw/skills/',
+                                priority: 'high',
+                                labels: ['browser', 'core']
+                            }
+                        ]
+                    },
+                    { id: 'inprogress', name: 'In Progress', cards: [] },
+                    { id: 'review', name: 'Review', cards: [] },
+                    { id: 'done', name: 'Done', cards: [] }
                 ]
             }
         };
@@ -3514,4 +3569,4 @@
     </script>
 </body>
 </html>
-/* Cache bust: 1770432180 */
+/* Cache bust: 1770969600 */

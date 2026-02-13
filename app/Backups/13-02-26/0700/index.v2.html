@@ -1326,6 +1326,9 @@
             </div>
         </div>
         <div class="header-right">
+            <span id="backupStatus" style="font-size: 11px; color: var(--text-muted); margin-right: 8px;"></span>
+            <button class="btn btn-icon" id="syncBtn" title="Sync with Server"><i class="ph ph-arrows-clockwise"></i></button>
+            <button class="btn btn-icon" id="backupFolderBtn" title="Set Backup Folder"><i class="ph ph-folder-notch"></i></button>
             <button class="btn btn-icon" id="searchBtn" title="Search (Ctrl+K)"><i class="ph ph-magnifying-glass"></i></button>
             <button class="btn btn-icon" id="templateBtn" title="Templates"><i class="ph ph-copy"></i></button>
             <button class="btn btn-icon" id="labelsBtn" title="Manage Labels"><i class="ph ph-tag"></i></button>
@@ -1730,7 +1733,8 @@
                     { id: 'backlog', name: 'Backlog', cards: [] },
                     { id: 'todo', name: 'To Do', cards: [] },
                     { id: 'inprogress', name: 'In Progress', cards: [] },
-                    { id: 'done', name: 'Done', cards: [] }
+                    { id: 'done', name: 'Done', cards: [] },
+                    { id: 'archive', name: 'Archive', cards: [] }
                 ]
             },
             project: {
@@ -1823,7 +1827,97 @@
             return doneNames.some(name => lowerName.includes(name));
         };
 
-        // Local Storage
+        // File System Access API for persistent backups
+        let backupFileHandle = null;
+        let lastBackupTime = null;
+        
+        const getBackupData = () => ({
+            boards: store.boards,
+            archivedCards: store.archivedCards,
+            customLabels: store.customLabels,
+            settings: store.settings,
+            exportDate: new Date().toISOString(),
+            version: '1.0'
+        });
+        
+        const selectBackupFolder = async () => {
+            try {
+                if (!window.showDirectoryPicker) {
+                    showToast('File System Access not supported. Use Chrome/Edge.', 'error');
+                    return false;
+                }
+                
+                const dirHandle = await window.showDirectoryPicker();
+                // Store the directory handle
+                backupFileHandle = dirHandle;
+                localStorage.setItem('flow_backup_dir', 'granted');
+                showToast('Backup folder selected!', 'success');
+                await saveBackupToFile();
+                return true;
+            } catch (err) {
+                console.error('Folder selection cancelled:', err);
+                return false;
+            }
+        };
+        
+        const saveBackupToFile = async () => {
+            if (!backupFileHandle) {
+                // Try to restore from saved permission or fallback to downloads
+                fallbackExport();
+                return;
+            }
+            
+            try {
+                // Create or get the backup file
+                const fileHandle = await backupFileHandle.getFileHandle('FLOW-backup.json', { create: true });
+                const writable = await fileHandle.createWritable();
+                const data = getBackupData();
+                await writable.write(JSON.stringify(data, null, 2));
+                await writable.close();
+                
+                lastBackupTime = new Date();
+                updateBackupStatus();
+            } catch (err) {
+                console.error('Backup failed:', err);
+                fallbackExport();
+            }
+        };
+        
+        const fallbackExport = () => {
+            // Fallback: download to default location
+            const dataStr = JSON.stringify(getBackupData(), null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `FLOW-backup-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            lastBackupTime = new Date();
+            updateBackupStatus();
+            showToast('Backup saved to Downloads (select folder for auto-save)', 'info');
+        };
+        
+        const updateBackupStatus = () => {
+            const statusEl = document.getElementById('backupStatus');
+            if (statusEl) {
+                if (backupFileHandle) {
+                    const timeStr = lastBackupTime ? lastBackupTime.toLocaleTimeString() : 'Never';
+                    statusEl.textContent = `Auto-backup: ${timeStr}`;
+                    statusEl.style.color = 'var(--accent-green)';
+                } else {
+                    statusEl.textContent = 'Click to set backup folder';
+                    statusEl.style.color = 'var(--accent-yellow)';
+                    statusEl.style.cursor = 'pointer';
+                    statusEl.onclick = () => selectBackupFolder();
+                }
+            }
+        };
+
         const saveToStorage = () => {
             localStorage.setItem('taskmaster_data', JSON.stringify({
                 boards: store.boards,
@@ -1831,6 +1925,16 @@
                 customLabels: store.customLabels,
                 settings: store.settings
             }));
+            
+            // Auto-backup to file (debounced)
+            clearTimeout(window.exportTimeout);
+            window.exportTimeout = setTimeout(() => {
+                if (backupFileHandle) {
+                    saveBackupToFile();
+                } else {
+                    fallbackExport();
+                }
+            }, 1000);
         };
 
         const loadFromStorage = () => {
@@ -1848,9 +1952,11 @@
                 store.customLabels = [...defaultLabels];
             }
             
-            // Create default board if none exists
+            // Create default boards if none exists
             if (store.boards.length === 0) {
-                createBoard('My First Board', 'kanban');
+                createBoard('Flow Mind Website', 'kanban');
+                createBoard('General', 'kanban');
+                createBoard('House Keeping', 'kanban');
             }
             
             if (!store.currentBoard && store.boards.length > 0) {
@@ -2974,6 +3080,7 @@
             renderBoardSelector();
             renderBoard();
             renderCalendar();
+            updateBackupStatus(); // Initialize backup status display
             
             // Board selector
             document.getElementById('boardSelect').addEventListener('change', (e) => {
@@ -3067,6 +3174,46 @@
                 document.getElementById('boardModal').classList.add('active');
                 document.getElementById('boardName').value = '';
                 document.getElementById('boardName').focus();
+            });
+            
+            // Backup folder button
+            document.getElementById('backupFolderBtn').addEventListener('click', () => {
+                selectBackupFolder();
+            });
+            
+            // Sync button - reload from server
+            document.getElementById('syncBtn').addEventListener('click', async () => {
+                try {
+                    const response = await fetch('/api/data?t=' + Date.now());
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        // Force complete data replacement
+                        store.boards = JSON.parse(JSON.stringify(data.boards || []));
+                        store.archivedCards = JSON.parse(JSON.stringify(data.archivedCards || []));
+                        store.customLabels = JSON.parse(JSON.stringify(data.customLabels || []));
+                        store.settings = JSON.parse(JSON.stringify({ ...store.settings, ...data.settings }));
+                        
+                        // Ensure current board still exists
+                        const currentExists = store.boards.find(b => b.id === store.currentBoard);
+                        if (!currentExists && store.boards.length > 0) {
+                            store.currentBoard = store.boards[0].id;
+                        }
+                        
+                        // Force full re-render
+                        renderBoardSelector();
+                        renderBoard();
+                        renderCalendar();
+                        
+                        showToast('Synced from server!', 'success');
+                        console.log('Synced data:', store.boards[0]?.columns?.find(c => c.id === 'done')?.cards);
+                    } else {
+                        showToast('Server error: ' + response.status, 'error');
+                    }
+                } catch (e) {
+                    console.error('Sync error:', e);
+                    showToast('Sync failed: ' + e.message, 'error');
+                }
             });
             
             document.getElementById('closeBoardModal').addEventListener('click', () => {
