@@ -1886,6 +1886,50 @@
         let backupFileHandle = null;
         let lastBackupTime = null;
         
+        // IndexedDB for storing file handles
+        const DB_NAME = 'FLOW_BackupDB';
+        const DB_VERSION = 1;
+        const STORE_NAME = 'backupHandles';
+        
+        const openDB = () => {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve(request.result);
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains(STORE_NAME)) {
+                        db.createObjectStore(STORE_NAME);
+                    }
+                };
+            });
+        };
+        
+        const saveHandleToDB = async (handle) => {
+            try {
+                const db = await openDB();
+                const tx = db.transaction(STORE_NAME, 'readwrite');
+                const store = tx.objectStore(STORE_NAME);
+                await store.put(handle, 'backupDir');
+                localStorage.setItem('flow_backup_configured', 'true');
+            } catch (e) {
+                console.error('Failed to save handle:', e);
+            }
+        };
+        
+        const loadHandleFromDB = async () => {
+            try {
+                const db = await openDB();
+                const tx = db.transaction(STORE_NAME, 'readonly');
+                const store = tx.objectStore(STORE_NAME);
+                const handle = await store.get('backupDir');
+                return handle;
+            } catch (e) {
+                console.error('Failed to load handle:', e);
+                return null;
+            }
+        };
+        
         const getBackupData = () => ({
             boards: store.boards,
             archivedCards: store.archivedCards,
@@ -1903,9 +1947,8 @@
                 }
                 
                 const dirHandle = await window.showDirectoryPicker();
-                // Store the directory handle
                 backupFileHandle = dirHandle;
-                localStorage.setItem('flow_backup_dir', 'granted');
+                await saveHandleToDB(dirHandle);
                 showToast('Backup folder selected!', 'success');
                 await saveBackupToFile();
                 return true;
@@ -1917,13 +1960,29 @@
         
         const saveBackupToFile = async () => {
             if (!backupFileHandle) {
-                // Try to restore from saved permission or fallback to downloads
-                fallbackExport();
-                return;
+                // Try to restore from IndexedDB
+                const savedHandle = await loadHandleFromDB();
+                if (savedHandle) {
+                    try {
+                        // Verify permission
+                        const permission = await savedHandle.requestPermission({ mode: 'readwrite' });
+                        if (permission === 'granted') {
+                            backupFileHandle = savedHandle;
+                        } else {
+                            fallbackExport();
+                            return;
+                        }
+                    } catch (e) {
+                        fallbackExport();
+                        return;
+                    }
+                } else {
+                    fallbackExport();
+                    return;
+                }
             }
             
             try {
-                // Create or get the backup file
                 const fileHandle = await backupFileHandle.getFileHandle('FLOW-backup.json', { create: true });
                 const writable = await fileHandle.createWritable();
                 const data = getBackupData();
@@ -1957,13 +2016,22 @@
             showToast('Backup saved to Downloads (select folder for auto-save)', 'info');
         };
         
-        const updateBackupStatus = () => {
+        const updateBackupStatus = async () => {
             const statusEl = document.getElementById('backupStatus');
             if (statusEl) {
-                if (backupFileHandle) {
+                // Check if we have a handle in memory or can load from DB
+                let hasHandle = !!backupFileHandle;
+                if (!hasHandle) {
+                    const savedHandle = await loadHandleFromDB();
+                    hasHandle = !!savedHandle;
+                }
+                
+                if (hasHandle || backupFileHandle) {
                     const timeStr = lastBackupTime ? lastBackupTime.toLocaleTimeString() : 'Never';
                     statusEl.textContent = `Auto-backup: ${timeStr}`;
                     statusEl.style.color = 'var(--accent-green)';
+                    statusEl.style.cursor = 'default';
+                    statusEl.onclick = null;
                 } else {
                     statusEl.textContent = 'Click to set backup folder';
                     statusEl.style.color = 'var(--accent-yellow)';
@@ -3149,12 +3217,27 @@
         };
 
         // Event Listeners
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             loadFromStorage();
             renderBoardSelector();
             renderBoard();
             renderCalendar();
-            updateBackupStatus(); // Initialize backup status display
+            await updateBackupStatus(); // Initialize backup status display
+            
+            // Try to restore backup folder from IndexedDB
+            const savedHandle = await loadHandleFromDB();
+            if (savedHandle) {
+                try {
+                    const permission = await savedHandle.requestPermission({ mode: 'readwrite' });
+                    if (permission === 'granted') {
+                        backupFileHandle = savedHandle;
+                        console.log('Backup folder restored from IndexedDB');
+                        await updateBackupStatus();
+                    }
+                } catch (e) {
+                    console.log('Could not restore backup folder permission');
+                }
+            }
             
             // Board selector
             document.getElementById('boardSelect').addEventListener('change', (e) => {
@@ -3289,6 +3372,58 @@
                     showToast('Sync failed: ' + e.message, 'error');
                 }
             });
+            
+            // Auto-refresh from server every 5 seconds
+            setInterval(async () => {
+                try {
+                    const response = await fetch('/api/data?t=' + Date.now());
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        // Only update if data changed (check lastModified)
+                        const serverModified = data.lastModified || data.modifiedAt;
+                        const localModified = store.lastModified || store.modifiedAt;
+                        
+                        // Merge server data with local
+                        if (data.boards && JSON.stringify(data.boards) !== JSON.stringify(store.boards)) {
+                            store.boards = JSON.parse(JSON.stringify(data.boards));
+                            store.archivedCards = JSON.parse(JSON.stringify(data.archivedCards || []));
+                            store.customLabels = JSON.parse(JSON.stringify(data.customLabels || []));
+                            
+                            // Ensure current board still exists
+                            const currentExists = store.boards.find(b => b.id === store.currentBoard);
+                            if (!currentExists && store.boards.length > 0) {
+                                store.currentBoard = store.boards[0].id;
+                            }
+                            
+                            // Re-render without showing toast (silent update)
+                            renderBoardSelector();
+                            renderBoard();
+                            renderCalendar();
+                        }
+                    }
+                } catch (e) {
+                    // Silent fail on auto-refresh
+                    console.log('Auto-refresh failed:', e.message);
+                }
+            }, 5000);
+            
+            // Try to restore backup folder from IndexedDB on load
+            (async () => {
+                const savedHandle = await loadHandleFromDB();
+                if (savedHandle) {
+                    try {
+                        const permission = await savedHandle.requestPermission({ mode: 'readwrite' });
+                        if (permission === 'granted') {
+                            backupFileHandle = savedHandle;
+                            console.log('Backup folder restored from IndexedDB');
+                            updateBackupStatus();
+                        }
+                    } catch (e) {
+                        console.log('Could not restore backup folder permission');
+                    }
+                }
+            })();
             
             document.getElementById('closeBoardModal').addEventListener('click', () => {
                 document.getElementById('boardModal').classList.remove('active');
