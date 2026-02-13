@@ -662,7 +662,7 @@
         /* Kai Profile Module */
         .kai-container {
             display: flex;
-            height: 100%;
+            height: calc(100vh - 140px);
             gap: 24px;
             padding: 24px;
         }
@@ -670,6 +670,9 @@
         .kai-sidebar {
             width: 280px;
             flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            max-height: 100%;
         }
 
         .kai-profile-header {
@@ -703,6 +706,8 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             overflow: hidden;
+            overflow-y: auto;
+            max-height: calc(100% - 140px);
         }
 
         .kai-file-btn {
@@ -1135,7 +1140,7 @@
                                 <div class="kai-name">Kai</div>
                                 <div class="kai-role">Digital Employee</div>
                             </div>
-                            <div class="kai-file-list">
+                            <div class="kai-file-list" id="kaiFileList">
                                 <button class="kai-file-btn active" data-file="soul">
                                     <i class="ph ph-file-text"></i>
                                     SOUL.md
@@ -1151,6 +1156,46 @@
                                 <button class="kai-file-btn" data-file="agents">
                                     <i class="ph ph-gear"></i>
                                     AGENTS.md
+                                </button>
+                                <button class="kai-file-btn" data-file="memory">
+                                    <i class="ph ph-brain"></i>
+                                    MEMORY.md
+                                </button>
+                                <button class="kai-file-btn" data-file="standing_orders">
+                                    <i class="ph ph-list-checks"></i>
+                                    STANDING_ORDERS.md
+                                </button>
+                                <button class="kai-file-btn" data-file="protocol_cost">
+                                    <i class="ph ph-currency-dollar"></i>
+                                    PROTOCOL_COST_EFFICIENCY.md
+                                </button>
+                                <button class="kai-file-btn" data-file="tools">
+                                    <i class="ph ph-wrench"></i>
+                                    TOOLS.md
+                                </button>
+                                <button class="kai-file-btn" data-file="heartbeat">
+                                    <i class="ph ph-heartbeat"></i>
+                                    HEARTBEAT.md
+                                </button>
+                                <button class="kai-file-btn" data-file="dev_procedure">
+                                    <i class="ph ph-code"></i>
+                                    DEV_PROCEDURE.md
+                                </button>
+                                <button class="kai-file-btn" data-file="bootstrap">
+                                    <i class="ph ph-rocket"></i>
+                                    BOOTSTRAP.md
+                                </button>
+                                <button class="kai-file-btn" data-file="overnight">
+                                    <i class="ph ph-moon"></i>
+                                    OVERNIGHT.md
+                                </button>
+                                <button class="kai-file-btn" data-file="trading_app">
+                                    <i class="ph ph-trend-up"></i>
+                                    trading_app_strategy.md
+                                </button>
+                                <button class="kai-file-btn" data-file="trading_journal">
+                                    <i class="ph ph-chart-bar"></i>
+                                    trading_journal_market_research.md
                                 </button>
                             </div>
                         </div>
