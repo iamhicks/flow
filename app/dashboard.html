@@ -2171,6 +2171,39 @@
                                 </div>
                             </div>
 
+                            <!-- Token Usage Card -->
+                            <div class="system-card system-card-wide">
+                                <div class="system-card-header">
+                                    <i class="ph ph-coins"></i>
+                                    <span>Token Usage</span>
+                                    <span class="system-badge" id="tokenBadge">--</span>
+                                </div>
+                                <div class="system-card-body">
+                                    <div class="system-row">
+                                        <span class="system-label">Total Sessions</span>
+                                        <span class="system-value" id="token-sessions">--</span>
+                                    </div>
+                                    <div class="system-row">
+                                        <span class="system-label">Total Tokens Used</span>
+                                        <span class="system-value" id="token-total">--</span>
+                                    </div>
+                                    <div class="system-row">
+                                        <span class="system-label">Context Window</span>
+                                        <span class="system-value" id="token-context">--</span>
+                                    </div>
+                                    <div class="system-row">
+                                        <span class="system-label">Average Usage</span>
+                                        <span class="system-value" id="token-avg">--</span>
+                                    </div>
+                                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+                                        <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">Active Sessions</div>
+                                        <div id="token-sessions-list" style="font-size: 13px; max-height: 150px; overflow-y: auto;">
+                                            <!-- Session list loaded here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Config Preview Card -->
                             <div class="system-card system-card-wide">
                                 <div class="system-card-header">
@@ -3161,6 +3194,9 @@
 
                 // Load REAL gateway status
                 await loadGatewayStatus();
+                
+                // Load token usage
+                await loadTokenUsage();
 
                 // Load config preview (still static)
                 const configPreview = document.getElementById('configPreview');
@@ -3209,6 +3245,45 @@
                     badge.textContent = 'Error';
                     badge.className = 'system-status offline';
                 }
+            }
+        };
+
+        // Token Usage
+        const loadTokenUsage = async () => {
+            try {
+                const response = await fetch('/api/tokens?t=' + Date.now());
+                const data = await response.json();
+                
+                const badge = document.getElementById('tokenBadge');
+                const sessionsEl = document.getElementById('token-sessions');
+                const totalEl = document.getElementById('token-total');
+                const contextEl = document.getElementById('token-context');
+                const avgEl = document.getElementById('token-avg');
+                const listEl = document.getElementById('token-sessions-list');
+                
+                if (data.summary) {
+                    if (badge) badge.textContent = data.summary.totalSessions || '0';
+                    if (sessionsEl) sessionsEl.textContent = data.summary.activeSessions || '0';
+                    if (totalEl) totalEl.textContent = data.summary.totalTokensUsed || '-';
+                    if (contextEl) contextEl.textContent = data.summary.totalContextWindow || '-';
+                    if (avgEl) avgEl.textContent = data.summary.averageUsage || '-';
+                }
+                
+                if (listEl && data.sessions) {
+                    const activeSessions = data.sessions.filter(s => s.active);
+                    if (activeSessions.length > 0) {
+                        listEl.innerHTML = activeSessions.slice(0, 10).map(s => `
+                            <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border);" title="${s.key}">
+                                <span style="color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px;">${s.key}</span>
+                                <span style="color: ${s.percent > 80 ? 'var(--danger)' : s.percent > 50 ? 'var(--warning)' : 'var(--success)'};">${s.tokensUsed} (${s.percent}%)</span>
+                            </div>
+                        `).join('');
+                    } else {
+                        listEl.innerHTML = '<div style="color: var(--text-tertiary);">No active sessions</div>';
+                    }
+                }
+            } catch (e) {
+                console.error('Error loading token usage:', e);
             }
         };
 
