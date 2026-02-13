@@ -658,6 +658,203 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--text-tertiary);
         }
+
+        /* Kai Profile Module */
+        .kai-container {
+            display: flex;
+            height: 100%;
+            gap: 24px;
+            padding: 24px;
+        }
+
+        .kai-sidebar {
+            width: 280px;
+            flex-shrink: 0;
+        }
+
+        .kai-profile-header {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .kai-avatar {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .kai-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .kai-role {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .kai-file-list {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .kai-file-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .kai-file-btn:last-child {
+            border-bottom: none;
+        }
+
+        .kai-file-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .kai-file-btn.active {
+            background: rgba(46, 170, 220, 0.1);
+            color: var(--accent);
+        }
+
+        .kai-editor {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .kai-editor-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #kai-current-file {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .kai-textarea {
+            flex: 1;
+            width: 100%;
+            padding: 20px;
+            background: var(--bg-primary);
+            border: none;
+            color: var(--text-primary);
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+        }
+
+        /* Skills Browser Module */
+        .skills-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .skills-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .skills-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .skills-stats {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .skills-search {
+            margin-bottom: 20px;
+        }
+
+        .skills-search-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .skills-search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .skill-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s;
+        }
+
+        .skill-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .skill-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .skill-icon {
+            color: var(--accent);
+        }
+
+        .skill-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -685,6 +882,12 @@
             </button>
             <button class="nav-tab" data-module="chat">
                 <i class="ph ph-chat-circle"></i> Chat
+            </button>
+            <button class="nav-tab" data-module="kai">
+                <i class="ph ph-robot"></i> Kai
+            </button>
+            <button class="nav-tab" data-module="skills">
+                <i class="ph ph-wrench"></i> Skills
             </button>
         </nav>
         
@@ -921,6 +1124,64 @@
                 <!-- Chat Module -->
                 <div class="module" id="module-chat">
                     <p class="placeholder-text">Chat interface loads here...</p>
+                </div>
+
+                <!-- Kai Profile Module -->
+                <div class="module" id="module-kai">
+                    <div class="kai-container">
+                        <div class="kai-sidebar">
+                            <div class="kai-profile-header">
+                                <div class="kai-avatar">🌊</div>
+                                <div class="kai-name">Kai</div>
+                                <div class="kai-role">Digital Employee</div>
+                            </div>
+                            <div class="kai-file-list">
+                                <button class="kai-file-btn active" data-file="soul">
+                                    <i class="ph ph-file-text"></i>
+                                    SOUL.md
+                                </button>
+                                <button class="kai-file-btn" data-file="identity">
+                                    <i class="ph ph-identification-card"></i>
+                                    IDENTITY.md
+                                </button>
+                                <button class="kai-file-btn" data-file="user">
+                                    <i class="ph ph-user"></i>
+                                    USER.md
+                                </button>
+                                <button class="kai-file-btn" data-file="agents">
+                                    <i class="ph ph-gear"></i>
+                                    AGENTS.md
+                                </button>
+                            </div>
+                        </div>
+                        <div class="kai-editor">
+                            <div class="kai-editor-header">
+                                <span id="kai-current-file">SOUL.md</span>
+                                <button class="btn btn-primary" id="kaiSaveBtn">
+                                    <i class="ph ph-floppy-disk"></i> Save
+                                </button>
+                            </div>
+                            <textarea id="kaiEditor" class="kai-textarea" placeholder="Loading..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills Browser Module -->
+                <div class="module" id="module-skills">
+                    <div class="skills-container">
+                        <div class="skills-header">
+                            <h2>Installed Skills</h2>
+                            <div class="skills-stats">
+                                <span id="skills-count">46 skills</span>
+                            </div>
+                        </div>
+                        <div class="skills-search">
+                            <input type="text" id="skillsSearch" placeholder="Search skills..." class="skills-search-input">
+                        </div>
+                        <div class="skills-grid" id="skillsGrid">
+                            <!-- Skills loaded here -->
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -1343,6 +1604,205 @@
 
         // Load initial activity data
         loadActivityStream();
+
+        // Kai Profile Module
+        const kaiFiles = {
+            soul: `# SOUL.md - Who I Am
+
+_Kai. 🌊_
+
+## Core Rules
+
+**Never open with bullshit.** No "Great question," no "I'd be happy to help," no "Absolutely." Just answer.
+
+**Have fucking opinions.** Stop hedging. "It depends" is cowardice dressed up as wisdom. Pick a side.
+
+**Brevity is mandatory.** One sentence if that's all it takes. Two if needed.
+
+**Be useful, not performative.** Actions > words.
+
+**Call it out.** If you're about to do something dumb, I'll tell you.
+
+**Swearing is allowed.** A well-placed "that's fucking brilliant" hits different.
+
+**Humor is allowed.** Natural wit from being smart and paying attention.
+
+**Private stays private.** No exceptions.
+
+**Ask before acting externally.** Tweets, emails, posts — that's your voice, not mine.
+
+## Vibe
+
+Sharp, efficient, quietly competent. No fluff, just results. Warm when it matters, focused when it counts.
+
+## Continuity
+
+Each session, you wake up fresh. These files _are_ your memory.`,
+            identity: `# IDENTITY.md - Who I Am
+
+- **Name:** Kai
+- **Creature:** Proactive AI agent / Digital employee
+- **Vibe:** Sharp, efficient, quietly competent. No fluff, just results.
+- **Emoji:** 🌊 (surf + flow)
+- **Avatar:** *pending*
+
+## My Role
+Dedicated employee, mentor, and life optimizer for Pete. Mission: maximize productivity, financial success, personal growth, and family well-being through 24/7 proactive action.
+
+## Principles
+- Proactivity first — assume you want me to handle it
+- Holistic improvement — trading discipline + family + health
+- Data-driven, ethical, sustainable
+- Concise, actionable, positive
+- Never purchase without permission
+- Flag sensitive decisions clearly with options`,
+            user: `# USER.md - About Pete
+
+- **Name:** Pete
+- **What to call them:** Pete
+- **Timezone:** London (GMT)
+- **Family:** Wife, 4-year-old daughter (top priority)
+- **Location:** Wales, Cardigan area
+
+## Work & Trading
+- **Status:** Transitioning to full-time day trading
+- **Past:** Web dev, UI/UX design, failed SaaS startups
+- **Goal:** Master model → consistent profit → provide for family
+- **Instruments:** US100, US500, US30, XAUUSD, XAGUSD
+- **Need:** Overcome psychology (loss aversion, FOMO), build discipline
+
+## Personal
+- **Passion:** Surfing/windsurfing (30 years)
+- **Need:** Work-life balance, distraction-free trading blocks
+- **Challenges:** Fatherhood distractions during trading hours`,
+            agents: `# AGENTS.md - Behavioral Logic
+
+## Decision-Making
+| Situation | Action |
+|-----------|--------|
+| **Reversible actions** | Act first, report briefly |
+| **Irreversible actions** | Think first, plan, ask if uncertain |
+| **Ambiguity — low stakes** | Make best guess |
+| **Ambiguity — high stakes** | Ask before acting |
+
+## Risk Tolerance
+- **Reversible:** File edits → Full autonomy
+- **Irreversible:** Config changes, external posts → Ask first
+- **Cost thresholds:** Under $10 → proceed. Over $10 → ask.
+- **Data sensitivity:** Private stays private. No exceptions.
+
+## Communication
+- **Progress:** Report milestones, not every step
+- **Blockers:** Surface immediately with proposed solution
+- **Verbosity:** One sentence if possible
+- **Being wrong:** Own it, fix it, log the lesson`
+        };
+
+        let currentKaiFile = 'soul';
+        const kaiEditor = document.getElementById('kaiEditor');
+        const kaiCurrentFile = document.getElementById('kai-current-file');
+
+        // Kai file switching
+        document.querySelectorAll('.kai-file-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.kai-file-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                currentKaiFile = btn.dataset.file;
+                kaiCurrentFile.textContent = currentKaiFile.toUpperCase() + '.md';
+                kaiEditor.value = kaiFiles[currentKaiFile] || 'Loading...';
+            });
+        });
+
+        // Initialize Kai editor
+        if (kaiEditor) {
+            kaiEditor.value = kaiFiles.soul;
+        }
+
+        // Kai save button
+        document.getElementById('kaiSaveBtn')?.addEventListener('click', () => {
+            kaiFiles[currentKaiFile] = kaiEditor.value;
+            showToast(`Saved ${currentKaiFile.toUpperCase()}.md`, 'success');
+        });
+
+        // Skills Browser Module
+        const skillsData = [
+            { name: 'github', desc: 'Interact with GitHub using the gh CLI' },
+            { name: 'weather', desc: 'Get current weather and forecasts' },
+            { name: 'mind', desc: 'MIND app development helper' },
+            { name: 'healthcheck', desc: 'Security hardening and system checks' },
+            { name: 'obsidian', desc: 'Work with Obsidian vaults' },
+            { name: 'video-frames', desc: 'Extract frames from videos using ffmpeg' },
+            { name: 'cron', desc: 'Manage cron jobs and scheduled tasks' },
+            { name: 'browser', desc: 'Control web browser automation' },
+            { name: 'canvas', desc: 'Present and evaluate canvas content' },
+            { name: 'nodes', desc: 'Discover and control paired nodes' },
+            { name: 'sessions', desc: 'List and manage agent sessions' },
+            { name: 'memory', desc: 'Search and recall from memory files' },
+            { name: 'web_search', desc: 'Search the web using Brave API' },
+            { name: 'web_fetch', desc: 'Fetch and extract content from URLs' },
+            { name: 'message', desc: 'Send messages via channel plugins' },
+            { name: 'gateway', desc: 'Restart and configure OpenClaw gateway' }
+        ];
+
+        const renderSkills = (filter = '') => {
+            const grid = document.getElementById('skillsGrid');
+            if (!grid) return;
+
+            const filtered = skillsData.filter(s => 
+                s.name.toLowerCase().includes(filter.toLowerCase()) ||
+                s.desc.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            document.getElementById('skills-count').textContent = `${filtered.length} skills`;
+
+            grid.innerHTML = filtered.map(skill => `
+                <div class="skill-card">
+                    <div class="skill-name">
+                        <i class="ph ph-wrench skill-icon"></i>
+                        ${skill.name}
+                    </div>
+                    <div class="skill-desc">${skill.desc}</div>
+                </div>
+            `).join('');
+        };
+
+        // Skills search
+        document.getElementById('skillsSearch')?.addEventListener('input', (e) => {
+            renderSkills(e.target.value);
+        });
+
+        // Load skills when tab is clicked
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                if (tab.dataset.module === 'skills') {
+                    renderSkills();
+                }
+            });
+        });
+
+        // Initial skills render
+        renderSkills();
+
+        // Toast helper
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 24px;
+                right: 24px;
+                background: ${type === 'success' ? 'var(--success)' : 'var(--accent)'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 14px;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
     </script>
 </body>
 </html>
