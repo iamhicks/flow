@@ -1981,6 +1981,10 @@
                                         <span id="chatMessageCount">0 messages</span>
                                     </div>
                                 </div>
+                                <div class="chat-search" style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="text" id="chatSearch" placeholder="Search messages..." style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; color: var(--text-primary); outline: none; width: 200px;">
+                                    <i class="ph ph-magnifying-glass" style="color: var(--text-tertiary);"></i>
+                                </div>
                             </div>
                             <div class="chat-messages" id="chatMessages">
                                 <div class="chat-loading" id="chatLoading">
@@ -1988,9 +1992,9 @@
                                     <p>Loading messages...</p>
                                 </div>
                             </div>
-                            <div class="chat-input-area">
-                                <textarea class="chat-input" id="chatInput" placeholder="Message Kai..." rows="1"></textarea>
-                                <button class="chat-send-btn" id="chatSendBtn">
+                            <div class="chat-input-area" style="position: relative;">
+                                <textarea class="chat-input" id="chatInput" placeholder="Message Kai..." rows="1" style="padding-right: 48px;"></textarea>
+                                <button class="chat-send-btn" id="chatSendBtn" style="position: absolute; right: 28px; bottom: 24px; width: 36px; height: 36px;">
                                     <i class="ph ph-paper-plane-right"></i>
                                 </button>
                             </div>
@@ -3442,16 +3446,29 @@
         const chatSendBtn = document.getElementById('chatSendBtn');
         const channelList = document.getElementById('channelList');
         const chatLoading = document.getElementById('chatLoading');
-        const refreshChatBtn = document.getElementById('refreshChatBtn');
+        const chatSearch = document.getElementById('chatSearch');
         let chatHistory = [];
         let channels = [];
         let selectedChannel = 'all'; // 'all' to show all channels, or specific channel id
+        let allMessages = []; // Store all messages for search
+
+        // Search functionality
+        chatSearch?.addEventListener('input', (e) => {
+            const searchText = e.target.value.toLowerCase();
+            const filtered = allMessages.filter(msg => 
+                msg.text?.toLowerCase().includes(searchText) ||
+                msg.sender?.toLowerCase().includes(searchText) ||
+                msg.channelName?.toLowerCase().includes(searchText)
+            );
+            renderMessages(filtered, searchText);
+        });
 
         const loadChannels = async () => {
             try {
                 const response = await fetch('/api/messages');
                 if (response.ok) {
                     const data = await response.json();
+                    allMessages = data.messages || [];
                     channels = data.channels || [];
                     
                     // Add "All Channels" option
@@ -3479,8 +3496,10 @@
                             // Update UI
                             channelList.querySelectorAll('.chat-channel-item').forEach(ch => ch.classList.remove('filtered'));
                             item.classList.add('filtered');
+                            // Clear search when changing channel
+                            if (chatSearch) chatSearch.value = '';
                             // Re-render messages with filter
-                            renderMessages(data.messages || []);
+                            renderMessages(allMessages);
                         });
                     });
                     
@@ -3492,19 +3511,26 @@
             return [];
         };
 
-        const renderMessages = (messages) => {
+        const renderMessages = (messages, searchText = '') => {
             chatMessages.innerHTML = '';
             
-            // Filter messages by selected channel
-            const filteredMessages = selectedChannel === 'all' 
+            // Filter messages by selected channel first
+            let filteredMessages = selectedChannel === 'all' 
                 ? messages 
                 : messages.filter(msg => msg.channel === selectedChannel || msg.channelName?.toLowerCase() === selectedChannel.toLowerCase());
+            
+            // If search text, filter by search
+            if (searchText) {
+                filteredMessages = filteredMessages.filter(msg => 
+                    msg.text?.toLowerCase().includes(searchText.toLowerCase())
+                );
+            }
             
             if (filteredMessages.length === 0) {
                 chatMessages.innerHTML = `
                     <div class="chat-welcome">
                         <i class="ph ph-hand-waving"></i>
-                        <p>${selectedChannel === 'all' ? 'No messages yet. Start a conversation!' : 'No messages in this channel.'}</p>
+                        <p>${searchText ? 'No messages match your search.' : (selectedChannel === 'all' ? 'No messages yet. Start a conversation!' : 'No messages in this channel.')}</p>
                     </div>
                 `;
                 return;
@@ -3517,11 +3543,18 @@
                     minute: '2-digit' 
                 });
                 
+                // Highlight search text
+                let messageText = escapeHtml(msg.text);
+                if (searchText) {
+                    const regex = new RegExp(`(${escapeHtml(searchText)})`, 'gi');
+                    messageText = messageText.replace(regex, '<mark style="background: var(--accent); color: var(--bg-primary); padding: 2px 4px; border-radius: 4px;">$1</mark>');
+                }
+                
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `chat-message ${isUser ? 'user' : ''}`;
                 messageDiv.innerHTML = `
                     <div>
-                        <div class="chat-message-content">${escapeHtml(msg.text)}</div>
+                        <div class="chat-message-content">${messageText}</div>
                         <div class="chat-message-meta">
                             <span class="chat-message-channel">${msg.channelName}</span>
                             <span>${time}</span>

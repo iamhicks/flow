@@ -376,7 +376,67 @@
         "actor": "User"
       },
       "timestamp": "2026-02-13T13:33:18.065Z"
+    },
+    {
+      "id": "evt_1770992092727",
+      "type": "chat:message",
+      "data": {
+        "channel": "telegram",
+        "channelName": "Telegram",
+        "sender": "Pete",
+        "senderType": "human",
+        "text": "testing web chat filter",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770992092714",
+        "timestamp": "2026-02-13T14:14:52.714Z"
+      },
+      "timestamp": "2026-02-13T14:14:52.727Z"
+    },
+    {
+      "id": "evt_1770992094136",
+      "type": "chat:message",
+      "data": {
+        "channel": "telegram",
+        "channelName": "Telegram",
+        "sender": "Kai",
+        "senderType": "ai",
+        "text": "I see. Let me process that for you.",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770992094134",
+        "timestamp": "2026-02-13T14:14:54.134Z"
+      },
+      "timestamp": "2026-02-13T14:14:54.136Z"
+    },
+    {
+      "id": "evt_1770992237118",
+      "type": "chat:message",
+      "data": {
+        "channel": "webchat",
+        "channelName": "WebChat",
+        "sender": "Pete",
+        "senderType": "human",
+        "text": "i have filter on webchat, but it is not displaying my messages, only yours, it should display my messages also if i sent them through web chat. when I filter telegram, it should show my messages and yours, so if the conversation took place on telegram we should show that conversation from you and me",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770992237114",
+        "timestamp": "2026-02-13T14:17:17.114Z"
+      },
+      "timestamp": "2026-02-13T14:17:17.118Z"
+    },
+    {
+      "id": "evt_1770992242637",
+      "type": "chat:message",
+      "data": {
+        "channel": "webchat",
+        "channelName": "WebChat",
+        "sender": "Kai",
+        "senderType": "ai",
+        "text": "I see. Let me process that for you.",
+        "sessionId": "flow-dashboard",
+        "id": "msg_1770992242634",
+        "timestamp": "2026-02-13T14:17:22.634Z"
+      },
+      "timestamp": "2026-02-13T14:17:22.637Z"
     }
   ],
-  "lastUpdated": "2026-02-13T13:33:18.065Z"
+  "lastUpdated": "2026-02-13T14:17:22.637Z"
 }

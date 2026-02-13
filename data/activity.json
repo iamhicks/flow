@@ -1,6 +1,46 @@
 {
   "activities": [
     {
+      "id": "act_1770992242636",
+      "type": "chat",
+      "icon": "💬",
+      "actor": "Kai",
+      "actorType": "ai",
+      "description": "I see. Let me process that for you.",
+      "boardName": "webchat",
+      "timestamp": "2026-02-13T14:17:22.636Z"
+    },
+    {
+      "id": "act_1770992237117",
+      "type": "chat",
+      "icon": "💬",
+      "actor": "Pete",
+      "actorType": "human",
+      "description": "i have filter on webchat, but it is not displaying my messages, only yours, it should display my messages also if i sent them through web chat. when I filter telegram, it should show my messages and y",
+      "boardName": "webchat",
+      "timestamp": "2026-02-13T14:17:17.117Z"
+    },
+    {
+      "id": "act_1770992094136",
+      "type": "chat",
+      "icon": "💬",
+      "actor": "Kai",
+      "actorType": "ai",
+      "description": "I see. Let me process that for you.",
+      "boardName": "telegram",
+      "timestamp": "2026-02-13T14:14:54.136Z"
+    },
+    {
+      "id": "act_1770992092727",
+      "type": "chat",
+      "icon": "💬",
+      "actor": "Pete",
+      "actorType": "human",
+      "description": "testing web chat filter",
+      "boardName": "telegram",
+      "timestamp": "2026-02-13T14:14:52.727Z"
+    },
+    {
       "id": "act_1770989598065",
       "type": "task",
       "icon": "📋",
@@ -398,5 +438,5 @@
       "icon": "📊"
     }
   ],
-  "lastUpdated": "2026-02-13T13:33:18.065Z"
+  "lastUpdated": "2026-02-13T14:17:22.636Z"
 }
