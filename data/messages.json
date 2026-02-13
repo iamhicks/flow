@@ -1,46 +1,6 @@
 {
   "messages": [
     {
-      "id": "45143cf4",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Let me fix these properly:",
-      "timestamp": "2026-02-12T17:03:39.521Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "5a79a93e",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Done! Fixes applied:\n\n1. **Note title** — Changed to `rows=\"2\"` and removed `overflow: hidden` so it can wrap properly\n2. **Horizontal line removed** — Removed `border-top` from input area  \n3. **Vertical line fixed** — Changed scroll container to use `bottom: 80px` instead of `height: calc()` so it extends to meet the input area\n\nClose and restart!",
-      "timestamp": "2026-02-12T17:04:52.226Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "d097ee22",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Let me fix these properly:",
-      "timestamp": "2026-02-12T17:04:52.669Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "579e126d",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Done! Fixes applied:\n\n1. **Note title** — Changed to `rows=\"2\"` and removed `overflow: hidden` so it can wrap properly\n2. **Horizontal line removed** — Removed `border-top` from input area  \n3. **Vertical line fixed** — Changed scroll container to use `bottom: 80px` instead of `height: calc()` so it extends to meet the input area\n\nClose and restart!",
-      "timestamp": "2026-02-12T17:04:53.062Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
       "id": "fbc0288c",
       "channel": "telegram",
       "channelName": "Telegram",
@@ -4997,6 +4957,46 @@
       "text": "message box now small and justified right Loading messages spinning icin for some reason\n[message_id: 4808]",
       "timestamp": "2026-02-13T15:11:12.476Z",
       "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "c6114404",
+      "channel": "flowchat",
+      "channelName": "FlowChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "**✅ Fixed!**\n\nThe HTML got malformed in the last edit — there were:\n- Duplicate \"Loading messages\" spinners\n- Broken textarea/button tags split across lines\n- Missing proper container structure\n\n**Refresh dashboard** now — message box should be full width and the spinner should disappear once messages load! 🎨",
+      "timestamp": "2026-02-13T15:12:55.387Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "ae33b1bc",
+      "channel": "flowchat",
+      "channelName": "FlowChat",
+      "sender": "Pete",
+      "senderType": "human",
+      "text": "Pre-compaction memory flush. Store durable memories now (use memory/YYYY-MM-DD.md; create memory/ if needed). If nothing to store, reply with NO_REPLY.",
+      "timestamp": "2026-02-13T15:15:18.510Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "d42f970b",
+      "channel": "flowchat",
+      "channelName": "FlowChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "**✅ Memory stored.**\n\nSession summary committed and synced to Obsidian. Ready for compaction. 📚",
+      "timestamp": "2026-02-13T15:16:30.736Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "f4bf48af",
+      "channel": "telegram",
+      "channelName": "Telegram",
+      "sender": "Pete",
+      "senderType": "human",
+      "text": "message box is still not like Mind, needs to be same height, with same spacing around the send button and the border of the message box your message format also not fixed, still one paragraph when some lines should return onto new line\n[message_id: 4810]",
+      "timestamp": "2026-02-13T15:17:31.257Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
     }
   ],
   "channels": [
@@ -5037,5 +5037,5 @@
       "icon": "ph-chat-circle"
     }
   ],
-  "lastUpdated": "2026-02-13T15:12:26.611Z"
+  "lastUpdated": "2026-02-13T15:18:42.718Z"
 }
