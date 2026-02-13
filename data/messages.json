@@ -1,0 +1,53 @@
+{
+  "messages": [
+    {
+      "id": "msg_001",
+      "channel": "telegram",
+      "channelName": "Telegram DM",
+      "sender": "Pete",
+      "senderType": "human",
+      "text": "Morning Kai! Working on FLOW dashboard today.",
+      "timestamp": "2026-02-13T08:00:00Z",
+      "sessionId": "main"
+    },
+    {
+      "id": "msg_002",
+      "channel": "telegram",
+      "channelName": "Telegram DM",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "Good morning! 🌊 Ready to build. What module are we starting with?",
+      "timestamp": "2026-02-13T08:01:00Z",
+      "sessionId": "main"
+    },
+    {
+      "id": "msg_003",
+      "channel": "telegram",
+      "channelName": "Telegram DM",
+      "sender": "Pete",
+      "senderType": "human",
+      "text": "Let's add the Kai Profile module first.",
+      "timestamp": "2026-02-13T08:05:00Z",
+      "sessionId": "main"
+    },
+    {
+      "id": "msg_004",
+      "channel": "webchat",
+      "channelName": "Browser Dashboard",
+      "sender": "Pete",
+      "senderType": "human",
+      "text": "Testing the new Chat feature",
+      "timestamp": "2026-02-13T09:18:00Z",
+      "sessionId": "web-1"
+    }
+  ],
+  "channels": [
+    { "id": "telegram", "name": "Telegram", "status": "connected", "icon": "ph-telegram-logo" },
+    { "id": "webchat", "name": "WebChat", "status": "connected", "icon": "ph-browser" },
+    { "id": "whatsapp", "name": "WhatsApp", "status": "disconnected", "icon": "ph-whatsapp-logo" },
+    { "id": "discord", "name": "Discord", "status": "disconnected", "icon": "ph-discord-logo" },
+    { "id": "slack", "name": "Slack", "status": "disconnected", "icon": "ph-slack-logo" },
+    { "id": "imessage", "name": "iMessage", "status": "disconnected", "icon": "ph-chat-circle" }
+  ],
+  "lastUpdated": "2026-02-13T09:18:00Z"
+}

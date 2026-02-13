@@ -153,6 +153,61 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Messages API - Unified chat history
+  if (urlPath === '/api/messages' && req.method === 'GET') {
+    try {
+      const messagesPath = path.join(__dirname, 'data', 'messages.json');
+      if (fs.existsSync(messagesPath)) {
+        const data = fs.readFileSync(messagesPath, 'utf8');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(data);
+        return;
+      } else {
+        // Return empty structure if file doesn't exist
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ messages: [], channels: [], lastUpdated: new Date().toISOString() }));
+        return;
+      }
+    } catch (e) {
+      console.error('Error loading messages:', e);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: e.message }));
+      return;
+    }
+  }
+
+  if (urlPath === '/api/messages' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        const messagesPath = path.join(__dirname, 'data', 'messages.json');
+        let data = { messages: [], channels: [], lastUpdated: new Date().toISOString() };
+        
+        if (fs.existsSync(messagesPath)) {
+          data = JSON.parse(fs.readFileSync(messagesPath, 'utf8'));
+        }
+        
+        const newMessage = JSON.parse(body);
+        newMessage.id = 'msg_' + Date.now();
+        newMessage.timestamp = new Date().toISOString();
+        
+        data.messages.push(newMessage);
+        data.lastUpdated = new Date().toISOString();
+        
+        fs.writeFileSync(messagesPath, JSON.stringify(data, null, 2));
+        
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, message: newMessage }));
+      } catch (e) {
+        console.error('Error saving message:', e);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message }));
+      }
+    });
+    return;
+  }
+
   // Workspace .md files API
   if (urlPath.startsWith('/api/workspace/') && req.method === 'GET') {
     try {
