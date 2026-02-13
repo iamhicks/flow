@@ -1874,6 +1874,76 @@
             const today = new Date();
             return due.toDateString() === today.toDateString();
         };
+        
+        // Count overdue tasks across all boards
+        const getOverdueTasks = () => {
+            const overdueTasks = [];
+            store.boards.forEach(board => {
+                board.columns.forEach(column => {
+                    // Skip done columns
+                    if (isDoneColumn(column.name)) return;
+                    
+                    column.cards.forEach(card => {
+                        if (card.dueDate && isOverdue(card.dueDate)) {
+                            overdueTasks.push({
+                                ...card,
+                                boardName: board.name,
+                                columnName: column.name
+                            });
+                        }
+                    });
+                });
+            });
+            return overdueTasks;
+        };
+        
+        // Update overdue counter in UI
+        const updateOverdueCounter = () => {
+            const overdueTasks = getOverdueTasks();
+            const count = overdueTasks.length;
+            
+            // Find or create overdue badge
+            let badge = document.getElementById('overdueCounter');
+            if (!badge) {
+                // Add badge to header
+                const header = document.querySelector('.header');
+                if (header) {
+                    badge = document.createElement('div');
+                    badge.id = 'overdueCounter';
+                    badge.style.cssText = `
+                        background: var(--danger);
+                        color: white;
+                        padding: 4px 12px;
+                        border-radius: 20px;
+                        font-size: 13px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        margin-left: 16px;
+                    `;
+                    badge.addEventListener('click', () => {
+                        // Activate overdue filter
+                        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                        document.querySelector('[data-filter="overdue"]').classList.add('active');
+                        renderBoard();
+                    });
+                    header.insertBefore(badge, header.querySelector('.header-right'));
+                }
+            }
+            
+            if (badge) {
+                if (count > 0) {
+                    badge.innerHTML = `<i class="ph ph-warning-circle"></i> ${count} Overdue`;
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+            
+            return overdueTasks;
+        };
 
         // Check if a column is a "Done" type column
         const isDoneColumn = (columnName) => {
@@ -2790,6 +2860,9 @@
             });
             
             boardEl.appendChild(addColumnBtn);
+            
+            // Update overdue counter
+            updateOverdueCounter();
         };
 
         // Helper function to determine drop position

@@ -1,16 +1,6 @@
 {
   "messages": [
     {
-      "id": "a40a4da2",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Done! Full project backup created:\n\n**Documents backup:**\n`~/Documents/Kai/Backups/MIND-Full-Backup-2026-02-12-1530/`\n- index.html (main app)\n- Backups/ folder (all your stable checkpoints)\n\n**GitHub backup:**\nhttps://github.com/iamhicks/mind\n\nBoth locations now have the complete MIND project with all today's AI chat fixes!",
-      "timestamp": "2026-02-12T15:31:55.854Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
       "id": "7d7db9e0",
       "channel": "telegram",
       "channelName": "Telegram",
@@ -4997,6 +4987,16 @@
       "text": "Got it. Working on all of this:\n\n**Chat styling:**\n- User bubble, AI no bubble (background only)\n- No avatars\n- Remove frame, clean background\n- Remove refresh button\n- Live \"Connected\" status\n- Keep channel tags + timestamps\n\n**Kanban:**\n- Show overdue tasks (past due date)\n\n**Screenshots:** This needs file upload handling — doable but complex. Priority?",
       "timestamp": "2026-02-13T13:18:28.740Z",
       "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "842e8161",
+      "channel": "webchat",
+      "channelName": "WebChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "Now working on **overdue tasks** in kanban:",
+      "timestamp": "2026-02-13T13:20:25.119Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
     }
   ],
   "channels": [
@@ -5037,5 +5037,5 @@
       "icon": "ph-chat-circle"
     }
   ],
-  "lastUpdated": "2026-02-13T13:19:22.713Z"
+  "lastUpdated": "2026-02-13T13:21:58.095Z"
 }
