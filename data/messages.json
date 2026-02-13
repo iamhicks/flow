@@ -1,26 +1,6 @@
 {
   "messages": [
     {
-      "id": "b1a03462",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Done! Fixes applied:\n\n1. ✅ **Vertical line** — Added `border-top` to input area to complete the line\n2. ✅ **Note title wrapping** — Changed to `<textarea>` with `height: auto` and wrapping styles\n3. ✅ **More dropdown** — Moved inside `note-meta` div so it positions correctly under the button\n\nClose and restart!",
-      "timestamp": "2026-02-12T17:00:29.135Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "8dbc9258",
-      "channel": "telegram",
-      "channelName": "Telegram",
-      "sender": "Pete",
-      "senderType": "human",
-      "text": "---\nQueued #1\nmore button working not title - when the title gets too long it now deletes everything before it and starts again, i asked for it to wrap onto a new line vertical line still broken and now you have put the horizontal line back - going around in circles on this one\n[message_id: 4433]",
-      "timestamp": "2026-02-12T17:03:23.702Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
       "id": "45143cf4",
       "channel": "webchat",
       "channelName": "WebChat",
@@ -4997,6 +4977,26 @@
       "text": "lets remove the Unified Chat titles and the number of messages\n[message_id: 4806]",
       "timestamp": "2026-02-13T15:07:01.500Z",
       "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "a18aa8e2",
+      "channel": "flowchat",
+      "channelName": "FlowChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "**✅ Done!**\n\nRemoved:\n- \"Unified Chat\" title from sidebar\n- Message count from sidebar\n- \"Unified Chat\" title and \"Connected\" status from chat header\n\nNow it's just clean search box → channel list → messages → input. Much cleaner! 🎨\n\n**Refresh dashboard** to see the minimal UI!",
+      "timestamp": "2026-02-13T15:08:27.469Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "ade88ce3",
+      "channel": "telegram",
+      "channelName": "Telegram",
+      "sender": "Pete",
+      "senderType": "human",
+      "text": "message box now small and justified right Loading messages spinning icin for some reason\n[message_id: 4808]",
+      "timestamp": "2026-02-13T15:11:12.476Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
     }
   ],
   "channels": [
@@ -5037,5 +5037,5 @@
       "icon": "ph-chat-circle"
     }
   ],
-  "lastUpdated": "2026-02-13T15:08:00.823Z"
+  "lastUpdated": "2026-02-13T15:12:26.611Z"
 }
