@@ -2027,8 +2027,12 @@
                 }
                 
                 if (hasHandle || backupFileHandle) {
-                    const timeStr = lastBackupTime ? lastBackupTime.toLocaleTimeString() : 'Never';
-                    statusEl.textContent = `Auto-backup: ${timeStr}`;
+                    if (lastBackupTime) {
+                        const timeStr = lastBackupTime.toLocaleTimeString();
+                        statusEl.textContent = `Auto-backup: ${timeStr}`;
+                    } else {
+                        statusEl.textContent = 'Auto-backup: Ready';
+                    }
                     statusEl.style.color = 'var(--accent-green)';
                     statusEl.style.cursor = 'default';
                     statusEl.onclick = null;

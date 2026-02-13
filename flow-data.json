@@ -96,6 +96,18 @@
               "attachments": [],
               "recurring": "",
               "createdAt": "2026-02-13T12:27:04.239Z"
+            },
+            {
+              "id": "_7yavn9z83",
+              "title": "Overdue Status",
+              "description": "left column Tasks Status, can we add \"Overdue\" stats if there are any overdue tasks",
+              "dueDate": "",
+              "priority": "medium",
+              "labels": [],
+              "checklist": [],
+              "attachments": [],
+              "recurring": "",
+              "createdAt": "2026-02-13T12:55:50.520Z"
             }
           ]
         },
@@ -349,6 +361,6 @@
     "lastBackup": null,
     "currentBoard": "board_1"
   },
-  "lastModified": "2026-02-13T12:54:01.217Z",
+  "lastModified": "2026-02-13T12:56:38.569Z",
   "modifiedBy": "user"
 }
