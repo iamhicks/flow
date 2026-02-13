@@ -1,26 +1,6 @@
 {
   "messages": [
     {
-      "id": "7bb52775",
-      "channel": "telegram",
-      "channelName": "Telegram",
-      "sender": "Pete",
-      "senderType": "human",
-      "text": "[media attached: /Users/peteroberts/.openclaw/media/inbound/file_126---eab45924-cfdb-4e9b-9e38-27cf7f54e965.jpg (image/jpeg) | /Users/peteroberts/.openclaw/media/inbound/file_126---eab45924-cfdb-4e9b-9e38-27cf7f54e965.jpg]\nTo send an image back, prefer the message tool (media/path/filePath). If you must inline, use MEDIA:https://example.com/image.jpg (spaces ok, quote if needed) or a safe relative path like MEDIA:./image.jpg. Avoid absolute paths (MEDIA:/...) and ~ paths — they are blocked for security. Keep caption in the text body.\nnice! ok, some tweaks. reduce the space below the message box so it's all closer to the bottom of screen. when ai chat is open, hide the yellow ai chat button. change the x icon top right that closes the ai chat to an > icon to collapse the ai chat. when hovering over user chat bubble can we show small text below is dd-mm-yy / hh:mm. ai chat delete icon, when use clicks it, modal appears asking them to confirm deletion and that it can not be restored. remo",
-      "timestamp": "2026-02-12T14:49:49.687Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "66da4d99",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Great! Chat is working on the right side now. Let me make those tweaks:",
-      "timestamp": "2026-02-12T14:50:04.144Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
       "id": "bb2e716b",
       "channel": "webchat",
       "channelName": "WebChat",
@@ -4997,6 +4977,26 @@
       "text": "Parsing issue. Fixing:",
       "timestamp": "2026-02-13T12:06:38.137Z",
       "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "2d1dde99",
+      "channel": "webchat",
+      "channelName": "WebChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "**✅ Real data working!**",
+      "timestamp": "2026-02-13T12:08:18.797Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "bf5a5310",
+      "channel": "webchat",
+      "channelName": "WebChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "**✅ Done! Real data now:**\n\n| Stat | Before | After |\n|------|--------|-------|\n| **Cron Jobs** | Demo (4 static) | ✅ Real from OpenClaw |\n| **Channels** | Demo (static) | ✅ Real from openclaw.json |\n| **Sessions** | Demo | Still static (need session API) |\n\n**Refresh dashboard** → System tab now shows:\n```\nauto-push-memory-hourly    Next: in 52m    Last: 7m ago    ✅ ok\ngithub-monitor-fixed       Next: in 2h     Last: 8m ago    ✅ ok\nbackup-check               Next: in 19h    Last: 5h ago    ✅ ok\nfriday-cleanup-reminder    Next: in 7d     Last: 3h ago    ✅ ok\n```\n\n**Telegram status:** Shows \"connected\" if enabled in config.\n\n---\n\n**Sessions still demo** — need OpenClaw session API. Want me to add that too?",
+      "timestamp": "2026-02-13T12:08:27.204Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
     }
   ],
   "channels": [
@@ -5037,5 +5037,5 @@
       "icon": "ph-chat-circle"
     }
   ],
-  "lastUpdated": "2026-02-13T12:08:14.656Z"
+  "lastUpdated": "2026-02-13T12:21:25.365Z"
 }

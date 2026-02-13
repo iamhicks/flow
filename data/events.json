@@ -98,7 +98,19 @@
         "actor": "User"
       },
       "timestamp": "2026-02-13T12:07:20.961Z"
+    },
+    {
+      "id": "evt_1770985624745",
+      "type": "kanban:taskCreated",
+      "data": {
+        "id": "_v4m1r0xsl",
+        "title": "Token Usage",
+        "column": "backlog",
+        "board": "Flow Mind Website",
+        "creator": "User"
+      },
+      "timestamp": "2026-02-13T12:27:04.745Z"
     }
   ],
-  "lastUpdated": "2026-02-13T12:07:20.961Z"
+  "lastUpdated": "2026-02-13T12:27:04.745Z"
 }

@@ -2303,6 +2303,9 @@
                     loadActivityStream();
                 } else if (moduleId === 'memory') {
                     loadMemoryStream();
+                    // Start auto-polling for memory updates
+                    if (window.memoryPollInterval) clearInterval(window.memoryPollInterval);
+                    window.memoryPollInterval = setInterval(loadMemoryStream, 5000);
                 } else if (moduleId === 'deliverables') {
                     loadDeliverables();
                 }
@@ -2481,7 +2484,9 @@
                     product: '#9b59b6',
                     bug: '#dc4444',
                     business: '#2ecc71',
-                    milestone: '#e74c3c'
+                    milestone: '#e74c3c',
+                    identity: '#9b59b6',
+                    system: '#8b949e'
                 };
                 const color = categoryColors[memory.category] || '#8b949e';
                 

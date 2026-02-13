@@ -326,6 +326,170 @@ const addActivityItem = async (item) => {
 // Initialize triggers
 setupModuleTriggers();
 
+// ==========================================
+// AUTO-MEMORY EXTRACTION SYSTEM
+// ==========================================
+
+const extractMemoryFromFileEdit = (fileName, content) => {
+  try {
+    const memoryPath = path.join(__dirname, 'data', 'memory.json');
+    let memoryData = { memories: [], categories: [], lastUpdated: new Date().toISOString() };
+    
+    if (fs.existsSync(memoryPath)) {
+      memoryData = JSON.parse(fs.readFileSync(memoryPath, 'utf8'));
+    }
+    
+    // Determine category based on file name
+    let category = 'system';
+    let icon = '📝';
+    
+    if (fileName.includes('SOUL')) {
+      category = 'identity';
+      icon = '🌊';
+    } else if (fileName.includes('IDENTITY')) {
+      category = 'identity';
+      icon = '🆔';
+    } else if (fileName.includes('USER')) {
+      category = 'preference';
+      icon = '👤';
+    } else if (fileName.includes('MEMORY')) {
+      category = 'milestone';
+      icon = '🧠';
+    } else if (fileName.includes('trading')) {
+      category = 'trading';
+      icon = '📈';
+    } else if (fileName.includes('STRATEGY') || fileName.includes('Business')) {
+      category = 'business';
+      icon = '💼';
+    }
+    
+    // Create memory entry
+    const newMemory = {
+      id: 'mem_' + Date.now(),
+      type: 'edit',
+      content: `Updated ${fileName.replace('.md', '')}`,
+      category: category,
+      addedBy: 'Pete',
+      actorType: 'human',
+      timestamp: new Date().toISOString(),
+      icon: icon,
+      source: 'kai_profile'
+    };
+    
+    // Check for duplicates (same file within last hour)
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    const isDuplicate = memoryData.memories.some(m => 
+      m.source === 'kai_profile' && 
+      m.content === newMemory.content &&
+      m.timestamp > oneHourAgo
+    );
+    
+    if (!isDuplicate) {
+      memoryData.memories.unshift(newMemory);
+      
+      // Keep only last 50 memories
+      if (memoryData.memories.length > 50) {
+        memoryData.memories = memoryData.memories.slice(0, 50);
+      }
+      
+      memoryData.lastUpdated = new Date().toISOString();
+      fs.writeFileSync(memoryPath, JSON.stringify(memoryData, null, 2));
+      console.log('Memory extracted from file edit:', fileName);
+    }
+  } catch (e) {
+    console.error('Error extracting memory:', e);
+  }
+};
+
+// Parse daily logs and MEMORY.md for auto-extraction
+const parseDailyLogsForMemories = () => {
+  try {
+    const memoryPath = path.join(__dirname, 'data', 'memory.json');
+    let memoryData = { memories: [], categories: [], lastUpdated: new Date().toISOString() };
+    
+    if (fs.existsSync(memoryPath)) {
+      memoryData = JSON.parse(fs.readFileSync(memoryPath, 'utf8'));
+    }
+    
+    // Get list of memory files
+    const workspacePath = path.join(process.env.HOME, '.openclaw/workspace/memory');
+    if (!fs.existsSync(workspacePath)) return;
+    
+    const files = fs.readdirSync(workspacePath).filter(f => f.endsWith('.md') && f.match(/^\d{2}-\d{2}-\d{4}\.md$/));
+    
+    // Parse each daily log
+    files.forEach(file => {
+      const content = fs.readFileSync(path.join(workspacePath, file), 'utf8');
+      const date = file.replace('.md', '');
+      
+      // Extract accomplishments
+      const accomplishmentsMatch = content.match(/## Key Accomplishments[\s\S]*?(?=##|$)/);
+      if (accomplishmentsMatch) {
+        const items = accomplishmentsMatch[0].match(/- \*\*.*?\*\*.*?(?=\n- \*\*|\n###|\n##|$)/gs) || [];
+        items.forEach(item => {
+          const cleanItem = item.replace(/^- \*\*/, '').replace(/\*\*/g, '').trim();
+          if (cleanItem.length > 10 && !cleanItem.includes('None yet') && !memoryData.memories.some(m => m.content === cleanItem)) {
+            memoryData.memories.push({
+              id: 'mem_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+              type: 'accomplishment',
+              content: cleanItem.substring(0, 200),
+              category: 'milestone',
+              addedBy: 'Kai',
+              actorType: 'ai',
+              timestamp: new Date().toISOString(),
+              icon: '✅',
+              source: `daily_log_${date}`
+            });
+          }
+        });
+      }
+      
+      // Extract technical decisions
+      const decisionsMatch = content.match(/## Technical Decisions[\s\S]*?(?=##|$)/);
+      if (decisionsMatch) {
+        const items = decisionsMatch[0].match(/- .*?(?=\n- |\n###|\n##|$)/gs) || [];
+        items.forEach(item => {
+          const cleanItem = item.replace(/^- /, '').trim();
+          if (cleanItem.length > 10 && !cleanItem.includes('None yet') && !cleanItem.startsWith('---') && !memoryData.memories.some(m => m.content === cleanItem)) {
+            memoryData.memories.push({
+              id: 'mem_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+              type: 'decision',
+              content: cleanItem.substring(0, 200),
+              category: 'product',
+              addedBy: 'Kai',
+              actorType: 'ai',
+              timestamp: new Date().toISOString(),
+              icon: '💡',
+              source: `daily_log_${date}`
+            });
+          }
+        });
+      }
+    });
+    
+    // Sort by timestamp descending
+    memoryData.memories.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    // Keep only last 50
+    if (memoryData.memories.length > 50) {
+      memoryData.memories = memoryData.memories.slice(0, 50);
+    }
+    
+    memoryData.lastUpdated = new Date().toISOString();
+    fs.writeFileSync(memoryPath, JSON.stringify(memoryData, null, 2));
+    console.log('Parsed daily logs for memories, total:', memoryData.memories.length);
+    
+  } catch (e) {
+    console.error('Error parsing daily logs:', e);
+  }
+};
+
+// Run once on server start
+parseDailyLogsForMemories();
+
+// Schedule to run every hour
+setInterval(parseDailyLogsForMemories, 60 * 60 * 1000);
+
 // Detect kanban changes and emit events
 const detectKanbanChanges = (oldData, newData) => {
   try {
@@ -651,6 +815,21 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
+  // Memory Refresh API - Force re-parse daily logs
+  if (urlPath === '/api/memory/refresh' && req.method === 'POST') {
+    try {
+      parseDailyLogsForMemories();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, message: 'Memory refresh triggered' }));
+      return;
+    } catch (e) {
+      console.error('Error refreshing memories:', e);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: e.message }));
+      return;
+    }
+  }
+
   // Workspace .md files API
   if (urlPath.startsWith('/api/workspace/') && req.method === 'GET') {
     try {
@@ -698,6 +877,9 @@ const server = http.createServer(async (req, res) => {
         
         // Emit event for cross-module communication
         EventBus.emit('kai:fileEdited', { file: fileName });
+        
+        // Auto-extract memory from file edit
+        extractMemoryFromFileEdit(fileName, content);
         
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true }));
