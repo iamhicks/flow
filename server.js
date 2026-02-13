@@ -142,6 +142,7 @@ const syncMessagesFromSessions = async () => {
                 // Clean up the text
                 text = text
                   .replace(/\[Telegram.*?\]\s*/, '')
+                  .replace(/\[message_id:\s*\d+\]\s*/, '')
                   .replace(/\[Queued messages.*?\]\s*/s, '')
                   .replace(/System:\s*\[.*?\]\s*Cron:.*?(?=\n|$)/, '')
                   .trim();

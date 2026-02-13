@@ -1,26 +1,6 @@
 {
   "messages": [
     {
-      "id": "fbc0288c",
-      "channel": "telegram",
-      "channelName": "Telegram",
-      "sender": "Pete",
-      "senderType": "human",
-      "text": "cool all correct now\n[message_id: 4436]",
-      "timestamp": "2026-02-12T17:11:23.331Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
-      "id": "db276428",
-      "channel": "webchat",
-      "channelName": "WebChat",
-      "sender": "Kai",
-      "senderType": "ai",
-      "text": "Excellent! All fixed. \n\n**Today's accomplishments:**\n- ✅ AI chat layout working perfectly (tabs at top, chat sidebar on right)\n- ✅ Delete chat with confirmation\n- ✅ Vertical line continuous\n- ✅ Note title wraps properly\n- ✅ More button dropdown working\n- ✅ Full backup completed\n\nMIND is looking polished and ready. What's next?",
-      "timestamp": "2026-02-12T17:11:34.605Z",
-      "sessionId": "9f1e3c03-96dc-4f29-8744-146660e27add"
-    },
-    {
       "id": "753044a8",
       "channel": "telegram",
       "channelName": "Telegram",
@@ -4997,6 +4977,26 @@
       "text": "message box is still not like Mind, needs to be same height, with same spacing around the send button and the border of the message box your message format also not fixed, still one paragraph when some lines should return onto new line\n[message_id: 4810]",
       "timestamp": "2026-02-13T15:17:31.257Z",
       "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "853ac8c4",
+      "channel": "flowchat",
+      "channelName": "FlowChat",
+      "sender": "Kai",
+      "senderType": "ai",
+      "text": "**✅ Fixed!**\n\nTwo changes:\n\n**1. Message box now matches MIND exactly:**\n- Wrapper with border, shadow, rounded corners (20px)\n- Textarea inside with no border, transparent background\n- Send button in same row as textarea (not absolutely positioned)\n- Proper padding: 12px 16px on wrapper, 8px 4px on textarea\n\n**2. Message formatting fixed:**\n- Added `white-space: pre-wrap` to preserve line breaks\n- Multi-line messages now display correctly with proper wrapping\n\n**Refresh dashboard** to see the MIND-style input! 🎨",
+      "timestamp": "2026-02-13T15:18:56.310Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
+    },
+    {
+      "id": "9c9e1cd8",
+      "channel": "telegram",
+      "channelName": "Telegram",
+      "sender": "Pete",
+      "senderType": "human",
+      "text": "nice thanks! in my chat bubble we show [message_id: 4808] don't think we need to show that it say \"Message Kai\" will Kai auto change to the users agent's name? Move FlowChat above Telegram in the Channels list. You still have Webchat, call it FlowChat remove All Channels, don;t think we need to show that?\n[message_id: 4812]",
+      "timestamp": "2026-02-13T15:21:55.363Z",
+      "sessionId": "b0ad0013-f5e7-4ff3-bc45-5a67f61b38e0"
     }
   ],
   "channels": [
@@ -5037,5 +5037,5 @@
       "icon": "ph-chat-circle"
     }
   ],
-  "lastUpdated": "2026-02-13T15:18:42.718Z"
+  "lastUpdated": "2026-02-13T15:23:23.764Z"
 }

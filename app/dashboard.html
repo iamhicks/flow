@@ -2142,7 +2142,7 @@
                                         <span class="system-status online">Connected</span>
                                     </div>
                                     <div class="system-row">
-                                        <span class="system-label">Webchat</span>
+                                        <span class="system-label">FlowChat</span>
                                         <span class="system-status online">Active</span>
                                     </div>
                                 </div>
@@ -3185,7 +3185,7 @@
                 const sessionList = document.getElementById('sessionList');
                 const sessions = [
                     { id: 'main', name: 'Main Agent', status: 'active' },
-                    { id: 'session-1', name: 'Webchat Session', status: 'active' },
+                    { id: 'session-1', name: 'FlowChat Session', status: 'active' },
                     { id: 'session-2', name: 'Telegram DM', status: 'active' },
                     { id: 'session-3', name: 'Heartbeat Worker', status: 'active' },
                     { id: 'session-4', name: 'Cron Runner', status: 'active' }
@@ -3214,7 +3214,7 @@
                     const config = {
                         gateway: { port: 18789, mode: 'local' },
                         model: { primary: 'kimi-coding/k2p5' },
-                        channels: { telegram: 'enabled', webchat: 'enabled' },
+                        channels: { telegram: 'enabled', flowchat: 'enabled' },
                         workspace: '~/.openclaw/workspace'
                     };
                     configPreview.textContent = JSON.stringify(config, null, 2);
@@ -3459,11 +3459,15 @@
                     allMessages = data.messages || [];
                     channels = data.channels || [];
                     
-                    // Add "All Channels" option
-                    const allChannels = [{ id: 'all', name: 'All Channels', status: 'connected', icon: 'ph-chat-circle-text' }, ...channels];
-                    
                     // Render channel list - static display only, no filtering
-                    channelList.innerHTML = allChannels.map(ch => `
+                    // Sort: FlowChat first, then others
+                    const sortedChannels = [...channels].sort((a, b) => {
+                        if (a.id === 'flowchat') return -1;
+                        if (b.id === 'flowchat') return 1;
+                        return 0;
+                    });
+                    
+                    channelList.innerHTML = sortedChannels.map(ch => `
                         <div class="chat-channel-item" data-channel="${ch.id}">
                             <div class="chat-channel-icon">
                                 <i class="ph ${ch.icon || 'ph-chat-circle'}"></i>
